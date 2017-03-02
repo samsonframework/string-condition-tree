@@ -18,6 +18,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
     protected $input = [
         '/test/string',
         '/test/string/inner',
+        '/tube/string',
         '/second-test/string/inner',
         '/second-test/inner',
         '/',
@@ -26,9 +27,12 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
     /** @var array Expected string condition tree */
     protected $expected = [
         '/' => [],
-        '/test/string' => [
-            [],
-            '/inner' => []
+        '/t' => [
+            'est/string' => [
+                [],
+                '/inner' => []
+            ],
+            'ube/string' => []
         ],
         '/second-test/' => [
             'string/inner' => [],
