@@ -1,0 +1,41 @@
+{
+  "name": "samsonframework/string-condition-tree",
+  "description": "SamsonFramework string condition tree generator",
+  "keywords": [
+    "samsonframework",
+    "condition tree",
+    "condition",
+    "tree"
+  ],
+  "authors": [
+    {
+      "name": "Vitaly Iegorov",
+      "email": "egorov@samsonos.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "5.*"
+  },
+  "license": "Open Software License (OSL) v 3.0",
+  "homepage": "http://samsonos.com/",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
+  "config": {
+    "github-protocols": [
+      "https"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "samsonframework\\stringconditiontree\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "samsonframework\\stringconditiontree\\tests\\": "tests/"
+    }
+  }
+}
