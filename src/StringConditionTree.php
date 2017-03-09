@@ -19,9 +19,7 @@ class StringConditionTree
     protected $stringLengths = [];
 
     public function process(array $input) {
-        $result = [];
-        $result = $this->innerProcessor($input[0], $input);
-        return $result;
+        return $this->innerProcessor($input[0], $input);
     }
 
     protected function innerProcessor(string $sourceKey, array $input)
@@ -29,29 +27,38 @@ class StringConditionTree
         $matched = [];
         $missed = [];
 
-        $matchedStr = '';
+        // Gather matched prefix for all input strings
+        $matchedPrefix = '';
 
-        $stringLength  = strlen($sourceKey);
-
-        for ($i = 0; $i < $stringLength; $i++) {
+        // Iterate characters in source key
+        for ($i = 0, $stringLength  = strlen($sourceKey); $i < $stringLength; $i++) {
+            // Get i character from source key
             $char = $sourceKey{$i};
 
-            foreach ($input as $key) {
-                if (!isset($key{$i}) || $key{$i} !== $sourceKey{$i}) {
+            // Iterate all input strings
+            foreach ($input as $inputKey) {
+                /**
+                 * Check is input string has i character and
+                 * if it does not match i source key character.
+                 */
+                if (!isset($inputKey{$i}) || $inputKey{$i} !== $char) {
+                    // Break parent for loop as characters mismatch;
                     break 2;
                 }
             }
-            $matchedStr .= $char;
+
+            /** Collected matched prefix from source key */
+            $matchedPrefix .= $char;
         }
 
-        foreach ($input as $key) {
-            if (strpos($key, $matchedStr) === 0) {
-                $matched[] = substr($key, $i, strlen($key));
+        foreach ($input as $inputKey) {
+            if (strpos($inputKey, $matchedPrefix) === 0) {
+                $matched[] = substr($inputKey, $i, strlen($inputKey));
             } else {
-                $missed[] = $key;
+                $missed[] = $inputKey;
             }
         }
 
-        return [$matchedStr => $matched, $missed];
+        return [$matchedPrefix => $matched, $missed];
     }
 }
