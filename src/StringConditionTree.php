@@ -18,7 +18,33 @@ class StringConditionTree
     /** @var array Get input strings lengths */
     protected $stringLengths = [];
 
-    public function process(array $input) {
+    protected function compareStrings(string $first, string $second): int
+    {
+        $firstLength = strlen($first);
+        $secondLength = strlen($second);
+
+        if ($firstLength === $secondLength) {
+            return strcmp($first, $second);
+        } else {
+            return ($firstLength < $secondLength) ? -1 : 1;
+        }
+    }
+
+    protected function prepareInput(array $input): array
+    {
+        // Lower case and trim all strings in input
+        $result = array_map('strtolower', array_map('trim', $input));
+
+        // Sort strings by length ascending
+        usort($result, [$this, 'compareStrings']);
+
+        return $result;
+    }
+
+    public function process(array $input)
+    {
+        $input = $this->prepareInput($input);
+
         return $this->innerProcessor($input[0], $input);
     }
 
