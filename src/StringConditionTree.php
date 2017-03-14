@@ -95,7 +95,15 @@ class StringConditionTree
         foreach ($input as $initialString) {
             $shortestCommonPrefix = '';
 
+            if (is_array($initialString)) {
+                continue;
+            }
+
             foreach ($input as $comparedString) {
+                if (is_array($comparedString)) {
+                    continue;
+                }
+
                 $longestCommonPrefix = $this->getLongestMatchingPrefix($initialString, $comparedString);
 
                 if ($shortestCommonPrefix === '' || strlen($shortestCommonPrefix) > strlen($longestCommonPrefix)) {
@@ -111,6 +119,10 @@ class StringConditionTree
                 }
 
                 foreach ($input as $comparedString) {
+                    if (is_array($comparedString)) {
+                        continue;
+                    }
+
                     // Add longest common prefix key strings without prefix
                     $stringWithoutPrefix = substr($comparedString, strlen($shortestCommonPrefix));
                     if (!in_array($stringWithoutPrefix, $matched[$shortestCommonPrefix], true) && is_string($stringWithoutPrefix)) {
@@ -118,7 +130,7 @@ class StringConditionTree
                     }
                 }
 
-                $matched[$shortestCommonPrefix] = $this->innerProcessor($matched[$shortestCommonPrefix]);
+                $matched[$shortestCommonPrefix] = array_merge($matched[$shortestCommonPrefix], $this->innerProcessor($matched[$shortestCommonPrefix]));
             }
         }
 
