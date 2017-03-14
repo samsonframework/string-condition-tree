@@ -16,11 +16,11 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
 
     /** @var array Input strings array */
     protected $input = [
-        '/test/string',
-        '/test/string/inner',
-        '/tube/string',
-        '/second-test/string/inner',
-        '/second-test/inner',
+        '/test/string' => '#1',
+        '/test/string/inner' => '#2',
+        '/tube/string' => '#3',
+        '/second-test/string/inner' => '#4',
+        '/second-test/inner' => '#5',
         '/',
     ];
 
@@ -48,6 +48,6 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
-        $this->assertEquals($this->expected, $this->sct->process($this->input));
+        $this->assertEquals($this->expected, $this->sct->process(array_keys($this->input)));
     }
 }
