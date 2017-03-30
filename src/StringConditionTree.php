@@ -57,11 +57,68 @@ class StringConditionTree
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
          */
-        $return = $this->innerProcessor($input);
+        $return = $this->innerProcessor2($input);
 
         return $return;
     }
 
+    /**
+     * Add only unique value to array.
+     *
+     * @param mixed $value Unique value
+     * @param array $array Array for adding unique value
+     * @param bool  $strict Strict uniqueness check
+     * @see in_array();
+     *
+     * @return bool True if unique value was added
+     */
+    protected function addUniqueToArray($value, &$array, bool $strict = true)
+    {
+        // Create array if not array is passed
+        if (!is_array($array)) {
+            $array = [];
+        }
+
+        // Add value to array if it is unique
+        if (!in_array($value, $array, $strict)) {
+            $array[] = $value;
+
+            return true;
+        } else { // Value is already in array
+            return false;
+        }
+    }
+
+    protected function innerProcessor2(array $input)
+    {
+        /**
+         * Iterate all combinations of strings and group by longest matching prefix
+         */
+        $longestPrefixes = [];
+        for ($i=0, $count=count($input); $i<$count; $i++) {
+            for ($j=$i+1; $j<$count; $j++) {
+                $longestMatchedPrefix = $this->getLongestMatchingPrefix($input[$i], $input[$j]);
+
+                // Store matched strings under longest matching prefix
+                $this->addUniqueToArray($input[$i], $longestPrefixes[$longestMatchedPrefix]);
+                $this->addUniqueToArray($input[$j], $longestPrefixes[$longestMatchedPrefix]);
+            }
+        }
+
+        /**
+         * Find longest matching prefix from longest matching prefixes
+         */
+        return $longestPrefixes;
+    }
+
+    /**
+     * Find longest matching prefix between two strings.
+     *
+     * @param string $initialString Initial string
+     * @param string $comparedString Compared string
+     *
+     * @return string Longest matching prefix
+     */
     protected function getLongestMatchingPrefix(string $initialString, string $comparedString): string
     {
         // Iterate and compare how string matches
@@ -71,6 +128,7 @@ class StringConditionTree
         $initialLength = strlen($initialString);
         $comparedLength = strlen($comparedString);
 
+        // Define shortest and longest strings to avoid character matching errors
         $shortestString = $initialLength < $comparedLength ? $initialString : $comparedString;
         $longestString = $initialLength >= $comparedLength ? $initialString : $comparedString;
 

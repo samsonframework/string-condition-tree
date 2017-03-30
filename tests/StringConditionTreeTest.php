@@ -21,7 +21,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         '/tube/string' => '#3',
         '/second-test/string/inner' => '#4',
         '/second-test/inner' => '#5',
-        '/',
+        '/' => '#6',
     ];
 
     /** @var array Expected string condition tree */
