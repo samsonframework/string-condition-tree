@@ -186,7 +186,7 @@ class StringConditionTree
         }
 
         /**
-         * Sort LMPs(array keys) descending by key length
+         * Sort LMPs(array keys) ascending by key length
          */
         $this->sortArrayByKeys($longestPrefixes);
 
