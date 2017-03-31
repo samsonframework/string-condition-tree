@@ -12,7 +12,7 @@ Library for generating optimized strings conditions tree from strings array.
 [![Stories in Ready](https://badge.waffle.io/samsonframework/behat-extension.png?label=ready&title=Ready)](https://waffle.io/samsonframework/behat-extension)
 [![Inline docs](http://inch-ci.org/github/samsonframework/behat-extension.svg?branch=master)](http://inch-ci.org/github/samsonframework/behat-extension)
 
-##Documentation
+## Documentation
 Follow [official documentation](http://github.com/samsonframework/string-condition-tree/blob/master/docs/Index.md).
 
 ##Installation
@@ -21,16 +21,16 @@ You can install this package through Composer:
 
 The packages adheres to the SemVer specification, and there will be full backward compatibility between minor versions.
 
-##Testing
+## Testing
 ```$ vendor/bin/phpunit```
 
-##Contributing
+## Contributing
 Feel free to fork and create pull requests at any time.
 
-##Security
+## Security
 If you discover any security related issues, please use this repository issue tracker.
 
-##License
+## License
 Open Software License ("OSL") v 3.0. Please see License File for more information.
 
 [SamsonOS](http://samsonos.com)
