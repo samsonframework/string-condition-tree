@@ -163,6 +163,7 @@ class StringConditionTree
     protected function removeKeyFromArrayStrings(array $array, string $selfMarker): array
     {
         $result = [];
+        /** @var string[] $values */
         foreach ($array as $key => $values) {
             $lmpLength = strlen($key);
             foreach ($values as $string) {
