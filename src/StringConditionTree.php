@@ -38,6 +38,17 @@ class StringConditionTree
         }
     }
 
+    /**
+     * Sort array by key string lengths.
+     *
+     * @param array $input Input array for sorting
+     * @param int   $order Sorting order
+     */
+    protected function sortArrayByKeys(array &$input, int $order = SORT_ASC)
+    {
+        array_multisort(array_map('strlen', array_keys($input)), $order, $input);
+    }
+
     protected function prepareInput(array $input): array
     {
         // Lower case and trim all strings in input
@@ -57,7 +68,7 @@ class StringConditionTree
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
          */
-        $return = $this->innerProcessor2($input);
+        $this->innerProcessor($input, $return);
 
         return $return;
     }
@@ -65,9 +76,10 @@ class StringConditionTree
     /**
      * Add only unique value to array.
      *
-     * @param mixed $value Unique value
-     * @param array $array Array for adding unique value
+     * @param mixed $value  Unique value
+     * @param array $array  Array for adding unique value
      * @param bool  $strict Strict uniqueness check
+     *
      * @see in_array();
      *
      * @return bool True if unique value was added
@@ -89,32 +101,10 @@ class StringConditionTree
         }
     }
 
-    protected function innerProcessor2(array $input)
-    {
-        /**
-         * Iterate all combinations of strings and group by longest matching prefix
-         */
-        $longestPrefixes = [];
-        for ($i=0, $count=count($input); $i<$count; $i++) {
-            for ($j=$i+1; $j<$count; $j++) {
-                $longestMatchedPrefix = $this->getLongestMatchingPrefix($input[$i], $input[$j]);
-
-                // Store matched strings under longest matching prefix
-                $this->addUniqueToArray($input[$i], $longestPrefixes[$longestMatchedPrefix]);
-                $this->addUniqueToArray($input[$j], $longestPrefixes[$longestMatchedPrefix]);
-            }
-        }
-
-        /**
-         * Find longest matching prefix from longest matching prefixes
-         */
-        return $longestPrefixes;
-    }
-
     /**
      * Find longest matching prefix between two strings.
      *
-     * @param string $initialString Initial string
+     * @param string $initialString  Initial string
      * @param string $comparedString Compared string
      *
      * @return string Longest matching prefix
@@ -146,52 +136,112 @@ class StringConditionTree
         return $longestPrefix;
     }
 
-    protected function innerProcessor(array $input)
+    /**
+     * Remove key string from the beginning of all sub-array strings.
+     *
+     * @param array  $array Input array of key => [keyStrings...]
+     *
+     * @param string $selfMarker Marker for storing self pointer
+     *
+     * @return array Processed array with removed keys from beginning of sub arrays
+     */
+    protected function removeKeyFromArrayStrings(array $array, string $selfMarker): array
     {
-        $matched = [];
+        $result = [];
+        foreach ($array as $key => $values) {
+            $lmpLength = strlen($key);
+            for ($i = 0, $count = count($values); $i < $count; $i++) {
+                $result[$key][$i] = substr($values[$i], $lmpLength);
 
-        foreach ($input as $initialString) {
-            $shortestCommonPrefix = '';
-
-            if (is_array($initialString)) {
-                continue;
-            }
-
-            foreach ($input as $comparedString) {
-                if (is_array($comparedString)) {
-                    continue;
+                if ($result[$key][$i] === '') {
+                    $result[$key][$i] = $selfMarker;
                 }
-
-                $longestCommonPrefix = $this->getLongestMatchingPrefix($initialString, $comparedString);
-
-                if ($shortestCommonPrefix === '' || strlen($shortestCommonPrefix) > strlen($longestCommonPrefix)) {
-                    $shortestCommonPrefix = $longestCommonPrefix;
-                }
-            }
-
-            // If we have found shortest common prefix from longest ones
-            if ($shortestCommonPrefix !== '') {
-                // Create matching prefix/strings array entry for longest common prefix
-                if (!array_key_exists($shortestCommonPrefix, $matched)) {
-                    $matched[$shortestCommonPrefix] = [];
-                }
-
-                foreach ($input as $comparedString) {
-                    if (is_array($comparedString)) {
-                        continue;
-                    }
-
-                    // Add longest common prefix key strings without prefix
-                    $stringWithoutPrefix = substr($comparedString, strlen($shortestCommonPrefix));
-                    if (!in_array($stringWithoutPrefix, $matched[$shortestCommonPrefix], true) && is_string($stringWithoutPrefix)) {
-                        $matched[$shortestCommonPrefix][] = $stringWithoutPrefix;
-                    }
-                }
-
-                $matched[$shortestCommonPrefix] = array_merge($matched[$shortestCommonPrefix], $this->innerProcessor($matched[$shortestCommonPrefix]));
             }
         }
 
-        return $matched;
+        return $result;
+    }
+
+    /**
+     * Find all duplication of source array values in compared array and remove them.
+     *
+     * @param array $source Source array
+     * @param array $compared Compared array for filtering duplicates
+     */
+    protected function removeDuplicatesInSubArray(array $source, array &$compared)
+    {
+        foreach ($source as $value) {
+            foreach ($compared as $key => &$subValue) {
+                if ($subValue === $value) {
+                    unset($compared[$key]);
+                }
+            }
+        }
+    }
+
+    protected function innerProcessor(array $input, &$result = [], $selfMarker = '@self')
+    {
+        /**
+         * Iterate all combinations of strings and group by LMP
+         */
+        $longestPrefixes = [];
+        for ($i = 0, $count = count($input); $i < $count; $i++) {
+            for ($j = $i + 1; $j < $count; $j++) {
+                $longestMatchedPrefix = $this->getLongestMatchingPrefix($input[$i], $input[$j]);
+
+                // We have found at least one matching character between strings
+                if ($longestMatchedPrefix !== '') {
+                    $this->addUniqueToArray($input[$i], $longestPrefixes[$longestMatchedPrefix]);
+                    $this->addUniqueToArray($input[$j], $longestPrefixes[$longestMatchedPrefix]);
+                }
+            }
+        }
+
+        /**
+         * Sort LMPs(array keys) descending by key length
+         */
+        $this->sortArrayByKeys($longestPrefixes);
+
+        /**
+         * Iterate all sorted LMP strings and remove duplicates from LMP string ordered lower
+         */
+        $keys = array_keys($longestPrefixes);
+        for ($i = 0, $length = count($keys); $i < $length; $i++) {
+            for ($j = $i + 1; $j < $length; $j++) {
+                $this->removeDuplicatesInSubArray($longestPrefixes[$keys[$i]], $longestPrefixes[$keys[$j]]);
+            }
+        }
+
+        // Remove empty LMPs as they are included in smaller LMPs
+        $longestPrefixes = array_filter($longestPrefixes);
+
+        /**
+         * After filtering LMPs remove LMP from matched string arrays
+         */
+        $longestPrefixes = $this->removeKeyFromArrayStrings($longestPrefixes, $selfMarker);
+
+        /**
+         * If we have not found any LMPs then use input as an end with self marker pointers
+         */
+        if (count($longestPrefixes) === 0) {
+            $longestPrefixes = array_combine($input, array_fill(0, count($input), [$selfMarker]));
+        } else {
+            /**
+             * If we have self marker as an input string - create LMP for it
+             */
+            if (in_array($selfMarker, $input, true)) {
+                $longestPrefixes[$selfMarker] = [];
+            }
+
+            /**
+             * Recursively iterate current level LMPs
+             */
+            foreach ($longestPrefixes as $longestPrefix => $strings) {
+                $localResult = $this->innerProcessor($strings, $result[$longestPrefix]);
+                $result[$longestPrefix] = $localResult;
+            }
+        }
+
+        return $longestPrefixes;
     }
 }

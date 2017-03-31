@@ -22,6 +22,11 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         '/second-test/string/inner' => '#4',
         '/second-test/inner' => '#5',
         '/' => '#6',
+        'test/' => '#7',
+        'test/this-please' => '#8',
+        'p' => '#9',
+        'p/test/' => '#10',
+        'p/test-me/' => '#11',
     ];
 
     /** @var array Expected string condition tree */
@@ -37,6 +42,10 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         '/second-test/' => [
             'string/inner' => [],
             'inner' => []
+        ],
+        'test/' => [
+            [],
+            'this-please' => []
         ]
     ];
 
