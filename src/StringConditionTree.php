@@ -31,9 +31,7 @@ class StringConditionTree
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
          */
-        $this->debug = new TreeNode(self::ROOT_NAME);
-
-        $this->innerProcessor(self::ROOT_NAME, $input, $this->debug);
+        $this->innerProcessor(self::ROOT_NAME, $input, $this->debug = new TreeNode(self::ROOT_NAME));
 
         return $this->debug;
     }
