@@ -165,11 +165,13 @@ class StringConditionTree
         $result = [];
         foreach ($array as $key => $values) {
             $lmpLength = strlen($key);
-            for ($i = 0, $count = count($values); $i < $count; $i++) {
-                $result[$key][$i] = substr($values[$i], $lmpLength);
+            foreach ($values as $string) {
+                $newString = substr($string, $lmpLength);
 
-                if ($result[$key][$i] === '') {
-                    $result[$key][$i] = $selfMarker;
+                if ($newString === '' || $string === $selfMarker) {
+                    $result[$key][] = $selfMarker;
+                } else {
+                    $result[$key][] = $newString;
                 }
             }
         }
@@ -240,6 +242,26 @@ class StringConditionTree
 
         // Remove empty LMPs as they are included in smaller LMPs
         $longestPrefixes = array_filter($longestPrefixes);
+
+        /**
+         * Search for input string that do not have LMP, and add missing as LMP
+         */
+        foreach ($input as $string) {
+            $found = false;
+
+            if ($string !== $selfMarker) {
+                foreach ($longestPrefixes as $strings) {
+                    if (in_array($string, $strings, true)) {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $longestPrefixes[$string] = [$selfMarker];
+                }
+            }
+        }
 
         /**
          * After filtering LMPs remove LMP from matched string arrays
