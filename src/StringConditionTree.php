@@ -18,6 +18,9 @@ class StringConditionTree
     /** @var array Get input strings lengths */
     protected $stringLengths = [];
 
+    /** @var TreeNode Resulting collection for debugging */
+    protected $debug;
+
     /**
      * Compare strings by characters length.
      *
@@ -68,9 +71,11 @@ class StringConditionTree
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
          */
-        $this->innerProcessor($input, $return);
+        $this->debug = new TreeNode();
 
-        return $return;
+        $this->innerProcessor('@root', $input, $this->debug);
+
+        return $this->debug;
     }
 
     /**
@@ -179,8 +184,12 @@ class StringConditionTree
         }
     }
 
-    protected function innerProcessor(array $input, &$result = [], $selfMarker = '@self')
+    protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = '@self')
     {
+        $newChild = new TreeNode();
+        $newChild->value = $prefix;
+        $result->children[$prefix] = $newChild;
+
         /**
          * Iterate all combinations of strings and group by LMP
          */
@@ -225,23 +234,20 @@ class StringConditionTree
          */
         if (count($longestPrefixes) === 0) {
             $longestPrefixes = array_combine($input, array_fill(0, count($input), [$selfMarker]));
-        } else {
-            /**
-             * If we have self marker as an input string - create LMP for it
-             */
-            if (in_array($selfMarker, $input, true)) {
-                $longestPrefixes[$selfMarker] = [];
-            }
-
-            /**
-             * Recursively iterate current level LMPs
-             */
-            foreach ($longestPrefixes as $longestPrefix => $strings) {
-                $localResult = $this->innerProcessor($strings, $result[$longestPrefix]);
-                $result[$longestPrefix] = $localResult;
-            }
         }
 
-        return $longestPrefixes;
+        /**
+         * If we have self marker as an input string - create LMP for it
+         */
+        if (in_array($selfMarker, $input, true)) {
+            $longestPrefixes[$selfMarker] = [];
+        }
+
+        /**
+         * Recursively iterate current level LMPs
+         */
+        foreach ($longestPrefixes as $longestPrefix => $strings) {
+            $this->innerProcessor($longestPrefix, $strings, $newChild);
+        }
     }
 }
