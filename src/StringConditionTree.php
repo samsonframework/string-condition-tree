@@ -15,34 +15,8 @@ class StringConditionTree
     const ROOT_NAME = '@root';
     const SELF_NAME = '@self';
 
-    /** @var array Output strings collection */
-    protected $output = [];
-
-    /** @var array Get input strings lengths */
-    protected $stringLengths = [];
-
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
-
-    /**
-     * Compare strings by characters length.
-     *
-     * @param string $first
-     * @param string $second
-     *
-     * @return int
-     */
-    protected function compareStrings(string $first, string $second): int
-    {
-        $firstLength = strlen($first);
-        $secondLength = strlen($second);
-
-        if ($firstLength === $secondLength) {
-            return strcmp($first, $second);
-        } else {
-            return ($firstLength < $secondLength) ? -1 : 1;
-        }
-    }
 
     /**
      * Sort array by key string lengths.
@@ -55,17 +29,6 @@ class StringConditionTree
         array_multisort(array_map('strlen', array_keys($input)), $order, $input);
     }
 
-    protected function prepareInput(array $input): array
-    {
-        // Lower case and trim all strings in input
-        $result = array_map('strtolower', array_map('trim', $input));
-
-        // Sort strings by length ascending
-        usort($result, [$this, 'compareStrings']);
-
-        return $result;
-    }
-
     /**
      * Build similarity strings tree.
      *
@@ -75,8 +38,6 @@ class StringConditionTree
      */
     public function process(array $input): TreeNode
     {
-        $input = $this->prepareInput($input);
-
         /**
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
