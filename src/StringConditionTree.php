@@ -66,7 +66,14 @@ class StringConditionTree
         return $result;
     }
 
-    public function process(array $input)
+    /**
+     * Build similarity strings tree.
+     *
+     * @param array $input Collection of strings
+     *
+     * @return TreeNode Resulting similarity strings tree
+     */
+    public function process(array $input): TreeNode
     {
         $input = $this->prepareInput($input);
 
@@ -74,7 +81,7 @@ class StringConditionTree
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
          */
-        $this->debug = new TreeNode();
+        $this->debug = new TreeNode(self::ROOT_NAME);
 
         $this->innerProcessor(self::ROOT_NAME, $input, $this->debug);
 
@@ -187,12 +194,18 @@ class StringConditionTree
         }
     }
 
+    /**
+     * Recursive string similarity tree builder.
+     *
+     * @param string   $prefix
+     * @param array    $input
+     * @param TreeNode $result
+     * @param string   $selfMarker
+     */
     protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = self::SELF_NAME)
     {
         // Create tree node
-        $newChild = new TreeNode();
-        $newChild->value = $prefix;
-        $result->children[$prefix] = $newChild;
+        $newChild = $result->append($prefix);
 
         /**
          * Iterate all combinations of strings and group by LMP

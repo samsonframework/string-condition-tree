@@ -14,6 +14,35 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
     /** @var StringConditionTree */
     protected $sct;
 
+    /** @var array Expected string condition tree */
+    protected $expected = [
+        'p' => [
+            '@self' => [],
+            '/test' => [
+                '/' => ['@self'=> []],
+                '-me/' => ['@self' => []]
+            ],
+        ],
+        '/' => [
+            't' => [
+                'est/string' => [
+                    '@self' => [],
+                    '/inner' => ['@self' => []]
+                ],
+                'ube/string' => ['@self' => []]
+            ],
+            'second-test/' => [
+                'inner' => ['@self' => []],
+                'string/inner' => ['@self' => []],
+            ],
+            '@self' => []
+        ],
+        'test/' => [
+            '@self' => [],
+            'this-please' => ['@self' => []]
+        ]
+    ];
+
     /** @var array Input strings array */
     protected $input = [
         '/test/string' => '#1',
@@ -29,40 +58,14 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         'p/test-me/' => '#11',
     ];
 
-    /** @var array Expected string condition tree */
-    protected $expected = [
-        '/' => ['@self'],
-        '/t' => [
-            'est/string' => [
-                ['@self'],
-                '/inner' => ['@self']
-            ],
-            'ube/string' => ['@self']
-        ],
-        'p' => [
-            '/test' => [
-                '/' => ['@self'],
-                '-me/' => ['@self']
-            ],
-        ],
-        '/second-test/' => [
-            'string/inner' => ['@self'],
-            'inner' => ['@self']
-        ],
-        'test/' => [
-            ['@self'],
-            'this-please' => ['@self']
-        ]
-    ];
-
     public function setUp()
     {
         $this->sct = new StringConditionTree();
-        sort($this->expected);
     }
 
     public function testProcess()
     {
-        $this->assertEquals($this->expected, $this->sct->process(array_keys($this->input)));
+        $nodes = $this->sct->process(array_keys($this->input))->toArray();
+        $this->assertEquals($this->expected, $nodes[StringConditionTree::ROOT_NAME]);
     }
 }
