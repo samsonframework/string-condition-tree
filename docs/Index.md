@@ -1,8 +1,8 @@
-#SamsonFramework string condition tree generator official documentation
+# SamsonFramework string condition tree generator official documentation
 
 > This module generates optimized conditions tree for searching in given strings array.
 > Please see [StringConditionTreeTest](https://github.com/samsonframework/string-condition-tree/blob/master/tests/StringConditionTreeTest.php) for example.
 
-#Algorithm 
+# Algorithm 
 Needs translation to english
 я ищу в исходном массиве самый длинный совпадающий префикс(СДСП) между всеми строками и собираю это в асоциативный массив где ключ этот самый СДСП, потом я сортирую этот массив по ключам (СДСП) что бы получить самые короткие СДСП в начало так как они включают в себя больше все вхождений, потом я иду по каждому СДСП из этого массива и попавшие в него строки я убираю из всех остальных СДСП, потом убираю СДСП которые остались пустые(его строки входят в более маленькие СДСП) потом я сравнивая исходный массив с строк со всеми строками которые попапали в оставшиеся СДСП и если строка входящего массива не вошла не в один из СДСП то это конечная строка и я делаю из СДСП далее я отрезаю СДСП часть строки из сгруппированных под этот СДСП строк, и если во входящей строке есть маркер что это конечный результат - добавляю его в начало. Потом рекурсивно бегу по СДСП и их строкам и проделаю тоже самое.
