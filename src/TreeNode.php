@@ -46,8 +46,8 @@ class TreeNode implements \Iterator
     public function toArray(): array
     {
         $result = [];
-        foreach ($this->children as $child) {
-            $result[$child->value] = $child->toArray();
+        foreach ($this as $key => $child) {
+            $result[$key] = $child->toArray();
         }
 
         return $result;
