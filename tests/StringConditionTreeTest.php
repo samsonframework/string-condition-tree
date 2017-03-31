@@ -24,6 +24,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
             ],
         ],
         '/' => [
+            '@self' => [],
             't' => [
                 'est/string' => [
                     '@self' => [],
@@ -35,7 +36,6 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
                 'inner' => ['@self' => []],
                 'string/inner' => ['@self' => []],
             ],
-            '@self' => []
         ],
         'test/' => [
             '@self' => [],
