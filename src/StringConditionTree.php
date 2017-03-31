@@ -269,17 +269,10 @@ class StringConditionTree
         $longestPrefixes = $this->removeKeyFromArrayStrings($longestPrefixes, $selfMarker);
 
         /**
-         * If we have not found any LMPs then use input as an end with self marker pointers
-         */
-        if (count($longestPrefixes) === 0) {
-            $longestPrefixes = array_combine($input, array_fill(0, count($input), [$selfMarker]));
-        }
-
-        /**
          * If we have self marker as an input string - create LMP for it
          */
         if (in_array($selfMarker, $input, true)) {
-            $longestPrefixes[$selfMarker] = [];
+            $longestPrefixes = array_merge([$selfMarker => []], $longestPrefixes);
         }
 
         /**
