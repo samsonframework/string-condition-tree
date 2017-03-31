@@ -1,7 +1,7 @@
 #SamsonFramework string condition tree generator official documentation
 
 > This module generates optimized conditions tree for searching in given strings array.
-> Please see [TestCase](https://github.com/samsonframework/string-condition-tree/blob/master/tests/StringConditionTreeTest.php) for example.
+> Please see [StringConditionTreeTest](https://github.com/samsonframework/string-condition-tree/blob/master/tests/StringConditionTreeTest.php) for example.
 
 #Algorithm 
 Needs translation to english
