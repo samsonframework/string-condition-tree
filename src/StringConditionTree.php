@@ -12,6 +12,9 @@ namespace samsonframework\stringconditiontree;
  */
 class StringConditionTree
 {
+    const ROOT_NAME = '@root';
+    const SELF_NAME = '@self';
+
     /** @var array Output strings collection */
     protected $output = [];
 
@@ -73,7 +76,7 @@ class StringConditionTree
          */
         $this->debug = new TreeNode();
 
-        $this->innerProcessor('@root', $input, $this->debug);
+        $this->innerProcessor(self::ROOT_NAME, $input, $this->debug);
 
         return $this->debug;
     }
@@ -184,8 +187,9 @@ class StringConditionTree
         }
     }
 
-    protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = '@self')
+    protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = self::SELF_NAME)
     {
+        // Create tree node
         $newChild = new TreeNode();
         $newChild->value = $prefix;
         $result->children[$prefix] = $newChild;

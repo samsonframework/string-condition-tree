@@ -31,21 +31,27 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
 
     /** @var array Expected string condition tree */
     protected $expected = [
-        '/' => [],
+        '/' => ['@self'],
         '/t' => [
             'est/string' => [
-                [],
-                '/inner' => []
+                ['@self'],
+                '/inner' => ['@self']
             ],
-            'ube/string' => []
+            'ube/string' => ['@self']
+        ],
+        'p' => [
+            '/test' => [
+                '/' => ['@self'],
+                '-me/' => ['@self']
+            ],
         ],
         '/second-test/' => [
-            'string/inner' => [],
-            'inner' => []
+            'string/inner' => ['@self'],
+            'inner' => ['@self']
         ],
         'test/' => [
-            [],
-            'this-please' => []
+            ['@self'],
+            'this-please' => ['@self']
         ]
     ];
 
