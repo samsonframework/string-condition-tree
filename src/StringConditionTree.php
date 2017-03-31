@@ -19,17 +19,6 @@ class StringConditionTree
     protected $debug;
 
     /**
-     * Sort array by key string lengths.
-     *
-     * @param array $input Input array for sorting
-     * @param int   $order Sorting order
-     */
-    protected function sortArrayByKeys(array &$input, int $order = SORT_ASC)
-    {
-        array_multisort(array_map('strlen', array_keys($input)), $order, $input);
-    }
-
-    /**
      * Build similarity strings tree.
      *
      * @param array $input Collection of strings
@@ -47,6 +36,17 @@ class StringConditionTree
         $this->innerProcessor(self::ROOT_NAME, $input, $this->debug);
 
         return $this->debug;
+    }
+
+    /**
+     * Sort array by key string lengths.
+     *
+     * @param array $input Input array for sorting
+     * @param int   $order Sorting order
+     */
+    protected function sortArrayByKeys(array &$input, int $order = SORT_ASC)
+    {
+        array_multisort(array_map('strlen', array_keys($input)), $order, $input);
     }
 
     /**
