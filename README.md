@@ -15,7 +15,7 @@ Library for generating optimized strings conditions tree from strings array.
 ## Documentation
 Follow [official documentation](http://github.com/samsonframework/string-condition-tree/blob/master/docs/Index.md).
 
-##Installation
+## Installation
 You can install this package through Composer:
 ```composer require samsonframework/string-condition-tree```
 
