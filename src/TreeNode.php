@@ -28,7 +28,7 @@ class TreeNode implements \Iterator
      * TreeNode constructor.
      *
      * @param string   $value Node value
-     * @param TreeNode $parent Pointer to parent node
+     * @param self $parent Pointer to parent node
      */
     public function __construct(string $value = '', self $parent = null)
     {
