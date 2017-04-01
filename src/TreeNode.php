@@ -85,7 +85,7 @@ class TreeNode implements \Iterator
      */
     public function next()
     {
-        return next($this->children);
+        next($this->children);
     }
 
     /**
