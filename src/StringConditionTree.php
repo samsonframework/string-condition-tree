@@ -12,7 +12,7 @@ namespace samsonframework\stringconditiontree;
  */
 class StringConditionTree
 {
-    const ROOT_NAME = '@root';
+    const ROOT_NAME = '';
     const SELF_NAME = '@self';
 
     /** @var TreeNode Resulting collection for debugging */
@@ -31,7 +31,7 @@ class StringConditionTree
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
          */
-        $this->innerProcessor(self::ROOT_NAME, $input, $this->debug = new TreeNode(self::ROOT_NAME));
+        $this->innerProcessor(self::ROOT_NAME, $input, $this->debug = new TreeNode());
 
         return $this->debug;
     }

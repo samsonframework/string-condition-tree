@@ -12,8 +12,14 @@ namespace samsonframework\stringconditiontree;
  */
 class TreeNode implements \Iterator
 {
+    /** @var self Pointer to parent node */
+    protected $parent;
+
     /** @var mixed Tree node value */
     public $value;
+
+    /** @var string Tree node full value */
+    protected $fullValue;
 
     /** @var self[] Collection of tree node children */
     public $children = [];
@@ -21,11 +27,14 @@ class TreeNode implements \Iterator
     /**
      * TreeNode constructor.
      *
-     * @param string $value Node value
+     * @param string   $value Node value
+     * @param TreeNode $parent Pointer to parent node
      */
-    public function __construct(string $value)
+    public function __construct(string $value = '', self $parent = null)
     {
         $this->value = $value;
+        $this->parent = $parent;
+        $this->fullValue = $parent !== null ? $parent->fullValue.$value : $value;
     }
 
     /**
@@ -37,7 +46,7 @@ class TreeNode implements \Iterator
      */
     public function append(string $value): self
     {
-        return $this->children[$value] = new self($value);
+        return $this->children[$value] = new self($value, $this);
     }
 
     /**
@@ -47,7 +56,11 @@ class TreeNode implements \Iterator
     {
         $result = [];
         foreach ($this as $key => $child) {
-            $result[$key] = $child->toArray();
+            if ($key !== StringConditionTree::SELF_NAME) {
+                $result[$key] = $child->toArray();
+            } else { // Store full node value
+                $result[$key] = $this->fullValue;
+            }
         }
 
         return $result;
