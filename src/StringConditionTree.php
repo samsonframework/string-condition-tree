@@ -58,7 +58,7 @@ class StringConditionTree
      *
      * @return bool True if unique value was added
      */
-    protected function addUniqueToArray($value, &$array, bool $strict = true)
+    protected function addUniqueToArray($value, array &$array, bool $strict = true)
     {
         // Create array if not array is passed
         if (!is_array($array)) {
