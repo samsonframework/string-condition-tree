@@ -18,6 +18,19 @@ class StringConditionTree
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
 
+    /** @var callable TreeNode value handler */
+    protected $treeNodeValueHandler;
+
+    /**
+     * Set TreeNode value handler.
+     *
+     * @param callable $handler TreeNode value handler
+     */
+    public function setTreeNodeValueHandler(callable $handler)
+    {
+        $this->treeNodeValueHandler = $handler;
+    }
+
     /**
      * Build similarity strings tree.
      *
@@ -58,7 +71,7 @@ class StringConditionTree
      *
      * @return bool True if unique value was added
      */
-    protected function addUniqueToArray($value, array &$array, bool $strict = true)
+    protected function addUniqueToArray($value, &$array, bool $strict = true)
     {
         // Create array if not array is passed
         if (!is_array($array)) {
@@ -124,7 +137,7 @@ class StringConditionTree
         $result = [];
         /** @var string[] $values */
         foreach ($array as $key => $values) {
-            $lmpLength = strlen($key);
+            $lmpLength = strlen((string)$key);
             foreach ($values as $string) {
                 $newString = substr($string, $lmpLength);
 
@@ -166,6 +179,9 @@ class StringConditionTree
      */
     protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = self::SELF_NAME)
     {
+        // Rewrite prefix if TreeNode value handler is present
+        $prefix = is_callable($this->treeNodeValueHandler) ? call_user_func($this->treeNodeValueHandler, $prefix) : $prefix;
+
         // Create tree node
         $newChild = $result->append($prefix);
 
@@ -239,7 +255,7 @@ class StringConditionTree
          * Recursively iterate current level LMPs
          */
         foreach ($longestPrefixes as $longestPrefix => $strings) {
-            $this->innerProcessor($longestPrefix, $strings, $newChild);
+            $this->innerProcessor((string)$longestPrefix, $strings, $newChild);
         }
     }
 }

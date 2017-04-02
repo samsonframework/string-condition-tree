@@ -28,7 +28,7 @@ class TreeNode implements \Iterator
      * TreeNode constructor.
      *
      * @param string   $value Node value
-     * @param self $parent Pointer to parent node
+     * @param TreeNode $parent Pointer to parent node
      */
     public function __construct(string $value = '', self $parent = null)
     {
@@ -50,6 +50,8 @@ class TreeNode implements \Iterator
     }
 
     /**
+     * Convert tree node to associative array.
+     *
      * @return array Tree structure as hashed array
      */
     public function toArray(): array
