@@ -34,7 +34,10 @@ class TreeNode implements \Iterator
     {
         $this->value = $value;
         $this->parent = $parent;
-        $this->fullValue = $parent !== null ? $parent->fullValue.$value : $value;
+
+        if ($parent !== null) {
+            $this->fullValue = $parent->fullValue . ($value !== StringConditionTree::SELF_NAME ? $value : '');
+        }
     }
 
     /**
