@@ -13,13 +13,13 @@ namespace samsonframework\stringconditiontree;
 class TreeNode implements \Iterator
 {
     /** @var self Pointer to parent node */
-    protected $parent;
+    public $parent;
 
     /** @var mixed Tree node value */
     public $value;
 
     /** @var string Tree node full value */
-    protected $fullValue;
+    public $fullValue;
 
     /** @var self[] Collection of tree node children */
     public $children = [];

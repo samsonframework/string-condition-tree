@@ -110,14 +110,36 @@ class StringConditionTree
         $longestString = $initialLength >= $comparedLength ? $initialString : $comparedString;
 
         // Iterate initial string characters
+        $isPattern = false;
         for ($z = 0, $length = strlen($shortestString); $z < $length; $z++) {
-            // Compare characters with compared string
-            if ($shortestString{$z} !== $longestString{$z}) {
-                break; // Exit on first mismatching character
-            }
+            // Pattern support
+            // TODO: Probably can be optimized
+            if ($isPattern || $shortestString{$z} === '{') {
+                $isPattern = true;
 
-            // Concatenate matching part of two strings
-            $longestPrefix .= $initialString{$z};
+                // Concatenate longest matching prefix
+                $longestPrefix .= $shortestString{$z};
+
+                // Compare characters with compared string
+                if ($shortestString{$z} !== $longestString{$z}) {
+                    // Clear pattern as pattern characters mismatch
+                    $longestPrefix = '';
+                    break;
+                }
+
+                // If pattern id closed unset flag fro special behaviour
+                if ($shortestString{$z} === '}') {
+                    $isPattern = false;
+                }
+            } else {
+                // Compare characters with compared string
+                if ($shortestString{$z} !== $longestString{$z}) {
+                    break; // Exit on first mismatching character
+                }
+
+                // Concatenate matching part of two strings
+                $longestPrefix .= $initialString{$z};
+            }
         }
 
         return $longestPrefix;
