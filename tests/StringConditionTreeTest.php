@@ -28,11 +28,11 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
                     'name' => ['@self' => 'p/{parameter}/name'],
                 ],
                 '{id:d+}' => ['@self' => 'p/{id:d+}'],
-            ],
-            '/{id}' => [
-                '@self' => 'p/{id}',
-                '/' => ['@self' => 'p/{id}/']
-            ],
+                '{id}' => [// @molodyko - This is very ruff =)
+                    '@self' => 'p/{id}',
+                    '/' => ['@self' => 'p/{id}/']
+                ],
+            ]
         ],
         '/' => [
             '@self' => '/',
