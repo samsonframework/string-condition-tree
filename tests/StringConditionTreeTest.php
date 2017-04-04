@@ -77,7 +77,10 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         'p/{parameter}/' => '#15',
         'p/{parameter}/name' => '#16',
         '/test/{user_id}/' => '#17',
-        '/test/user_id/' => '#18'
+        '/test/user_id/' => '#18',
+        '{parameter}' => '#19',
+        '{param}-{parameter}' => '#20',
+        '{param}-{parameter}/test' => '#21',
     ];
 
     public function setUp()

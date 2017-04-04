@@ -190,9 +190,6 @@ class StringConditionTree
      */
     protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = self::SELF_NAME)
     {
-        // Rewrite prefix if TreeNode value handler is present
-        $prefix = is_callable($this->treeNodeValueHandler) ? call_user_func($this->treeNodeValueHandler, $prefix) : $prefix;
-
         // Create tree node
         $newChild = $result->append($prefix);
 
