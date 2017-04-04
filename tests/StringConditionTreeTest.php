@@ -28,7 +28,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
                     'name' => ['@self' => 'p/{parameter}/name'],
                 ],
                 '{id:d+}' => ['@self' => 'p/{id:d+}'],
-                '{id}' => [// @molodyko - This is very ruff =)
+                '{id}' => [// @molodyko - This is very tuff =)
                     '@self' => 'p/{id}',
                     '/' => ['@self' => 'p/{id}/']
                 ],
@@ -42,25 +42,29 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
                         '@self' => '/test/string',
                         '/inner' => ['@self' => '/test/string/inner']
                     ],
+                    'user_id/' => ['@self' => '/test/user_id/'],
                     '{user_id}/' => ['@self' => '/test/{user_id}/'],
-                    'user_id/' => ['@self' => '/test/user_id/']
                 ],
                 'ube/string' => ['@self' => '/tube/string']
+            ],
+            'cms/gift/' => [
+                '{id}/{search}' => ['@self' => '/cms/gift/{id}/{search}'],
+                'form/{id}' => ['@self' => '/cms/gift/form/{id}'],
             ],
             'second-test/' => [
                 'inner' => ['@self' => '/second-test/inner'],
                 'string/inner' => ['@self' => '/second-test/string/inner'],
-            ],
+            ]
         ],
         'test/' => [
             '@self' => 'test/',
             'this-please' => ['@self' => 'test/this-please']
         ],
-        '{parameter}' => ['@self' => '{parameter}'],
         '{param}-{parameter}' => [
             '@self' => '{param}-{parameter}',
             '/test' => ['@self' => '{param}-{parameter}/test']
         ],
+        '{parameter}' => ['@self' => '{parameter}'],
     ];
 
     /** @var array Input strings array */
@@ -86,6 +90,8 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         '{parameter}' => '#19',
         '{param}-{parameter}' => '#20',
         '{param}-{parameter}/test' => '#21',
+        '/cms/gift/form/{id}' => '#22',
+        '/cms/gift/{id}/{search}' => '#23',
     ];
 
     public function setUp()
@@ -96,6 +102,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
     public function testProcess()
     {
         $nodes = $this->sct->process(array_keys($this->input))->toArray();
-        $this->assertEquals($this->expected, $nodes);
+
+        $this->assertSame($this->expected, $nodes);
     }
 }
