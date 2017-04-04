@@ -4,6 +4,7 @@
  * on 02.03.17 at 13:25
  */
 namespace samsonframework\stringconditiontree;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * Class StringConditionTree
@@ -12,8 +13,17 @@ namespace samsonframework\stringconditiontree;
  */
 class StringConditionTree
 {
+    /** Tree node root element identifier, needed for recursion */
     const ROOT_NAME = '';
+
+    /** Final tree node branch identifier */
     const SELF_NAME = '@self';
+
+    /** String parameter start marker */
+    const PARAMETER_START = '{';
+
+    /** String parameter end marker */
+    const PARAMETER_END = '}';
 
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
@@ -39,6 +49,19 @@ class StringConditionTree
     }
 
     /**
+     * Prefix length counter for array sorting callback to sort by prefix length and put
+     * parametrized prefixed at the end.
+     *
+     * @param string $prefix Prefix string
+     *
+     * @return int Prefix length
+     */
+    protected function prefixLength(string $prefix): int
+    {
+        return strpos($prefix, self::PARAMETER_START) ? PHP_INT_MAX : strlen($prefix);
+    }
+
+    /**
      * Sort array by key string lengths.
      *
      * @param array $input Input array for sorting
@@ -46,7 +69,7 @@ class StringConditionTree
      */
     protected function sortArrayByKeys(array &$input, int $order = SORT_ASC)
     {
-        array_multisort(array_map('strlen', array_keys($input)), $order, $input);
+        array_multisort(array_map([$this, 'prefixLength'], array_keys($input)), $order, $input);
     }
 
     /**
