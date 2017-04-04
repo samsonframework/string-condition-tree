@@ -25,6 +25,9 @@ class StringConditionTree
     /** String parameter end marker */
     const PARAMETER_END = '}';
 
+    /** Parameter sorting length value for counting */
+    const PARAMETER_COF = 2000;
+
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
 
@@ -76,7 +79,46 @@ class StringConditionTree
      */
     protected function prefixLength(string $prefix): int
     {
-        return strpos($prefix, self::PARAMETER_START) !== false ? PHP_INT_MAX - strlen($prefix) : strlen($prefix);
+        static $len = [];
+
+        /**
+         * Parametrized string comparison.
+         *
+         * We need to follow rules:
+         *  1. Strings starting with not parametrized character(NPC)
+         *  should have lower value than string starting with parametrized character groups(PCg).
+         *  2. Strings having multiple PCG should be ordered according PCG count.
+         *  3. Strings starting with NPC and having PCG should have more priority
+         *  over only PCG strings.
+         */
+
+        $value = 0;
+        $isParameter = false;
+        $parametersCount = substr_count($prefix, $this->parameterStartMarker);
+
+        for ($i = 0, $length = strlen($prefix); $i < $length; $i++) {
+            if ($prefix{$i} === $this->parameterStartMarker) {
+                $isParameter = true;
+                $value += self::PARAMETER_COF / $parametersCount;
+            } elseif ($prefix{$i} === $this->parameterEndMarker) {
+                $isParameter = false;
+            } elseif (!$isParameter) {
+                $value += 2 * ord($prefix{$i});
+            }
+        }
+
+        $len[$prefix] = (int)$value;
+
+            /*strpos($prefix, $this->parameterStartMarker) !== false
+            // Count length considering amount of parameters and total prefix length
+            ? (substr_count($prefix, $this->parameterStartMarker) * self::PARAMETER_COF) - strlen($prefix)
+            : strlen($prefix);*/
+
+        if ($prefix === '{id}/{search}') {
+            var_dump(1);
+        }
+
+        return $len[$prefix];
     }
 
     /**
