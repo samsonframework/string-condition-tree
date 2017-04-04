@@ -76,7 +76,7 @@ class StringConditionTree
      */
     protected function prefixLength(string $prefix): int
     {
-        return strpos($prefix, self::PARAMETER_START) !== false ? PHP_INT_MAX : strlen($prefix);
+        return strpos($prefix, self::PARAMETER_START) !== false ? PHP_INT_MAX - strlen($prefix) : strlen($prefix);
     }
 
     /**
