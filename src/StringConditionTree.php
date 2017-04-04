@@ -162,6 +162,9 @@ class StringConditionTree
                 if ($shortestString{$z} === $this->parameterEndMarker) {
                     // If parametrized part ended append to longest matching prefix
                     $longestPrefix .= $parametrizedPrefix;
+                    // Clear parametrized prefix as we can have other parametrized parts
+                    $parametrizedPrefix = '';
+                    // Reset parametrized flag
                     $isPattern = false;
                 }
             } else {
@@ -252,6 +255,11 @@ class StringConditionTree
                 }
             }
         }
+
+        if (array_key_exists('{param}-{parameter}', $longestPrefixes)) {
+            var_dump(1);
+        }
+
 
         /**
          * Sort LMPs(array keys) ascending by key length

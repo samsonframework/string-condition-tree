@@ -57,9 +57,9 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
             'this-please' => ['@self' => 'test/this-please']
         ],
         '{parameter}' => ['@self' => '{parameter}'],
-        '{param}-{param}{parameter}' => [
-            '@self' => '{param}-{param}{parameter}',
-            '/test' => ['@self' => '{param}-{param}{parameter}/test']
+        '{param}-{parameter}' => [
+            '@self' => '{param}-{parameter}',
+            '/test' => ['@self' => '{param}-{parameter}/test']
         ],
     ];
 
