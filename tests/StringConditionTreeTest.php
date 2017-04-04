@@ -48,8 +48,8 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
                 'ube/string' => ['@self' => '/tube/string']
             ],
             'cms/gift/' => [
-                '{id}/{search}' => ['@self' => '/cms/gift/{id}/{search}'],
                 'form/{id}' => ['@self' => '/cms/gift/form/{id}'],
+                '{id}/{search}' => ['@self' => '/cms/gift/{id}/{search}'],
             ],
             'second-test/' => [
                 'inner' => ['@self' => '/second-test/inner'],
