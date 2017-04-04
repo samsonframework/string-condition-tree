@@ -18,19 +18,6 @@ class StringConditionTree
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
 
-    /** @var callable TreeNode value handler */
-    protected $treeNodeValueHandler;
-
-    /**
-     * Set TreeNode value handler.
-     *
-     * @param callable $handler TreeNode value handler
-     */
-    public function setTreeNodeValueHandler(callable $handler)
-    {
-        $this->treeNodeValueHandler = $handler;
-    }
-
     /**
      * Build similarity strings tree.
      *
