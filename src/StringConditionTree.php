@@ -28,6 +28,24 @@ class StringConditionTree
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
 
+    /** @var string Parametrized string start marker */
+    protected $parameterStartMarker = self::PARAMETER_START;
+
+    /** @var string Parametrized string end marker */
+    protected $parameterEndMarker = self::PARAMETER_END;
+
+    /**
+     * StringConditionTree constructor.
+     *
+     * @param string $parameterStartMarker Parametrized string start marker
+     * @param string $parameterEndMarker Parametrized string end marker
+     */
+    public function __construct(string $parameterStartMarker = self::PARAMETER_START, string $parameterEndMarker = self::PARAMETER_END)
+    {
+        $this->parameterStartMarker = $parameterStartMarker;
+        $this->parameterEndMarker = $parameterEndMarker;
+    }
+
     /**
      * Build similarity strings tree.
      *
@@ -126,7 +144,7 @@ class StringConditionTree
         for ($z = 0, $length = strlen($shortestString); $z < $length; $z++) {
             // Pattern support
             // TODO: Probably can be optimized
-            if ($isPattern || $shortestString{$z} === '{') {
+            if ($isPattern || $shortestString{$z} === self::PARAMETER_START) {
                 $isPattern = true;
 
                 // Concatenate longest matching prefix
@@ -140,7 +158,7 @@ class StringConditionTree
                 }
 
                 // If pattern id closed unset flag fro special behaviour
-                if ($shortestString{$z} === '}') {
+                if ($shortestString{$z} === self::PARAMETER_END) {
                     $isPattern = false;
                 }
             } else {
