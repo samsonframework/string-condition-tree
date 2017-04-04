@@ -18,17 +18,32 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
     protected $expected = [
         'p' => [
             '@self' => 'p',
-            '/test' => [
-                '/' => ['@self'=> 'p/test/'],
-                '-me/' => ['@self' => 'p/test-me/']
+            '/' => [
+                'test' => [
+                    '/' => ['@self'=> 'p/test/'],
+                    '-me/' => ['@self' => 'p/test-me/']
+                ],
+                '{parameter}/' => [
+                    '@self' => 'p/{parameter}/',
+                    'name' => ['@self' => 'p/{parameter}/name'],
+                ],
+                '{id:d+}' => ['@self' => 'p/{id:d+}'],
+            ],
+            '/{id}' => [
+                '@self' => 'p/{id}',
+                '/' => ['@self' => 'p/{id}/']
             ],
         ],
         '/' => [
             '@self' => '/',
             't' => [
-                'est/string' => [
-                    '@self' => '/test/string',
-                    '/inner' => ['@self' => '/test/string/inner']
+                'est/' => [
+                    'string' => [
+                        '@self' => '/test/string',
+                        '/inner' => ['@self' => '/test/string/inner']
+                    ],
+                    '{user_id}/' => ['@self' => '/test/{user_id}/'],
+                    'user_id/' => ['@self' => '/test/user_id/']
                 ],
                 'ube/string' => ['@self' => '/tube/string']
             ],
@@ -56,6 +71,13 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         'p' => '#9',
         'p/test/' => '#10',
         'p/test-me/' => '#11',
+        'p/{id}' => '#12',
+        'p/{id}/' => '#13',
+        'p/{id:d+}' => '#14',
+        'p/{parameter}/' => '#15',
+        'p/{parameter}/name' => '#16',
+        '/test/{user_id}/' => '#17',
+        '/test/user_id/' => '#18'
     ];
 
     public function setUp()
@@ -66,6 +88,6 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
     public function testProcess()
     {
         $nodes = $this->sct->process(array_keys($this->input))->toArray();
-        $this->assertEquals($this->expected, $nodes[StringConditionTree::ROOT_NAME]);
+        $this->assertEquals($this->expected, $nodes);
     }
 }

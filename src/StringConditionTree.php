@@ -46,6 +46,8 @@ class StringConditionTree
          */
         $this->innerProcessor(self::ROOT_NAME, $input, $this->debug = new TreeNode());
 
+        $this->debug = $this->debug->children[self::ROOT_NAME];
+
         return $this->debug;
     }
 
