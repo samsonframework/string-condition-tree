@@ -58,7 +58,7 @@ class StringConditionTree
      */
     protected function prefixLength(string $prefix): int
     {
-        return strpos($prefix, self::PARAMETER_START) ? PHP_INT_MAX : strlen($prefix);
+        return strpos($prefix, self::PARAMETER_START) !== false ? PHP_INT_MAX : strlen($prefix);
     }
 
     /**
@@ -274,6 +274,11 @@ class StringConditionTree
          * After filtering LMPs remove LMP from matched string arrays
          */
         $longestPrefixes = $this->removeKeyFromArrayStrings($longestPrefixes, $selfMarker);
+
+        /**
+         * Sort LMPs(array keys) ascending by key length
+         */
+        $this->sortArrayByKeys($longestPrefixes);
 
         /**
          * If we have self marker as an input string - create LMP for it
