@@ -144,7 +144,7 @@ class StringConditionTree
         for ($z = 0, $length = strlen($shortestString); $z < $length; $z++) {
             // Pattern support
             // TODO: Probably can be optimized
-            if ($isPattern || $shortestString{$z} === self::PARAMETER_START) {
+            if ($isPattern || $shortestString{$z} === $this->parameterStartMarker) {
                 $isPattern = true;
 
                 // Concatenate longest matching prefix
@@ -158,7 +158,7 @@ class StringConditionTree
                 }
 
                 // If pattern id closed unset flag fro special behaviour
-                if ($shortestString{$z} === self::PARAMETER_END) {
+                if ($shortestString{$z} === $this->parameterEndMarker) {
                     $isPattern = false;
                 }
             } else {
