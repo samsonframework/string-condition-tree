@@ -256,11 +256,6 @@ class StringConditionTree
             }
         }
 
-        if (array_key_exists('{param}-{parameter}', $longestPrefixes)) {
-            var_dump(1);
-        }
-
-
         /**
          * Sort LMPs(array keys) ascending by key length
          */
