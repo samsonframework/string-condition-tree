@@ -141,6 +141,7 @@ class StringConditionTree
 
         // Iterate initial string characters
         $isPattern = false;
+        $parametrizedPrefix = '';
         for ($z = 0, $length = strlen($shortestString); $z < $length; $z++) {
             // Pattern support
             // TODO: Probably can be optimized
@@ -148,17 +149,19 @@ class StringConditionTree
                 $isPattern = true;
 
                 // Concatenate longest matching prefix
-                $longestPrefix .= $shortestString{$z};
+                $parametrizedPrefix .= $shortestString{$z};
 
                 // Compare characters with compared string
                 if ($shortestString{$z} !== $longestString{$z}) {
                     // Clear pattern as pattern characters mismatch
-                    $longestPrefix = '';
+                    $parametrizedPrefix = '';
                     break;
                 }
 
                 // If pattern id closed unset flag fro special behaviour
                 if ($shortestString{$z} === $this->parameterEndMarker) {
+                    // If parametrized part ended append to longest matching prefix
+                    $longestPrefix .= $parametrizedPrefix;
                     $isPattern = false;
                 }
             } else {
@@ -193,7 +196,7 @@ class StringConditionTree
             foreach ($values as $string) {
                 $newString = substr($string, $lmpLength);
 
-                if ($newString === '' || $string === $selfMarker) {
+                if ($newString === false || $newString === '' || $string === $selfMarker) {
                     $result[$key][] = $selfMarker;
                 } else {
                     $result[$key][] = $newString;
