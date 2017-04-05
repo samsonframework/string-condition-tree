@@ -123,24 +123,24 @@ class StructureSorter
         $maxStructureSize = $this->equalizeStructures($initial, $compared);
 
         // Iterate every structure group
-        for ($i = 0; $i < $maxStructureSize; $i++) {
-            // If initial structure has NPCG than it has higher priority
-            if ($initial[$i][0] > $compared[$i][0]) {
-                return -1;
-            }
+        //for ($i = 0; $i < $maxStructureSize; $i++) {
+        foreach ($initial as $key => $initialGroup) {
+            $comparedGroup = $compared[$key];
 
-            // If compared structure has NPCG than it has higher priority
-            if ($initial[$i][0] < $compared[$i][0]) {
-                return 1;
+            // If initial structure has NPCG than it has higher priority
+            $return = $this->compareCSGData($initialGroup, $comparedGroup, self::G_VARIABLE, 0);
+
+            if ($return !== 0) {
+                return $return;
             }
 
             // Compare NOT starting NPCG length
-            if ($i > 0 && $initial[$i][0] === 1) {
-                if ($initial[$i][1] > $compared[$i][1]) {
+            if ($key > 0 && $initialGroup[0] === 1) {
+                if ($initialGroup[1] > $comparedGroup[1]) {
                     return -1;
                 }
 
-                if ($initial[$i][1] < $compared[$i][1]) {
+                if ($initialGroup[1] < $comparedGroup[1]) {
                     return 1;
                 }
             }
@@ -195,6 +195,34 @@ class StructureSorter
     }
 
     /**
+     * Compare longer CGS considering that:
+     * - Shortest fixed CGS should have higher priority
+     * - Longest variable CGS should have higher priority
+     *
+     * @param array $initialGroup  Initial CGS
+     * @param array $comparedGroup Compared CGS
+     * @param int   $type          Fixed/Variable CGS
+     * @param int   $dataIndex CSG data index
+     *
+     * @return int 0 if initial CGS is not longer than compared,
+     *                  otherwise -1/1 depending on CGS type.
+     */
+    private function compareCSGData(array $initialGroup, array $comparedGroup, int $type, int $dataIndex = 1)
+    {
+        // Compare character group length
+        if ($initialGroup[$dataIndex] > $comparedGroup[$dataIndex]) {
+            return ($type === self::G_FIXED ? 1 : -1);
+        }
+
+        if ($initialGroup[$dataIndex] < $comparedGroup[$dataIndex]) {
+            return ($type === self::G_FIXED ? -1 : 1);
+        }
+
+        // Cannot define
+        return 0;
+    }
+
+    /**
      * Compare two character group structure(CGS) length and define
      * which one is longer.
      *
@@ -213,7 +241,7 @@ class StructureSorter
             $comparedGroup = $compared[$index];
             // Check if character group matches passed character group type
             if ($initialGroup[0] === $type) {
-                $return = $this->compareLength($initialGroup, $comparedGroup, $type);
+                $return = $this->compareCSGData($initialGroup, $comparedGroup, $type);
 
                 // Compare character group length
                 if ($return !== 0) {
@@ -225,33 +253,6 @@ class StructureSorter
         }
 
         // CGS have equal length
-        return 0;
-    }
-
-    /**
-     * Compare longer CGS considering that:
-     * - Shortest fixed CGS should have higher priority
-     * - Longest variable CGS should have higher priority
-     *
-     * @param array $initialGroup Initial CGS
-     * @param array $comparedGroup Compared CGS
-     * @param int   $type Fixed/Variable CGS
-     *
-     * @return int 0 if initial CGS is not longer than compared,
-     *                  otherwise -1/1 depending on CGS type.
-     */
-    private function compareLength(array $initialGroup, array $comparedGroup, int $type)
-    {
-        // Compare character group length
-        if ($initialGroup[1] > $comparedGroup[1]) {
-            return ($type === self::G_FIXED ? 1 : -1);
-        }
-
-        if ($initialGroup[1] < $comparedGroup[1]) {
-            return ($type === self::G_FIXED ? -1 : 1);
-        }
-
-        // Cannot define
         return 0;
     }
 }

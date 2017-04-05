@@ -131,10 +131,12 @@ class StringConditionTree
     protected function getLMPCollection(array $input): array
     {
         $longestPrefixes = [];
-        foreach ($input as $initial) {
+        for ($i = 0, $length = count($input); $i < $length; $i++) {
+            $initial = $input[$i];
             $foundLMP = false;
-            foreach ($input as $compared) {
-                if ($initial !== $compared) {
+            for ($j = 0; $j < $length; $j++) {
+                $compared = $input[$j];
+                if ($compared !== $initial) {
                     $longestMatchedPrefix = $this->getLongestMatchingPrefix($initial, $compared);
 
                     // We have found at least one matching character between strings
@@ -188,10 +190,11 @@ class StringConditionTree
 
                 // Compare characters with compared string
                 if ($shortestString{$z} !== $longestString{$z}) {
+                    $parametrizedPrefix = '';
                     break;
                 }
 
-                // If pattern id closed unset flag fro special behaviour
+                // If pattern id closed unset flag for special behaviour
                 if ($shortestString{$z} === $this->parameterEndMarker) {
                     // If parametrized part ended append to longest matching prefix
                     $longestPrefix .= $parametrizedPrefix;
