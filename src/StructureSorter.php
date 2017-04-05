@@ -120,10 +120,7 @@ class StructureSorter
      */
     protected function compareStringStructure(array $initial, array $compared): int
     {
-        $maxStructureSize = $this->equalizeStructures($initial, $compared);
-
         // Iterate every structure group
-        //for ($i = 0; $i < $maxStructureSize; $i++) {
         foreach ($initial as $key => $initialGroup) {
             $comparedGroup = $compared[$key];
 
@@ -158,40 +155,6 @@ class StructureSorter
         }
 
         return $return;
-    }
-
-    /**
-     * Make CGS equals size.
-     *
-     * @param array $initial Initial CGS, will be changed
-     * @param array $compared Compared CGS, will be changed
-     *
-     * @return int Longest CGS size(now they are both equal)
-     */
-    protected function equalizeStructures(array &$initial, array &$compared): int
-    {
-        $size = max(count($initial), count($compared));
-
-        // Make structures same size preserving previous existing structure value
-        for ($i = 1; $i < $size; $i++) {
-            $this->fillMissingStructureGroup($initial, $i);
-            $this->fillMissingStructureGroup($compared, $i);
-        }
-
-        return $size;
-    }
-
-    /**
-     * Fill CSG with previous group value if not present.
-     *
-     * @param array $groups CSG for filling
-     * @param int   $index  CSG index
-     */
-    private function fillMissingStructureGroup(array &$groups, int $index)
-    {
-        if (!array_key_exists($index, $groups)) {
-            $groups[$index] = $groups[$index - 1];
-        }
     }
 
     /**
@@ -254,5 +217,39 @@ class StructureSorter
 
         // CGS have equal length
         return 0;
+    }
+
+    /**
+     * Make CGS equals size.
+     *
+     * @param array $initial Initial CGS, will be changed
+     * @param array $compared Compared CGS, will be changed
+     *
+     * @return int Longest CGS size(now they are both equal)
+     */
+    protected function equalizeStructures(array &$initial, array &$compared): int
+    {
+        $size = max(count($initial), count($compared));
+
+        // Make structures same size preserving previous existing structure value
+        for ($i = 1; $i < $size; $i++) {
+            $this->fillMissingStructureGroup($initial, $i);
+            $this->fillMissingStructureGroup($compared, $i);
+        }
+
+        return $size;
+    }
+
+    /**
+     * Fill CSG with previous group value if not present.
+     *
+     * @param array $groups CSG for filling
+     * @param int   $index  CSG index
+     */
+    private function fillMissingStructureGroup(array &$groups, int $index)
+    {
+        if (!array_key_exists($index, $groups)) {
+            $groups[$index] = $groups[$index - 1];
+        }
     }
 }
