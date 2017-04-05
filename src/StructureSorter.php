@@ -136,12 +136,11 @@ class StructureSorter
 
             // Compare NOT starting NPCG length
             if ($key > 0 && $initialGroup[0] === 1) {
-                if ($initialGroup[1] > $comparedGroup[1]) {
-                    return -1;
-                }
+                // If initial structure has NPCG than it has higher priority
+                $return = $this->compareCSGData($initialGroup, $comparedGroup, self::G_VARIABLE, 1);
 
-                if ($initialGroup[1] < $comparedGroup[1]) {
-                    return 1;
+                if ($return !== 0) {
+                    return $return;
                 }
             }
 
