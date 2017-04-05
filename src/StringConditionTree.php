@@ -70,66 +70,147 @@ class StringConditionTree
     }
 
     /**
-     * Prefix length counter for array sorting callback to sort by prefix length and put
-     * parametrized prefixed at the end.
+     * Buil string character group structure considering parametrized
+     * and not parametrized characted groups and their length(PCG, NPCG).
      *
      * @param string $prefix Prefix string
      *
-     * @return int Prefix length
+     * @return array String character groups structure
      */
-    protected function prefixLength(string $prefix): int
+    protected function getPrefixStructure(string $prefix): array
     {
-        static $len = [];
+        /** @var array $structureMatrix String PCG(0)/NPCG(1) structure matrix for comparison */
+        $structureMatrix = [];
+
+        // Flags for showing current string character group
+        /** @var bool $isPCG Flags showing PCG started */
+        $isPCG = false;
+        /** @var bool $isNPCG Flags showing NPCG started */
+        $isNPCG = true;
+
+        // Pointer to current CG to count string NPCG length
+        $currentCG = 0;
 
         /**
-         * Parametrized string comparison.
-         *
-         * We need to follow rules:
-         *  1. Strings starting with not parametrized character(NPC)
-         *  should have lower value than string starting with parametrized character groups(PCg).
-         *  2. Strings having multiple PCG should be ordered according PCG count.
-         *  3. Strings starting with NPC and having PCG should have more priority
-         *  over only PCG strings.
+         * TODO: Try to find PCG filter :... pattern and process it also as
+         * PCG with filters should be prioritized over PSG without filter
+         * even if filter is .*
          */
 
-        $value = 0;
-        $isParameter = false;
-        $parametersCount = substr_count($prefix, $this->parameterStartMarker);
-
+        // Iterate string by characters
         for ($i = 0, $length = strlen($prefix); $i < $length; $i++) {
-            if ($prefix{$i} === $this->parameterStartMarker) {
-                $isParameter = true;
-                $value += self::PARAMETER_COF / $parametersCount;
-            } elseif ($prefix{$i} === $this->parameterEndMarker) {
-                $isParameter = false;
-            } elseif (!$isParameter) {
-                $value += 2 * ord($prefix{$i});
+            if (!$isPCG && $prefix{$i} === $this->parameterStartMarker) {
+                $isPCG = true;
+                $isNPCG = false;
+                $structureMatrix[] = [0,0,$prefix];
+                $currentCG = &$structureMatrix[count($structureMatrix)-1][1];
+            } elseif ($isPCG && $prefix{$i} === $this->parameterEndMarker) {
+                $isPCG = false;
+                $isNPCG = true;
+            } elseif ($isNPCG) {
+                $isNPCG = false;
+                $structureMatrix[] = [1,0,$prefix];
+                $currentCG = &$structureMatrix[count($structureMatrix)-1][1];
             }
+
+            // Store current character group length
+            $currentCG++;
         }
 
-        $len[$prefix] = (int)$value;
-
-            /*strpos($prefix, $this->parameterStartMarker) !== false
-            // Count length considering amount of parameters and total prefix length
-            ? (substr_count($prefix, $this->parameterStartMarker) * self::PARAMETER_COF) - strlen($prefix)
-            : strlen($prefix);*/
-
-        if ($prefix === '{id}/{search}') {
-            var_dump(1);
-        }
-
-        return $len[$prefix];
+        return $structureMatrix;
     }
 
     /**
-     * Sort array by key string lengths.
+     * Compare string structures.
+     *
+     * @param array $initial Initial string structure
+     * @param array $compared Compared string structure
+     *
+     * @return int Result of array elements comparison
+     */
+    protected function compareStringStructure(array $initial, array $compared): int
+    {
+        $maxStructureSize = max(count($initial), count($compared));
+
+        // Make structures same size preserving previous existing structure value
+        for ($i = 1; $i < $maxStructureSize; $i++) {
+            if (!array_key_exists($i, $initial)) {
+                $initial[$i] = $initial[$i-1];
+            }
+            if (!array_key_exists($i, $compared)) {
+                $compared[$i] = $compared[$i-1];
+            }
+        }
+
+        // Iterate every structure group
+        for ($i = 0; $i < $maxStructureSize; $i++) {
+            // If initial structure has NPCG than it has higher priority
+            if ($initial[$i][0] > $compared[$i][0]) {
+                return -1;
+            }
+
+            // If compared structure has NPCG than it has higher priority
+            if ($initial[$i][0] < $compared[$i][0]) {
+                return 1;
+            }
+
+            // They are equal continue to next structure group comparison
+        }
+
+        // If both structures are equal compare lengths of NPCG
+        for ($i = 0; $i < $maxStructureSize; $i++) {
+            // If current CG is NPCG
+            if ($initial[$i][0] === 1) {
+                if ($initial[$i][1] > $compared[$i][1]) {
+                    return 1;
+                }
+
+                if ($initial[$i][1] < $compared[$i][1]) {
+                    return -1;
+                }
+            }
+
+            // Current NPCG character groups have equal length - continue
+        }
+
+        // If both structures are equal and NPCG length are equal - compare lengths of PCG
+        for ($i = 0; $i < $maxStructureSize; $i++) {
+            // If current CG is PCG
+            if ($initial[$i][0] === 0) {
+                if ($initial[$i][1] > $compared[$i][1]) {
+                    return -1;
+                }
+
+                if ($initial[$i][1] < $compared[$i][1]) {
+                    return 1;
+                }
+            }
+
+            // Current PCG character groups have equal length - continue
+        }
+
+        // Structures are absolutely equal
+        return 0;
+    }
+
+    /**
+     * Sort strings array considering PCG and NPCG string structure.
      *
      * @param array $input Input array for sorting
-     * @param int   $order Sorting order
+     * @return array Sorted array
      */
-    protected function sortArrayByKeys(array &$input, int $order = SORT_ASC)
+    protected function sortArrayByKeys(array &$input)
     {
-        array_multisort(array_map([$this, 'prefixLength'], array_keys($input)), $order, $input);
+        $prefixes = array_map([$this, 'getPrefixStructure'], array_keys($input));
+
+        usort($prefixes, [$this, 'compareStringStructure']);
+
+        $result = [];
+        foreach ($prefixes as $sortingData) {
+            $result[$sortingData[0][2]] = $input[$sortingData[0][2]];
+        }
+
+        return $result;
     }
 
     /**
@@ -301,7 +382,7 @@ class StringConditionTree
         /**
          * Sort LMPs(array keys) ascending by key length
          */
-        $this->sortArrayByKeys($longestPrefixes);
+        $longestPrefixes = $this->sortArrayByKeys($longestPrefixes);
 
         /**
          * Iterate all sorted LMP strings and remove duplicates from LMP string ordered lower
@@ -344,7 +425,7 @@ class StringConditionTree
         /**
          * Sort LMPs(array keys) ascending by key length
          */
-        $this->sortArrayByKeys($longestPrefixes);
+        $longestPrefixes = $this->sortArrayByKeys($longestPrefixes);
 
         /**
          * If we have self marker as an input string - create LMP for it
