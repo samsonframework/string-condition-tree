@@ -368,6 +368,21 @@ class StringConditionTree
     }
 
     /**
+     * Iterate LMP and remove duplicate strings in other LMPs.
+     *
+     * @param array $prefixes LMP collection, returning value
+     */
+    protected function filterLMPStrings(array &$prefixes)
+    {
+        $keys = array_keys($prefixes);
+        for ($i = 0, $length = count($keys); $i < $length; $i++) {
+            for ($j = $i + 1; $j < $length; $j++) {
+                $this->removeDuplicatesInSubArray($prefixes[$keys[$i]], $prefixes[$keys[$j]]);
+            }
+        }
+    }
+
+    /**
      * Get collection of grouped longest matching prefixes with strings sub-array.
      *
      * @param array $input Input strings array
@@ -427,12 +442,8 @@ class StringConditionTree
         /**
          * Iterate all sorted LMP strings and remove duplicates from LMP string ordered lower
          */
-        $keys = array_keys($longestPrefixes);
-        for ($i = 0, $length = count($keys); $i < $length; $i++) {
-            for ($j = $i + 1; $j < $length; $j++) {
-                $this->removeDuplicatesInSubArray($longestPrefixes[$keys[$i]], $longestPrefixes[$keys[$j]]);
-            }
-        }
+        $this->filterLMPStrings($longestPrefixes);
+
 
         /**
          * After filtering LMPs remove LMP from matched string arrays
