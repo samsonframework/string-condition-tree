@@ -31,6 +31,9 @@ class StringConditionTree
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
 
+    /** @var array Collection of input string => identifier */
+    protected $source;
+
     /** @var string Parametrized string start marker */
     protected $parameterStartMarker = self::PARAMETER_START;
 
@@ -58,11 +61,13 @@ class StringConditionTree
      */
     public function process(array $input): TreeNode
     {
+        $this->source = $input;
+
         /**
          * We need to find first matching character that present at least at one two string
          * to start building tree. Otherwise there is no reason to build tree.
          */
-        $this->innerProcessor(self::ROOT_NAME, $input, $this->debug = new TreeNode());
+        $this->innerProcessor(self::ROOT_NAME, array_keys($input), $this->debug = new TreeNode());
 
         $this->debug = $this->debug->children[self::ROOT_NAME];
 
@@ -231,9 +236,9 @@ class StringConditionTree
      * @param array $array  Array for adding unique value
      * @param bool  $strict Strict uniqueness check
      *
+     * @return bool True if unique value was added
      * @see in_array();
      *
-     * @return bool True if unique value was added
      */
     protected function addUniqueToArray($value, &$array, bool $strict = true)
     {
@@ -403,8 +408,8 @@ class StringConditionTree
      */
     protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = self::SELF_NAME)
     {
-        // Create tree node
-        $newChild = $result->append($prefix);
+        // Create tree node. Pass string identifier if present
+        $newChild = $result->append($prefix, $this->source[$result->fullValue.$prefix] ?? '');
 
         /**
          * Iterate all combinations of strings and group by LMP
@@ -418,7 +423,6 @@ class StringConditionTree
                     // We have found at least one matching character between strings
                     if ($longestMatchedPrefix !== '') {
                         $this->addUniqueToArray($initial, $longestPrefixes[$longestMatchedPrefix]);
-                        $this->addUniqueToArray($compared, $longestPrefixes[$longestMatchedPrefix]);
                     }
                 }
             }

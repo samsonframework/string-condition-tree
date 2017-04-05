@@ -15,8 +15,11 @@ class TreeNode implements \Iterator
     /** @var self Pointer to parent node */
     public $parent;
 
-    /** @var mixed Tree node value */
+    /** @var string Tree node value */
     public $value;
+
+    /** @var string Tree node identifier */
+    public $identifier;
 
     /** @var string Tree node full value */
     public $fullValue;
@@ -27,13 +30,15 @@ class TreeNode implements \Iterator
     /**
      * TreeNode constructor.
      *
-     * @param string   $value Node value
+     * @param string   $value  Node value
+     * @param string   $identifier Node identifier
      * @param TreeNode $parent Pointer to parent node
      */
-    public function __construct(string $value = '', self $parent = null)
+    public function __construct(string $value = '', string $identifier = '', self $parent = null)
     {
         $this->value = $value;
         $this->parent = $parent;
+        $this->identifier = $identifier;
 
         if ($parent !== null) {
             $this->fullValue = $parent->fullValue . ($value !== StringConditionTree::SELF_NAME ? $value : '');
@@ -44,12 +49,13 @@ class TreeNode implements \Iterator
      * Append new node instance and return it.
      *
      * @param string $value Node value
+     * @param string $identifier Node identifier
      *
-     * @return self New created node instance
+     * @return TreeNode New created node instance
      */
-    public function append(string $value): self
+    public function append(string $value, string $identifier): self
     {
-        return $this->children[$value] = new self($value, $this);
+        return $this->children[$value] = new self($value, $identifier, $this);
     }
 
     /**
@@ -64,7 +70,7 @@ class TreeNode implements \Iterator
             if ($key !== StringConditionTree::SELF_NAME) {
                 $result[$key] = $child->toArray();
             } else { // Store full node value
-                $result[$key] = $this->fullValue;
+                $result[$key] = $this->identifier;
             }
         }
 

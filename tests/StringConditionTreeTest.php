@@ -17,56 +17,56 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
     /** @var array Expected string condition tree */
     protected $expected = [
         'p' => [
-            '@self' => 'p',
+            '@self' => '#9',
             '/' => [
                 'test' => [
-                    '/' => ['@self'=> 'p/test/'],
-                    '-me/' => ['@self' => 'p/test-me/']
+                    '/' => ['@self'=> '#10'],
+                    '-me/' => ['@self' => '#11']
                 ],
                 '{parameter}/' => [
-                    '@self' => 'p/{parameter}/',
-                    'name' => ['@self' => 'p/{parameter}/name'],
+                    '@self' => '#15',
+                    'name' => ['@self' => '#16'],
                 ],
-                '{id:d+}' => ['@self' => 'p/{id:d+}'],
-                '{id}' => [// @molodyko - This is very tuff =)
-                    '@self' => 'p/{id}',
-                    '/' => ['@self' => 'p/{id}/']
+                '{id:d+}' => ['@self' => '#14'],
+                '{id}' => [
+                    '@self' => '#12',
+                    '/' => ['@self' => '#13']
                 ],
             ]
         ],
         '/' => [
-            '@self' => '/',
+            '@self' => '#6',
             't' => [
                 'est/' => [
                     'string' => [
-                        '@self' => '/test/string',
-                        '/inner' => ['@self' => '/test/string/inner']
+                        '@self' => '#1',
+                        '/inner' => ['@self' => '#2']
                     ],
-                    'user_id/' => ['@self' => '/test/user_id/'],
-                    '{user_id}/' => ['@self' => '/test/{user_id}/'],
+                    'user_id/' => ['@self' => '#18'],
+                    '{user_id}/' => ['@self' => '#17'],
                 ],
-                'ube/string' => ['@self' => '/tube/string']
+                'ube/string' => ['@self' => '#3']
             ],
             'cms/gift/' => [
-                'form/{id}' => ['@self' => '/cms/gift/form/{id}'],
-                '{id}/{search}' => ['@self' => '/cms/gift/{id}/{search}'],
+                'form/{id}' => ['@self' => '#22'],
+                '{id}/{search}' => ['@self' => '#23'],
             ],
             'second-test/' => [
-                'inner' => ['@self' => '/second-test/inner'],
-                'string/inner' => ['@self' => '/second-test/string/inner'],
+                'inner' => ['@self' => '#5'],
+                'string/inner' => ['@self' => '#4'],
             ]
         ],
         'test/' => [
-            '@self' => 'test/',
-            'this-please' => ['@self' => 'test/this-please']
+            '@self' => '#7',
+            'this-please' => ['@self' => '#8']
         ],
-        '{z}/test/{y:\d+}' => ['@self' => '{z}/test/{y:\d+}'],
-        '{p}/{p}/form' => ['@self' => '{p}/{p}/form'],
+        '{z}/test/{y:\d+}' => ['@self' => '#25'],
+        '{p}/{p}/form' => ['@self' => '#24'],
         '{param}-{parameter}' => [
-            '@self' => '{param}-{parameter}',
-            '/test' => ['@self' => '{param}-{parameter}/test']
+            '@self' => '#20',
+            '/test' => ['@self' => '#21']
         ],
-        '{parameter}' => ['@self' => '{parameter}'],
+        '{parameter}' => ['@self' => '#19'],
     ];
 
     /** @var array Input strings array */
@@ -105,7 +105,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
-        $nodes = $this->sct->process(array_keys($this->input))->toArray();
+        $nodes = $this->sct->process($this->input)->toArray();
 
         $this->assertSame($this->expected, $nodes);
     }
