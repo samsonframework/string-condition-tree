@@ -104,7 +104,6 @@ class StringConditionTree
          */
         $this->filterLMPStrings($longestPrefixes);
 
-
         /**
          * After filtering LMPs remove LMP from matched string arrays
          */
