@@ -134,6 +134,7 @@ class StructureSorter
                 return $return;
             }
 
+            // TODO: Create test! as this works only with router
             // Compare NOT starting NPCG length
             if ($key > 0 && $initialGroup[0] === 1) {
                 // If initial structure has NPCG than it has higher priority
