@@ -75,8 +75,8 @@ class StringConditionTree
     }
 
     /**
-     * Buil string character group structure considering parametrized
-     * and not parametrized characted groups and their length(PCG, NPCG).
+     * Build string character group structure considering parametrized
+     * and not parametrized character groups and their length(PCG, NPCG).
      *
      * @param string $prefix Prefix string
      *
@@ -464,9 +464,9 @@ class StringConditionTree
         /**
          * If we have self marker as an input string - create LMP for it
          */
-        if (in_array($selfMarker, $input, true)) {
-            $longestPrefixes = array_merge([$selfMarker => []], $longestPrefixes);
-        }
+//        if (in_array($selfMarker, $input, true)) {
+//            $longestPrefixes = array_merge([$selfMarker => []], $longestPrefixes);
+//        }
 
         /**
          * Recursively iterate current level LMPs

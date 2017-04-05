@@ -63,12 +63,14 @@ class TreeNode extends IterableTreeNode
     public function toArray(): array
     {
         $result = [];
+
+        if ($this->identifier !== '') {
+            $result[StringConditionTree::SELF_NAME] = $this->identifier;
+        }
+
+        /** @var self $child */
         foreach ($this as $key => $child) {
-            if ($key !== StringConditionTree::SELF_NAME) {
-                $result[$key] = $child->toArray();
-            } else { // Store full node value
-                $result[$key] = $this->identifier;
-            }
+            $result[$key] = $child->toArray();
         }
 
         return $result;
