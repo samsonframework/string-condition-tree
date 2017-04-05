@@ -14,7 +14,8 @@
     }
   ],
   "require": {
-    "phpunit/phpunit": "5.*"
+    "phpunit/phpunit": "5.*",
+    "satooshi/php-coveralls": "*"
   },
   "license": "Open Software License (OSL) v 3.0",
   "homepage": "http://samsonos.com/",
