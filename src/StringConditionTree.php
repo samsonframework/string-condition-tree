@@ -45,7 +45,10 @@ class StringConditionTree
      * @param string $parameterStartMarker Parametrized string start marker
      * @param string $parameterEndMarker   Parametrized string end marker
      */
-    public function __construct(string $parameterStartMarker = self::PARAMETER_START, string $parameterEndMarker = self::PARAMETER_END)
+    public function __construct(
+        string $parameterStartMarker = self::PARAMETER_START,
+        string $parameterEndMarker = self::PARAMETER_END
+    )
     {
         $this->parameterStartMarker = $parameterStartMarker;
         $this->parameterEndMarker = $parameterEndMarker;
