@@ -154,6 +154,17 @@ class StringConditionTree
                 return 1;
             }
 
+            // Compare NOT starting NPCG length
+            if ($i > 0 && $initial[$i][0] === 1 ) {
+                if ($initial[$i][1] > $compared[$i][1]) {
+                    return -1;
+                }
+
+                if ($initial[$i][1] < $compared[$i][1]) {
+                    return 1;
+                }
+            }
+
             // They are equal continue to next structure group comparison
         }
 
