@@ -3,7 +3,6 @@
  * Created by Vitaly Iegorov <egorov@samsonos.com>.
  * on 05.04.17 at 11:43
  */
-
 namespace samsonframework\stringconditiontree;
 
 /**
