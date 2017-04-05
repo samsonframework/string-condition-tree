@@ -75,6 +75,4 @@ class TreeNode extends IterableTreeNode
 
         return $result;
     }
-
-
 }
