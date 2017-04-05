@@ -213,9 +213,7 @@ class StructureSorter
             $comparedGroup = $compared[$index];
             // Check if character group matches passed character group type
             if ($initialGroup[0] === $type) {
-                $return = $this->compareLength($initialGroup, $comparedGroup, $type)
-                ?? $this->compareLength($initialGroup, $comparedGroup, $type)
-                ?? 0;
+                $return = $this->compareLength($initialGroup, $comparedGroup, $type);
 
                 // Compare character group length
                 if ($return !== 0) {
@@ -239,7 +237,7 @@ class StructureSorter
      * @param array $comparedGroup Compared CGS
      * @param int   $type Fixed/Variable CGS
      *
-     * @return int|null Null if initial CGS is not longer than compared,
+     * @return int 0 if initial CGS is not longer than compared,
      *                  otherwise -1/1 depending on CGS type.
      */
     private function compareLength(array $initialGroup, array $comparedGroup, int $type)
@@ -249,7 +247,11 @@ class StructureSorter
             return ($type === self::G_FIXED ? 1 : -1);
         }
 
+        if ($initialGroup[1] < $comparedGroup[1]) {
+            return ($type === self::G_FIXED ? -1 : 1);
+        }
+
         // Cannot define
-        return null;
+        return 0;
     }
 }
