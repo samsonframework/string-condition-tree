@@ -3,7 +3,6 @@
  * Created by Vitaly Iegorov <egorov@samsonos.com>.
  * on 05.04.17 at 15:18
  */
-
 namespace samsonframework\stringconditiontree;
 
 /**
@@ -13,6 +12,12 @@ namespace samsonframework\stringconditiontree;
  */
 class StructureSorter
 {
+    /** Variable length characters group */
+    const G_VARIABLE = 0;
+
+    /** Fixed length characters group */
+    const G_FIXED = 1;
+
     /** @var string Parametrized string start marker */
     protected $parameterStartMarker;
 
@@ -169,10 +174,34 @@ class StructureSorter
             // Current NPCG character groups have equal length - continue
         }
 
-        // If both structures are equal and NPCG length are equal - compare lengths of PCG
-        for ($i = 0; $i < $maxStructureSize; $i++) {
-            // If current CG is PCG
-            if ($initial[$i][0] === 0) {
+        $return = $this->compareStructureLengths($maxStructureSize, $initial, $compared, self::G_FIXED);
+        if ($return === 0) {
+            $return = $this->compareStructureLengths($maxStructureSize, $initial, $compared, self::G_VARIABLE);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Compare two character group structure(CGS) length and define
+     * which one is longer.
+     *
+     * @param int   $size CGS size
+     * @param array $initial Initial CGS
+     * @param array $compared Compared CGS
+     * @param int   $type CGS type (Variable|Fixed length)
+     *
+     * @return int -1 if initial CGS longer
+     *             0 if initial and compared CGS are equal
+     *             1 if compared CGS longer
+     */
+    protected function compareStructureLengths(int $size, array $initial, array $compared, int $type = self::G_FIXED): int
+    {
+        // Iterate character group structures
+        for ($i = 0; $i < $size; $i++) {
+            // Check if character group matches passed character group type
+            if ($initial[$i][$type] === $type) {
+                // Compare character group length
                 if ($initial[$i][1] > $compared[$i][1]) {
                     return -1;
                 }
@@ -180,12 +209,12 @@ class StructureSorter
                 if ($initial[$i][1] < $compared[$i][1]) {
                     return 1;
                 }
-            }
 
-            // Current PCG character groups have equal length - continue
+                // Continue to next character group structure
+            }
         }
 
-        // Structures are absolutely equal
+        // Character group structures have equal length
         return 0;
     }
 }
