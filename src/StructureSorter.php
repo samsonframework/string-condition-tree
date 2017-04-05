@@ -149,12 +149,12 @@ class StructureSorter
         }
 
         // Compare fixed length CGS
-        $return = $this->compareStructureLengths($maxStructureSize, $initial, $compared, self::G_FIXED);
+        $return = $this->compareStructureLengths($initial, $compared, self::G_FIXED);
 
         // Fixed CGS are equal
         if ($return === 0) {
             // Compare variable length CGS
-            $return = $this->compareStructureLengths($maxStructureSize, $initial, $compared, self::G_VARIABLE);
+            $return = $this->compareStructureLengths($initial, $compared, self::G_VARIABLE);
         }
 
         return $return;
@@ -198,7 +198,6 @@ class StructureSorter
      * Compare two character group structure(CGS) length and define
      * which one is longer.
      *
-     * @param int   $size CGS size
      * @param array $initial Initial CGS
      * @param array $compared Compared CGS
      * @param int   $type CGS type (Variable|Fixed length)
@@ -207,22 +206,24 @@ class StructureSorter
      *             0 if initial and compared CGS are equal
      *             1 if compared CGS longer
      */
-    protected function compareStructureLengths(int $size, array $initial, array $compared, int $type = self::G_FIXED): int
+    protected function compareStructureLengths(array $initial, array $compared, int $type = self::G_FIXED): int
     {
         // Iterate character group structures
-        for ($i = 0; $i < $size; $i++) {
+        foreach ($initial as $index => $initialGroup) {
+            $comparedGroup = $compared[$index];
             // Check if character group matches passed character group type
-            if ($initial[$i][0] === $type) {
+            if ($initialGroup[0] === $type) {
+//                if (0 === ($return = $this->compareLength($initial, $compared, $i, self::G_FIXED))) {
+//                    $return = $this->compareLength($initial, $compared, $i, self::G_VARIABLE);
+//                }
+
                 // Compare character group length
-                if ($initial[$i][1] > $compared[$i][1]) {
-                    /**
-                     * Shortest fixed CGS should have higher priority
-                     * Longest variable CGS should have higher priority
-                     */
+                if ($initialGroup[1] > $comparedGroup[1]) {
+
                     return ($type === self::G_FIXED ? 1 : -1);
                 }
 
-                if ($initial[$i][1] < $compared[$i][1]) {
+                if ($initialGroup[1] < $comparedGroup[1]) {
                     return ($type === self::G_FIXED ? -1 : 1);
                 }
 
@@ -231,6 +232,20 @@ class StructureSorter
         }
 
         // Character group structures have equal length
+        return 0;
+    }
+
+    private function compareLength(array $initial, array $compared, int $index, int $type): int
+    {
+        // Compare character group length
+        if ($initial[$index][1] > $compared[$index][1]) {
+            /**
+             * Shortest fixed CGS should have higher priority
+             * Longest variable CGS should have higher priority
+             */
+            return ($type === self::G_FIXED ? 1 : -1);
+        }
+
         return 0;
     }
 }
