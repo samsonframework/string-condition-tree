@@ -362,6 +362,38 @@ class StringConditionTree
     }
 
     /**
+     * Analyze strings array and search for missing strings in compared array sub arrays
+     * and add them as compared keys.
+     *
+     * @param array  $input Input array of strings
+     * @param array  $compare Compared array of strings sub-arrays
+     * @param string $selfMarker Self array key marker
+     *
+     * @return array Compared array with missing strings from input as keys => $selfMarker
+     */
+    protected function addMissingStringsAsLMP(array $input, array $compare, string $selfMarker): array
+    {
+        foreach ($input as $string) {
+            $found = false;
+
+            if ($string !== $selfMarker) {
+                foreach ($compare as $strings) {
+                    if (in_array($string, $strings, true)) {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $compare[$string] = [$selfMarker];
+                }
+            }
+        }
+
+        return $compare;
+    }
+
+    /**
      * Recursive string similarity tree builder.
      *
      * @param string   $prefix
@@ -411,22 +443,7 @@ class StringConditionTree
         /**
          * Search for input string that do not have LMP, and add missing as LMP
          */
-        foreach ($input as $string) {
-            $found = false;
-
-            if ($string !== $selfMarker) {
-                foreach ($longestPrefixes as $strings) {
-                    if (in_array($string, $strings, true)) {
-                        $found = true;
-                        break;
-                    }
-                }
-
-                if (!$found) {
-                    $longestPrefixes[$string] = [$selfMarker];
-                }
-            }
-        }
+        $longestPrefixes = $this->addMissingStringsAsLMP($input, $longestPrefixes, $selfMarker);
 
         /**
          * After filtering LMPs remove LMP from matched string arrays
