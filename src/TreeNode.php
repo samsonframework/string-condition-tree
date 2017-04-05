@@ -18,9 +18,6 @@ class TreeNode extends IterableTreeNode
     /** @var string Tree node value */
     public $value;
 
-    /** @var string Tree node identifier */
-    public $identifier;
-
     /** @var string Tree node full value */
     public $fullValue;
 
@@ -50,30 +47,5 @@ class TreeNode extends IterableTreeNode
     public function append(string $value, string $identifier): TreeNode
     {
         return $this->children[$value] = new self($value, $identifier, $this);
-    }
-
-    /**
-     * Convert tree node to associative array.
-     *
-     * @return array Tree structure as hashed array
-     */
-    public function toArray(): array
-    {
-        $result = [];
-
-        // Render @self item for tests
-        if ($this->identifier !== '') {
-            $result[StringConditionTree::SELF_NAME] = $this->identifier;
-        }
-
-        /**
-         * @var string $key
-         * @var TreeNode $child
-         */
-        foreach ($this as $key => $child) {
-            $result[$key] = $child->toArray();
-        }
-
-        return $result;
     }
 }
