@@ -61,11 +61,15 @@ class TreeNode extends IterableTreeNode
     {
         $result = [];
 
+        // Render @self item for tests
         if ($this->identifier !== '') {
             $result[StringConditionTree::SELF_NAME] = $this->identifier;
         }
 
-        /** @var TreeNode $child */
+        /**
+         * @var string $key
+         * @var TreeNode $child
+         */
         foreach ($this as $key => $child) {
             $result[$key] = $child->toArray();
         }
