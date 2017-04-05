@@ -190,7 +190,6 @@ class StringConditionTree
 
                 // Compare characters with compared string
                 if ($shortestString{$z} !== $longestString{$z}) {
-                    $parametrizedPrefix = '';
                     break;
                 }
 
