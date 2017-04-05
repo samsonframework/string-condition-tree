@@ -462,13 +462,6 @@ class StringConditionTree
         $longestPrefixes = $this->sortArrayByKeys($longestPrefixes);
 
         /**
-         * If we have self marker as an input string - create LMP for it
-         */
-//        if (in_array($selfMarker, $input, true)) {
-//            $longestPrefixes = array_merge([$selfMarker => []], $longestPrefixes);
-//        }
-
-        /**
          * Recursively iterate current level LMPs
          */
         foreach ($longestPrefixes as $longestPrefix => $strings) {
