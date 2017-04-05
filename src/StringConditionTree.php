@@ -48,8 +48,7 @@ class StringConditionTree
     public function __construct(
         string $parameterStartMarker = self::PARAMETER_START,
         string $parameterEndMarker = self::PARAMETER_END
-    )
-    {
+    ) {
         $this->parameterStartMarker = $parameterStartMarker;
         $this->parameterEndMarker = $parameterEndMarker;
     }
@@ -71,9 +70,7 @@ class StringConditionTree
          */
         $this->innerProcessor(self::ROOT_NAME, array_keys($input), $this->debug = new TreeNode());
 
-        $this->debug = $this->debug->children[self::ROOT_NAME];
-
-        return $this->debug;
+        return $this->debug->children[self::ROOT_NAME];
     }
 
     /**
