@@ -12,10 +12,6 @@ script:
  - mkdir -p build/logs
  - vendor/bin/phpunit --verbose --coverage-clover=build/logs/coverage.xml
 
-after_script:
- - wget https://scrutinizer-ci.com/ocular.phar
- - php ocular.phar code-coverage:upload --format=php-clover build/logs/coverage.xml
-
 after_success:
  - travis_retry php vendor/bin/coveralls
  - wget https://scrutinizer-ci.com/ocular.phar
