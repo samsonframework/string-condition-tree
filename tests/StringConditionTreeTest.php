@@ -61,6 +61,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
             'this-please' => ['@self' => '#8']
         ],
         '{z}/test/' => [
+            '{y:01\d+}' => ['@self' => '#27'],
             '{y:0\d+}' => ['@self' => '#26'],
             '{y:\d+}' => ['@self' => '#25'],
         ],
@@ -100,6 +101,7 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
         '{p}/{p}/form' => '#24',
         '{z}/test/{y:\d+}' => '#25',
         '{z}/test/{y:0\d+}' => '#26',
+        '{z}/test/{y:01\d+}' => '#27',
     ];
 
     public function setUp()
