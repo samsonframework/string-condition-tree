@@ -31,15 +31,12 @@ class TreeNode extends IterableTreeNode
      * @param string   $identifier Node identifier
      * @param TreeNode $parent Pointer to parent node
      */
-    public function __construct(string $value = '', string $identifier = '', self $parent = null)
+    public function __construct(string $value = '', string $identifier = '', TreeNode $parent = null)
     {
         $this->value = $value;
         $this->parent = $parent;
         $this->identifier = $identifier;
-
-        if ($parent !== null) {
-            $this->fullValue = $parent->fullValue . ($value !== StringConditionTree::SELF_NAME ? $value : '');
-        }
+        $this->fullValue = $parent !== null ? $parent->fullValue . $value : '';
     }
 
     /**
@@ -50,7 +47,7 @@ class TreeNode extends IterableTreeNode
      *
      * @return TreeNode New created node instance
      */
-    public function append(string $value, string $identifier): self
+    public function append(string $value, string $identifier): TreeNode
     {
         return $this->children[$value] = new self($value, $identifier, $this);
     }
@@ -68,7 +65,7 @@ class TreeNode extends IterableTreeNode
             $result[StringConditionTree::SELF_NAME] = $this->identifier;
         }
 
-        /** @var self $child */
+        /** @var TreeNode $child */
         foreach ($this as $key => $child) {
             $result[$key] = $child->toArray();
         }

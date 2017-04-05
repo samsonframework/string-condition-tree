@@ -12,7 +12,7 @@ namespace samsonframework\stringconditiontree;
  */
 class IterableTreeNode implements \Iterator
 {
-    /** @var self[] Collection of tree node children */
+    /** @var IterableTreeNode[] Collection of tree node children */
     public $children = [];
 
     /**
