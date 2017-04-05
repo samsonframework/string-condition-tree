@@ -120,26 +120,34 @@ class StructureSorter
      */
     protected function compareStringStructure(array $initial, array $compared): int
     {
-        // Iterate every structure group
+        $this->equalizeStructures($initial, $compared);
+
+        /**
+         * If all CG in structure are fixed then shortest should have higher priority
+         * If first CG is variable and second is fixed then longest fixed should have higher priority.
+         */
+
+        // Iterate every CGS
         foreach ($initial as $key => $initialGroup) {
             $comparedGroup = $compared[$key];
 
-            // If initial structure has NPCG than it has higher priority
+            /**
+             * FCG has higher priority then VCG.
+             * Compare CG type
+             */
             $return = $this->compareCSGData($initialGroup, $comparedGroup, self::G_VARIABLE, 0);
+
+            // If CG are equal and are fixed type
+            if ($key > 0 && $return === 0 && $initialGroup[0] === self::G_FIXED) {
+                /**
+                 * Compare fixed CG lengths. Fixed CG longer
+                 * should have higher priority.
+                 */
+                $return = $this->compareCSGData($initialGroup, $comparedGroup, self::G_VARIABLE, 1);
+            }
 
             if ($return !== 0) {
                 return $return;
-            }
-
-            // TODO: Create test! as this works only with router
-            // Compare NOT starting NPCG length
-            if ($key > 0 && $initialGroup[0] === 1) {
-                // If initial structure has NPCG than it has higher priority
-                $return = $this->compareCSGData($initialGroup, $comparedGroup, self::G_VARIABLE, 1);
-
-                if ($return !== 0) {
-                    return $return;
-                }
             }
 
             // They are equal continue to next structure group comparison
@@ -158,6 +166,40 @@ class StructureSorter
     }
 
     /**
+     * Make CGS equals size.
+     *
+     * @param array $initial Initial CGS, will be changed
+     * @param array $compared Compared CGS, will be changed
+     *
+     * @return int Longest CGS size(now they are both equal)
+     */
+    protected function equalizeStructures(array &$initial, array &$compared): int
+    {
+        $size = max(count($initial), count($compared));
+
+        // Make structures same size preserving previous existing structure value
+        for ($i = 1; $i < $size; $i++) {
+            $this->fillMissingStructureGroup($initial, $i);
+            $this->fillMissingStructureGroup($compared, $i);
+        }
+
+        return $size;
+    }
+
+    /**
+     * Fill CSG with previous group value if not present.
+     *
+     * @param array $groups CSG for filling
+     * @param int   $index  CSG index
+     */
+    private function fillMissingStructureGroup(array &$groups, int $index)
+    {
+        if (!array_key_exists($index, $groups)) {
+            $groups[$index] = $groups[$index - 1];
+        }
+    }
+
+    /**
      * Compare longer CGS considering that:
      * - Shortest fixed CGS should have higher priority
      * - Longest variable CGS should have higher priority
@@ -170,7 +212,7 @@ class StructureSorter
      * @return int 0 if initial CGS is not longer than compared,
      *                  otherwise -1/1 depending on CGS type.
      */
-    private function compareCSGData(array $initialGroup, array $comparedGroup, int $type, int $dataIndex = 1)
+    private function compareCSGData(array $initialGroup, array $comparedGroup, int $type, int $dataIndex = 1): int
     {
         // Compare character group length
         if ($initialGroup[$dataIndex] > $comparedGroup[$dataIndex]) {
@@ -217,39 +259,5 @@ class StructureSorter
 
         // CGS have equal length
         return 0;
-    }
-
-    /**
-     * Make CGS equals size.
-     *
-     * @param array $initial Initial CGS, will be changed
-     * @param array $compared Compared CGS, will be changed
-     *
-     * @return int Longest CGS size(now they are both equal)
-     */
-    protected function equalizeStructures(array &$initial, array &$compared): int
-    {
-        $size = max(count($initial), count($compared));
-
-        // Make structures same size preserving previous existing structure value
-        for ($i = 1; $i < $size; $i++) {
-            $this->fillMissingStructureGroup($initial, $i);
-            $this->fillMissingStructureGroup($compared, $i);
-        }
-
-        return $size;
-    }
-
-    /**
-     * Fill CSG with previous group value if not present.
-     *
-     * @param array $groups CSG for filling
-     * @param int   $index  CSG index
-     */
-    private function fillMissingStructureGroup(array &$groups, int $index)
-    {
-        if (!array_key_exists($index, $groups)) {
-            $groups[$index] = $groups[$index - 1];
-        }
     }
 }
