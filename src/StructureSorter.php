@@ -174,15 +174,24 @@ class StructureSorter
 
         // Make structures same size preserving previous existing structure value
         for ($i = 1; $i < $size; $i++) {
-            if (!array_key_exists($i, $initial)) {
-                $initial[$i] = $initial[$i - 1];
-            }
-            if (!array_key_exists($i, $compared)) {
-                $compared[$i] = $compared[$i - 1];
-            }
+            $this->fillMissingStructureGroup($initial, $i);
+            $this->fillMissingStructureGroup($compared, $i);
         }
 
         return $size;
+    }
+
+    /**
+     * Fill CSG with previous group value if not present.
+     *
+     * @param array $groups CSG for filling
+     * @param int   $index  CSG index
+     */
+    private function fillMissingStructureGroup(array &$groups, int $index)
+    {
+        if (!array_key_exists($index, $groups)) {
+            $groups[$index] = $groups[$index - 1];
+        }
     }
 
     /**
