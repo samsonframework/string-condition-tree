@@ -410,14 +410,16 @@ class StringConditionTree
          * Iterate all combinations of strings and group by LMP
          */
         $longestPrefixes = [];
-        for ($i = 0, $count = count($input); $i < $count; $i++) {
-            for ($j = $i + 1; $j < $count; $j++) {
-                $longestMatchedPrefix = $this->getLongestMatchingPrefix($input[$i], $input[$j]);
+        foreach ($input as $initial) {
+            foreach ($input as $compared) {
+                if ($initial !== $compared) {
+                    $longestMatchedPrefix = $this->getLongestMatchingPrefix($initial, $compared);
 
-                // We have found at least one matching character between strings
-                if ($longestMatchedPrefix !== '') {
-                    $this->addUniqueToArray($input[$i], $longestPrefixes[$longestMatchedPrefix]);
-                    $this->addUniqueToArray($input[$j], $longestPrefixes[$longestMatchedPrefix]);
+                    // We have found at least one matching character between strings
+                    if ($longestMatchedPrefix !== '') {
+                        $this->addUniqueToArray($initial, $longestPrefixes[$longestMatchedPrefix]);
+                        $this->addUniqueToArray($compared, $longestPrefixes[$longestMatchedPrefix]);
+                    }
                 }
             }
         }
