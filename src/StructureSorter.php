@@ -120,17 +120,7 @@ class StructureSorter
      */
     protected function compareStringStructure(array $initial, array $compared): int
     {
-        $maxStructureSize = max(count($initial), count($compared));
-
-        // Make structures same size preserving previous existing structure value
-        for ($i = 1; $i < $maxStructureSize; $i++) {
-            if (!array_key_exists($i, $initial)) {
-                $initial[$i] = $initial[$i - 1];
-            }
-            if (!array_key_exists($i, $compared)) {
-                $compared[$i] = $compared[$i - 1];
-            }
-        }
+        $maxStructureSize = $this->equalizeStructures($initial, $compared);
 
         // Iterate every structure group
         for ($i = 0; $i < $maxStructureSize; $i++) {
@@ -158,28 +148,41 @@ class StructureSorter
             // They are equal continue to next structure group comparison
         }
 
-        // If both structures are equal compare lengths of NPCG
-        for ($i = 0; $i < $maxStructureSize; $i++) {
-            // If current CG is NPCG
-            if ($initial[$i][0] === 1) {
-                if ($initial[$i][1] > $compared[$i][1]) {
-                    return 1;
-                }
-
-                if ($initial[$i][1] < $compared[$i][1]) {
-                    return -1;
-                }
-            }
-
-            // Current NPCG character groups have equal length - continue
-        }
-
+        // Compare fixed length CGS
         $return = $this->compareStructureLengths($maxStructureSize, $initial, $compared, self::G_FIXED);
+
+        // Fixed CGS are equal
         if ($return === 0) {
+            // Compare variable length CGS
             $return = $this->compareStructureLengths($maxStructureSize, $initial, $compared, self::G_VARIABLE);
         }
 
         return $return;
+    }
+
+    /**
+     * Make CGS equals size.
+     *
+     * @param array $initial Initial CGS, will be changed
+     * @param array $compared Compared CGS, will be changed
+     *
+     * @return int Longest CGS size(now they are both equal)
+     */
+    protected function equalizeStructures(array &$initial, array &$compared): int
+    {
+        $size = max(count($initial), count($compared));
+
+        // Make structures same size preserving previous existing structure value
+        for ($i = 1; $i < $size; $i++) {
+            if (!array_key_exists($i, $initial)) {
+                $initial[$i] = $initial[$i - 1];
+            }
+            if (!array_key_exists($i, $compared)) {
+                $compared[$i] = $compared[$i - 1];
+            }
+        }
+
+        return $size;
     }
 
     /**
@@ -200,14 +203,18 @@ class StructureSorter
         // Iterate character group structures
         for ($i = 0; $i < $size; $i++) {
             // Check if character group matches passed character group type
-            if ($initial[$i][$type] === $type) {
+            if ($initial[$i][0] === $type) {
                 // Compare character group length
                 if ($initial[$i][1] > $compared[$i][1]) {
-                    return -1;
+                    /**
+                     * Shortest fixed CGS should have higher priority
+                     * Longest variable CGS should have higher priority
+                     */
+                    return ($type === self::G_FIXED ? 1 : -1);
                 }
 
                 if ($initial[$i][1] < $compared[$i][1]) {
-                    return 1;
+                    return ($type === self::G_FIXED ? -1 : 1);
                 }
 
                 // Continue to next character group structure
