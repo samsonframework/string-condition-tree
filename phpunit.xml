@@ -14,12 +14,6 @@
         <testsuite name="All">
             <directory>./tests/</directory>
         </testsuite>
-        <!--<testsuite name="generator">-->
-        <!--<file>./tests/definition/builder/DefinitionGenerator.php</file>-->
-        <!--</testsuite>-->
-        <!--<testsuite name="definition">-->
-        <!--<file>./tests/definition</file>-->
-        <!--</testsuite>-->
     </testsuites>
 
     <logging>
