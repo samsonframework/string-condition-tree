@@ -2,15 +2,15 @@
  
 Library for generating optimized strings conditions tree from strings array.
 
-[![Latest Stable Version](https://poser.pugx.org/samsonframework/string-condition-tree/v/stable.svg)](https://packagist.org/packages/samsonframework/behat-extension)
+[![Latest Stable Version](https://poser.pugx.org/samsonframework/string-condition-tree/v/stable.svg)](https://packagist.org/packages/samsonframework/string-condition-tree)
 [![Build Status](https://scrutinizer-ci.com/g/samsonframework/string-condition-tree/badges/build.png?b=master)](https://scrutinizer-ci.com/g/samsonframework/string-condition-tree/build-status/master)
-[![Coverage Status](https://coveralls.io/repos/github/samsonframework/string-condition-tree/badge.svg?branch=master)](https://coveralls.io/github/samsonframework/behat-extension?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/samsonframework/string-condition-tree/badge.svg?branch=master)](https://coveralls.io/github/samsonframework/string-condition-tree?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/samsonframework/string-condition-tree/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/samsonframework/string-condition-tree/?branch=master)
-[![Code Climate](https://codeclimate.com/github/samsonframework/string-condition-tree/badges/gpa.svg)](https://codeclimate.com/github/samsonframework/behat-extension)
-[![Total Downloads](https://poser.pugx.org/samsonframework/string-condition-tree/downloads.svg)](https://packagist.org/packages/samsonframework/behat-extension)
+[![Code Climate](https://codeclimate.com/github/samsonframework/string-condition-tree/badges/gpa.svg)](https://codeclimate.com/github/samsonframework/string-condition-tree)
+[![Total Downloads](https://poser.pugx.org/samsonframework/string-condition-tree/downloads.svg)](https://packagist.org/packages/samsonframework/string-condition-tree)
 [![StyleCI](https://styleci.io/repos/77138455/shield?branch=master)](https://styleci.io/repos/77138455)
-[![Stories in Ready](https://badge.waffle.io/samsonframework/behat-extension.png?label=ready&title=Ready)](https://waffle.io/samsonframework/behat-extension)
-[![Inline docs](http://inch-ci.org/github/samsonframework/behat-extension.svg?branch=master)](http://inch-ci.org/github/samsonframework/behat-extension)
+[![Stories in Ready](https://badge.waffle.io/samsonframework/string-condition-tree.png?label=ready&title=Ready)](https://waffle.io/samsonframework/string-condition-tree)
+[![Inline docs](http://inch-ci.org/github/samsonframework/string-condition-tree.svg?branch=master)](http://inch-ci.org/github/samsonframework/string-condition-tree)
 
 ## Documentation
 Follow [official documentation](http://github.com/samsonframework/string-condition-tree/blob/master/docs/Index.md).
