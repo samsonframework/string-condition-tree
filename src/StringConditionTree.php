@@ -325,28 +325,29 @@ class StringConditionTree
      *
      * @param array  $array Input array of key => [keyStrings...]
      *
-     * @param string $selfMarker Marker for storing self pointer
-     *
      * @return array Processed array with removed keys from beginning of sub arrays
      */
-    protected function removeKeyFromArrayStrings(array $array, string $selfMarker): array
+    protected function removeKeyFromArrayStrings(array $array): array
     {
-        $result = [];
-        /** @var string[] $values */
-        foreach ($array as $key => $values) {
-            $lmpLength = strlen((string)$key);
-            foreach ($values as $string) {
-                $newString = substr($string, $lmpLength);
+        $processed = [];
+        /** @var string[] $stringsCollection */
+        foreach ($array as $keyString => $stringsCollection) {
+            $lmpLength = strlen((string)$keyString);
+            foreach ($stringsCollection as $stringValue) {
+                // Remove LMP from string
+                $newString = substr($stringValue, $lmpLength);
 
-                if ($newString === false || $newString === '' || $string === $selfMarker) {
-                    $result[$key][] = $selfMarker;
-                } else {
-                    $result[$key][] = $newString;
+                // This string has something left besides lmp
+                if ($newString !== false && $newString !== '') {
+                    $processed[$keyString][] = $newString;
+                } elseif (array_key_exists($keyString, $processed) === false) {
+                    // Add empty array to LMP if missing
+                    $processed[$keyString] = [];
                 }
             }
         }
 
-        return $result;
+        return $processed;
     }
 
     /**
@@ -367,35 +368,36 @@ class StringConditionTree
     }
 
     /**
-     * Analyze strings array and search for missing strings in compared array sub arrays
-     * and add them as compared keys.
+     * Get collection of grouped longest matching prefixes with strings sub-array.
      *
-     * @param array  $input Input array of strings
-     * @param array  $compare Compared array of strings sub-arrays
-     * @param string $selfMarker Self array key marker
+     * @param array $input Input strings array
      *
-     * @return array Compared array with missing strings from input as keys => $selfMarker
+     * @return array Longest matching prefixes array
      */
-    protected function addMissingStringsAsLMP(array $input, array $compare, string $selfMarker): array
+    protected function getLMPCollection(array $input): array
     {
-        foreach ($input as $string) {
-            $found = false;
+        $longestPrefixes = [];
+        foreach ($input as $initial) {
+            $foundLMP = false;
+            foreach ($input as $compared) {
+                if ($initial !== $compared) {
+                    $longestMatchedPrefix = $this->getLongestMatchingPrefix($initial, $compared);
 
-            if ($string !== $selfMarker) {
-                foreach ($compare as $strings) {
-                    if (in_array($string, $strings, true)) {
-                        $found = true;
-                        break;
+                    // We have found at least one matching character between strings
+                    if ($longestMatchedPrefix !== '') {
+                        $foundLMP = true;
+                        $this->addUniqueToArray($initial, $longestPrefixes[$longestMatchedPrefix]);
                     }
                 }
+            }
 
-                if (!$found) {
-                    $compare[$string] = [$selfMarker];
-                }
+            // Add initial string as LMP
+            if ($foundLMP === false) {
+                $this->addUniqueToArray($initial, $longestPrefixes[$initial]);
             }
         }
 
-        return $compare;
+        return $longestPrefixes;
     }
 
     /**
@@ -409,24 +411,13 @@ class StringConditionTree
     protected function innerProcessor(string $prefix, array $input, TreeNode $result, $selfMarker = self::SELF_NAME)
     {
         // Create tree node. Pass string identifier if present
-        $newChild = $result->append($prefix, $this->source[$result->fullValue.$prefix] ?? '');
+        $newChild = $result->append($prefix, $this->source[$result->fullValue . $prefix] ?? '');
 
         /**
-         * Iterate all combinations of strings and group by LMP
+         * Iterate all combinations of strings and group by LMP, also if no LMP is
+         * found consider strings as LMP itself
          */
-        $longestPrefixes = [];
-        foreach ($input as $initial) {
-            foreach ($input as $compared) {
-                if ($initial !== $compared) {
-                    $longestMatchedPrefix = $this->getLongestMatchingPrefix($initial, $compared);
-
-                    // We have found at least one matching character between strings
-                    if ($longestMatchedPrefix !== '') {
-                        $this->addUniqueToArray($initial, $longestPrefixes[$longestMatchedPrefix]);
-                    }
-                }
-            }
-        }
+        $longestPrefixes = $this->getLMPCollection($input);
 
         /**
          * Sort LMPs(array keys) ascending by key length
@@ -443,23 +434,10 @@ class StringConditionTree
             }
         }
 
-        // Remove empty LMPs as they are included in smaller LMPs
-        $longestPrefixes = array_filter($longestPrefixes);
-
-        /**
-         * Search for input string that do not have LMP, and add missing as LMP
-         */
-        $longestPrefixes = $this->addMissingStringsAsLMP($input, $longestPrefixes, $selfMarker);
-
         /**
          * After filtering LMPs remove LMP from matched string arrays
          */
-        $longestPrefixes = $this->removeKeyFromArrayStrings($longestPrefixes, $selfMarker);
-
-        /**
-         * Sort LMPs(array keys) ascending by key length
-         */
-        $longestPrefixes = $this->sortArrayByKeys($longestPrefixes);
+        $longestPrefixes = $this->removeKeyFromArrayStrings($longestPrefixes);
 
         /**
          * Recursively iterate current level LMPs
