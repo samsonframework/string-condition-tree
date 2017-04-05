@@ -213,39 +213,43 @@ class StructureSorter
             $comparedGroup = $compared[$index];
             // Check if character group matches passed character group type
             if ($initialGroup[0] === $type) {
-//                if (0 === ($return = $this->compareLength($initial, $compared, $i, self::G_FIXED))) {
-//                    $return = $this->compareLength($initial, $compared, $i, self::G_VARIABLE);
-//                }
+                $return = $this->compareLength($initialGroup, $comparedGroup, $type)
+                ?? $this->compareLength($initialGroup, $comparedGroup, $type)
+                ?? 0;
 
                 // Compare character group length
-                if ($initialGroup[1] > $comparedGroup[1]) {
-
-                    return ($type === self::G_FIXED ? 1 : -1);
+                if ($return !== 0) {
+                    return $return;
                 }
 
-                if ($initialGroup[1] < $comparedGroup[1]) {
-                    return ($type === self::G_FIXED ? -1 : 1);
-                }
-
-                // Continue to next character group structure
+                // Continue to next CGS
             }
         }
 
-        // Character group structures have equal length
+        // CGS have equal length
         return 0;
     }
 
-    private function compareLength(array $initial, array $compared, int $index, int $type): int
+    /**
+     * Compare longer CGS considering that:
+     * - Shortest fixed CGS should have higher priority
+     * - Longest variable CGS should have higher priority
+     *
+     * @param array $initialGroup Initial CGS
+     * @param array $comparedGroup Compared CGS
+     * @param int   $type Fixed/Variable CGS
+     *
+     * @return int|null Null if initial CGS is not longer than compared,
+     *                  otherwise -1/1 depending on CGS type.
+     */
+    private function compareLength(array $initialGroup, array $comparedGroup, int $type)
     {
         // Compare character group length
-        if ($initial[$index][1] > $compared[$index][1]) {
-            /**
-             * Shortest fixed CGS should have higher priority
-             * Longest variable CGS should have higher priority
-             */
+        if ($initialGroup[1] > $comparedGroup[1]) {
             return ($type === self::G_FIXED ? 1 : -1);
         }
 
-        return 0;
+        // Cannot define
+        return null;
     }
 }
