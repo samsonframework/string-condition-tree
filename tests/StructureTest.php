@@ -53,8 +53,8 @@ class StructureTest extends TestCase
         $initial = new Structure('/form-one/');
         $compared = new Structure('/form');
 
-        $this->assertEquals(1, $initial->compare($compared));
-        $this->assertEquals(-1, $compared->compare($initial));
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
     }
 
     public function testInitialVariableLongerThanCompared()
@@ -71,8 +71,8 @@ class StructureTest extends TestCase
         $initial = new Structure('/form/{t:\d+}/profile');
         $compared = new Structure('/form-one/{t:\d+}/profile');
 
-        $this->assertEquals(-1, $initial->compare($compared));
-        $this->assertEquals(1, $compared->compare($initial));
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testInitialFirstFixedEqualToComparedSecondVariableLonger()
@@ -89,8 +89,8 @@ class StructureTest extends TestCase
         $initial = new Structure('{t:\d+}/store');
         $compared = new Structure('{t:\d+}/profile');
 
-        $this->assertEquals(-1, $initial->compare($compared));
-        $this->assertEquals(1, $compared->compare($initial));
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testInitialFirstVariableEqualToComparedWithParameterSecondFixedLonger()
@@ -98,8 +98,8 @@ class StructureTest extends TestCase
         $initial = new Structure('{t:\d+}/store/{p}');
         $compared = new Structure('{t:\d+}/profile');
 
-        $this->assertEquals(-1, $initial->compare($compared));
-        $this->assertEquals(1, $compared->compare($initial));
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testInitialFirstFixedEqualToComparedRestEqual()

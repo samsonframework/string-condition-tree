@@ -44,6 +44,12 @@ abstract class AbstractCharacterGroup
     {
         // Equal character group types - return length comparison
         if ($this->isSameType($group)) {
+            if ($this->isFixed()) {
+                // Fixed character groups with longer length has lower priority
+                return $group->length <=> $this->length;
+            }
+
+            // Variable character groups with longer length has higher priority
             return $this->length <=> $group->length;
         }
 

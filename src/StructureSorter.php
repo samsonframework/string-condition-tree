@@ -4,6 +4,7 @@
  * on 05.04.17 at 15:18
  */
 namespace samsonframework\stringconditiontree;
+use samsonframework\stringconditiontree\string\Structure;
 
 /**
  * Parametrized strings sorting.
@@ -45,6 +46,17 @@ class StructureSorter
      */
     public function sortArrayByKeys(array $input): array
     {
+        $structures = [];
+        foreach (array_keys($input) as $string) {
+            $structures[$string] = new Structure($string);
+        }
+
+        usort($structures, function(Structure $initial, Structure $compared) {
+            $result = $initial->compare($compared);
+            return $result;
+        });
+
+
         // Convert string array keys into structure arrays
         $prefixes = array_map([$this, 'getPrefixStructure'], array_keys($input));
 

@@ -66,8 +66,14 @@ class CharacterGroupTest extends TestCase
 
         // 2nd fixed longer then 1st fixed
         $this->assertEquals(
-            -1,
+            1,
             $this->groups[0]->compare($this->groups[2])
+        );
+
+        // 1st fixed shorter then 2nd fixed
+        $this->assertEquals(
+            -1,
+            $this->groups[2]->compare($this->groups[0])
         );
 
         // 1st fixed equal length to 4th fixed
