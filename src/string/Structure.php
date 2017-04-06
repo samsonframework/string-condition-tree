@@ -40,4 +40,22 @@ class Structure
             }
         }
     }
+
+    /**
+     * Compare structure character groups.
+     *
+     * @param Structure $structure Compared string structure group
+     *
+     * @return int Comparison result
+     */
+    public function compare(Structure $structure): int
+    {
+        $comparedStructureSize = count($structure->groups);
+        foreach ($this->groups as $index => $group) {
+            // Get compared group or last compared character group is size mismatches
+            $comparedGroup = $structure[$index] ?? $structure[$comparedStructureSize-1];
+
+            return $group->compare($comparedGroup);
+        }
+    }
 }

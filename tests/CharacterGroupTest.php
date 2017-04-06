@@ -20,7 +20,7 @@ class CharacterGroupTest extends TestCase
 
     public function setUp()
     {
-        $this->structure = new Structure('/form/{t:\d+}/profile');
+        $this->structure = new Structure('/form/{t:\d+}/profile/{s}/test/');
     }
 
     public function testSameType()
@@ -42,5 +42,38 @@ class CharacterGroupTest extends TestCase
         $this->assertFalse($this->structure->groups[0]->isVariable());
         $this->assertTrue($this->structure->groups[1]->isVariable());
         $this->assertFalse($this->structure->groups[2]->isVariable());
+    }
+
+    public function testCompare()
+    {
+        // Fixed higher than variable
+        $this->assertEquals(
+            1,
+            $this->structure->groups[0]->compare($this->structure->groups[1])
+        );
+
+        // Variable lower than fixed
+        $this->assertEquals(
+            -1,
+            $this->structure->groups[1]->compare($this->structure->groups[0])
+        );
+
+        // 2nd fixed longer then 1st fixed
+        $this->assertEquals(
+            -1,
+            $this->structure->groups[0]->compare($this->structure->groups[2])
+        );
+
+        // 1st fixed equal length to 4th fixed
+        $this->assertEquals(
+            0,
+            $this->structure->groups[4]->compare($this->structure->groups[0])
+        );
+
+        // 4st fixed equal length to 1th fixed
+        $this->assertEquals(
+            0,
+            $this->structure->groups[0]->compare($this->structure->groups[4])
+        );
     }
 }
