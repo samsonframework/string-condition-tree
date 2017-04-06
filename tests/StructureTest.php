@@ -7,7 +7,6 @@ namespace samsonframework\stringconditiontree\tests;
 
 use PHPUnit\Framework\TestCase;
 use samsonframework\stringconditiontree\string\FixedCG;
-use samsonframework\stringconditiontree\string\FixedVariableFixedCG;
 use samsonframework\stringconditiontree\string\Structure;
 use samsonframework\stringconditiontree\string\VariableCG;
 use samsonframework\stringconditiontree\string\VariableFixedCG;
@@ -30,7 +29,9 @@ class StructureTest extends TestCase
                 FixedCG::class,
             ],
             '/form/{t:\d+}/profile' => [
-                FixedVariableFixedCG::class
+                FixedCG::class,
+                VariableFixedCG::class,
+                //FixedVariableFixedCG::class
             ],
             '{p}form/{t:\d+}' => [
                 VariableFixedCG::class,
@@ -153,6 +154,15 @@ class StructureTest extends TestCase
 
         $this->assertEquals(-1, $initial->compare($compared));
         $this->assertEquals(1, $compared->compare($initial));
+    }
+
+    public function testEndsWithFixedAfterVariable3()
+    {
+        $initial = new Structure('{p}/{p}/form');
+        $compared = new Structure('{z}/');
+
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testEndsWithFixedAfterVariable2()

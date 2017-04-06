@@ -55,17 +55,45 @@ class VariableFixedCG extends AbstractCharacterGroup
     {
         /** @var VariableFixedCG $group */
 
-        // Shorter FCG has higher priority
-        $return = $this->fixedCG->length <=> $group->fixedCG->length;
-
         // Fixed CG are equal
-//        if ($return === 0) {
-//            // Longer first VCG has higher priority
-//            $return = $this->variableCG->length <=> $group->variableCG->length;
-//        }
-        // TODO: Check for filtering pattern and VCG with filter has priority
-        // TODO: But how to compare filters if present?
+        if (($return = $this->compareFixed($group)) === 0) {
+            $variableFiltered = $this->variableHasFilter();
+            $comparedFiltered = $group->variableHasFilter();
+
+            // Filtered variable character group has priority
+            if ($variableFiltered) {
+                $return = 1;
+                // Both are filtered
+                if ($comparedFiltered) {
+                    // Longer Variable character group has higher priority
+                    $return = $this->variableCG->length <=> $group->variableCG->length;
+                }
+            } elseif ($comparedFiltered) {
+                $return = -1;
+            }
+        }
 
         return $return;
+    }
+
+    /**
+     * Longer fixed character group has higher priority.
+     *
+     * @param VariableFixedCG $group Compared character group
+     *
+     * @return int Comparison result
+     */
+    private function compareFixed(VariableFixedCG $group): int
+    {
+        // Opposite fixed CG comparison
+        return $this->fixedCG->length <=> $group->fixedCG->length;
+    }
+
+    /**
+     * @return bool Return true if variable character group has filter
+     */
+    public function variableHasFilter(): bool
+    {
+        return strpos($this->variableCG->string, ':') !== false;
     }
 }
