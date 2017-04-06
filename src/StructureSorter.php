@@ -207,7 +207,7 @@ class StructureSorter
      * @param array $initialGroup  Initial CGS
      * @param array $comparedGroup Compared CGS
      * @param int   $type          Fixed/Variable CGS
-     * @param int   $dataIndex CSG data index
+     * @param int   $dataIndex CSG creationData index
      *
      * @return int 0 if initial CGS is not longer than compared,
      *                  otherwise -1/1 depending on CGS type.
