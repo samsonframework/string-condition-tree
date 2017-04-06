@@ -17,18 +17,4 @@ class FixedCharacterGroup extends AbstractCharacterGroup
 
     /** string Character group matching regexp pattern */
     const PATTERN = '(?<'.self::PATTERN_GROUP.'>[^{}]+)';
-
-    /**
-     * @inheritdoc
-     */
-    public function compare(AbstractCharacterGroup $group): int
-    {
-        if ($this->isSameType($group)) { // Equal character group types - return length comparison
-            return $this->length <=> $group->length;
-        } elseif ($this->isFixed()) { // Fixed character groups has higher priority
-            return 1;
-        } else { // Variable character groups has lower priority
-            return -1;
-        }
-    }
 }

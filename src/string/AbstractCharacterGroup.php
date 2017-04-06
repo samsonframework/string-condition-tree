@@ -26,6 +26,37 @@ abstract class AbstractCharacterGroup
     }
 
     /**
+     * @return bool True if character group is variable length otherwise false
+     */
+    public function isVariable(): bool
+    {
+        return $this instanceof VariableCharacterGroup;
+    }
+
+    /**
+     * Compare character groups.
+     *
+     * @param AbstractCharacterGroup $group Compared character group
+     *
+     * @return int Comparison result
+     */
+    public function compare(AbstractCharacterGroup $group): int
+    {
+        // Equal character group types - return length comparison
+        if ($this->isSameType($group)) {
+            return $this->length <=> $group->length;
+        }
+
+        // Fixed character groups has higher priority
+        if ($this->isFixed()) {
+            return 1;
+        }
+
+        // Variable character groups has lower priority
+        return -1;
+    }
+
+    /**
      * Check if compared character group has same type.
      *
      * @param AbstractCharacterGroup $group Compared character group
@@ -44,21 +75,4 @@ abstract class AbstractCharacterGroup
     {
         return $this instanceof FixedCharacterGroup;
     }
-
-    /**
-     * @return bool True if character group is variable length otherwise false
-     */
-    public function isVariable(): bool
-    {
-        return $this instanceof VariableCharacterGroup;
-    }
-
-    /**
-     * Compare character groups.
-     *
-     * @param AbstractCharacterGroup $group Compared character group
-     *
-     * @return int Comparison result
-     */
-    abstract public function compare(AbstractCharacterGroup $group): int;
 }
