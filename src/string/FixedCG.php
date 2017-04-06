@@ -10,13 +10,16 @@ namespace samsonframework\stringconditiontree\string;
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class FixedCharacterGroup extends AbstractCharacterGroup
+class FixedCG extends AbstractCharacterGroup
 {
     /** string Character group matching regexp pattern matching group name */
     const PATTERN_GROUP = 'fixed';
 
+    /** string Regular expression matching character group */
+    const PATTERN_REGEXP = '[^{}]+';
+
     /** string Character group matching regexp pattern */
-    const PATTERN = '(?<'.self::PATTERN_GROUP.'>[^{}]+)';
+    const PATTERN = '(?<'.self::PATTERN_GROUP.'>'.self::PATTERN_REGEXP.')';
 
     /**
      * @inheritdoc

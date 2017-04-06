@@ -6,9 +6,10 @@
 namespace samsonframework\stringconditiontree\tests;
 
 use PHPUnit\Framework\TestCase;
-use samsonframework\stringconditiontree\string\FixedCharacterGroup;
+use samsonframework\stringconditiontree\string\FixedCG;
+use samsonframework\stringconditiontree\string\FixedVariableFixedCG;
 use samsonframework\stringconditiontree\string\Structure;
-use samsonframework\stringconditiontree\string\VariableCharacterGroup;
+use samsonframework\stringconditiontree\string\VariableCG;
 
 /**
  * Class StructureTest
@@ -22,26 +23,22 @@ class StructureTest extends TestCase
         /** @var array Data for testing character group structure creation */
         $creationData = [
             '{p}' => [
-                VariableCharacterGroup::class,
+                VariableCG::class,
             ],
             'p' => [
-                FixedCharacterGroup::class,
+                FixedCG::class,
             ],
             '/form/{t:\d+}/profile' => [
-                FixedCharacterGroup::class,
-                VariableCharacterGroup::class,
-                FixedCharacterGroup::class
+                FixedVariableFixedCG::class
             ],
             '{p}form/{t:\d+}' => [
-                VariableCharacterGroup::class,
-                FixedCharacterGroup::class,
-                VariableCharacterGroup::class,
+                VariableCG::class,
+                FixedCG::class,
+                VariableCG::class,
             ],
             '{p}/{p}/form' => [
-                VariableCharacterGroup::class,
-                FixedCharacterGroup::class,
-                VariableCharacterGroup::class,
-                FixedCharacterGroup::class,
+                VariableCG::class,
+                FixedVariableFixedCG::class
             ]
         ];
 

@@ -35,7 +35,7 @@ abstract class AbstractCharacterGroup
      */
     public function isVariable(): bool
     {
-        return $this instanceof VariableCharacterGroup;
+        return $this instanceof VariableCG;
     }
 
     /**
@@ -87,6 +87,6 @@ abstract class AbstractCharacterGroup
      */
     public function isFixed(): bool
     {
-        return $this instanceof FixedCharacterGroup;
+        return $this instanceof FixedCG;
     }
 }

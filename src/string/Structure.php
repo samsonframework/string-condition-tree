@@ -13,7 +13,7 @@ namespace samsonframework\stringconditiontree\string;
 class Structure
 {
     /** string Character group matching pattern */
-    const PATTERN = '/' . FixedCharacterGroup::PATTERN . '|' . VariableCharacterGroup::PATTERN . '/';
+    const PATTERN = '/' . FixedVariableFixedCG::PATTERN . '|' . FixedCG::PATTERN . '|' . VariableCG::PATTERN . '/';
 
     /** @var AbstractCharacterGroup[] */
     public $groups = [];
@@ -32,20 +32,26 @@ class Structure
 
         // Iterate input and find fixed/variable groups
         while (preg_match(self::PATTERN, $input, $matches)) {
-            // Replace only first occurence of character group
+            $matches = array_filter($matches);
+            // Replace only first occurrence of character group
             if (($pos = strpos($input, $matches[0])) !== false) {
                 $input = substr_replace($input, '', $pos, strlen($matches[0]));
             }
 
-            if (array_key_exists(VariableCharacterGroup::PATTERN_GROUP, $matches)) {
-                $this->groups[] = new VariableCharacterGroup(
-                    $matches[VariableCharacterGroup::PATTERN_GROUP],
-                    strlen($matches[VariableCharacterGroup::PATTERN_GROUP])
+            if (array_key_exists(FixedVariableFixedCG::PATTERN_GROUP, $matches)) {
+                $this->groups[] = new FixedVariableFixedCG(
+                    $matches[FixedVariableFixedCG::PATTERN_GROUP],
+                    strlen($matches[FixedVariableFixedCG::PATTERN_GROUP])
+                );
+            } elseif (array_key_exists(VariableCG::PATTERN_GROUP, $matches)) {
+                $this->groups[] = new VariableCG(
+                    $matches[VariableCG::PATTERN_GROUP],
+                    strlen($matches[VariableCG::PATTERN_GROUP])
                 );
             } else {
-                $this->groups[] = new FixedCharacterGroup(
-                    $matches[FixedCharacterGroup::PATTERN_GROUP],
-                    strlen($matches[FixedCharacterGroup::PATTERN_GROUP])
+                $this->groups[] = new FixedCG(
+                    $matches[FixedCG::PATTERN_GROUP],
+                    strlen($matches[FixedCG::PATTERN_GROUP])
                 );
             }
         }
@@ -73,8 +79,17 @@ class Structure
             $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize - 1];
 
             // Define if initial character group has higher priority
-            $priorityMatrix[] = $initialGroup->compare($comparedGroup) * ($maxSize - $index);
+            $priorityMatrix[] = $initialGroup->compare($comparedGroup) * ($initialGroup->isFixed() || $comparedGroup->isFixed() ? $maxSize : 1);
         }
+
+        /**
+         * Possible structures
+         *
+         * var|fixed
+         * var|fixed|var
+         * fixed|var
+         * fixed|var|fixed
+         */
 
         $return = array_sum($priorityMatrix);
         if ($return > 0) {

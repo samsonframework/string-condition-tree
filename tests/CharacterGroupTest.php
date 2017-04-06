@@ -7,8 +7,8 @@ namespace samsonframework\stringconditiontree\tests;
 
 use PHPUnit\Framework\TestCase;
 use samsonframework\stringconditiontree\string\AbstractCharacterGroup;
-use samsonframework\stringconditiontree\string\FixedCharacterGroup;
-use samsonframework\stringconditiontree\string\VariableCharacterGroup;
+use samsonframework\stringconditiontree\string\FixedCG;
+use samsonframework\stringconditiontree\string\VariableCG;
 
 /**
  * Class CharacterGroupTest
@@ -22,11 +22,11 @@ class CharacterGroupTest extends TestCase
 
     public function setUp()
     {
-        $this->groups[] = new FixedCharacterGroup('', 6);
-        $this->groups[] = new VariableCharacterGroup('', 7);
-        $this->groups[] = new FixedCharacterGroup('', 9);
-        $this->groups[] = new VariableCharacterGroup('', 3);
-        $this->groups[] = new FixedCharacterGroup('', 6);
+        $this->groups[] = new FixedCG('', 6);
+        $this->groups[] = new VariableCG('', 7);
+        $this->groups[] = new FixedCG('', 9);
+        $this->groups[] = new VariableCG('', 3);
+        $this->groups[] = new FixedCG('', 6);
     }
 
     public function testSameType()
