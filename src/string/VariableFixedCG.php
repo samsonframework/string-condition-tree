@@ -56,7 +56,7 @@ class VariableFixedCG extends AbstractCharacterGroup
         /** @var VariableFixedCG $group */
 
         // Shorter FCG has higher priority
-        $return = $group->fixedCG->length <=> $this->fixedCG->length;
+        $return = $this->fixedCG->length <=> $group->fixedCG->length;
 
         // Fixed CG are equal
 //        if ($return === 0) {

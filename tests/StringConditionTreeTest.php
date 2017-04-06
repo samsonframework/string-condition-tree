@@ -16,24 +16,6 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
 
     /** @var array Expected string condition tree */
     protected $expected = [
-        'p' => [
-            '@self' => '#9',
-            '/' => [
-                'test' => [
-                    '/' => ['@self'=> '#10'],
-                    '-me/' => ['@self' => '#11']
-                ],
-                '{parameter}/' => [
-                    '@self' => '#15',
-                    'name' => ['@self' => '#16'],
-                ],
-                '{id:d+}' => ['@self' => '#14'],
-                '{id}' => [
-                    '@self' => '#12',
-                    '/' => ['@self' => '#13']
-                ],
-            ]
-        ],
         '/' => [
             '@self' => '#6',
             't' => [
@@ -59,18 +41,36 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
             '{entity}/{id}/form' => ['@self' => '#28'],
             '{num}/{page:\d+}' => ['@self' => '#30'],
         ],
+        'p' => [
+            '@self' => '#9',
+            '/' => [
+                'test' => [
+                    '/' => ['@self'=> '#10'],
+                    '-me/' => ['@self' => '#11']
+                ],
+                '{parameter}/' => [
+                    '@self' => '#15',
+                    'name' => ['@self' => '#16'],
+                ],
+                '{id:d+}' => ['@self' => '#14'],
+                '{id}' => [
+                    '@self' => '#12',
+                    '/' => ['@self' => '#13']
+                ],
+            ]
+        ],
         'test/' => [
             '@self' => '#7',
             'this-please' => ['@self' => '#8']
         ],
-        '{z}/te' => [
-            '/{y:0\d+}' => ['@self' => '#26'],
-            'st/{y:01\d+}' => ['@self' => '#27'],
-        ],
+        '{p}/{p}/form' => ['@self' => '#24'],
         '{z}/' => [
             '{p}/{y:\d+}' => ['@self' => '#25'],
+            'te' => [
+                '/{y:0\d+}' => ['@self' => '#26'],
+                'st/{y:01\d+}' => ['@self' => '#27'],
+            ],
         ],
-        '{p}/{p}/form' => ['@self' => '#24'],
         '{param}-{parameter}' => [
             '@self' => '#20',
             '/test' => ['@self' => '#21']
@@ -119,8 +119,8 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
 
     public function testProcess()
     {
-        //$nodes = $this->sct->process($this->input)->toArray();
+        $nodes = $this->sct->process($this->input)->toArray();
 
-        //$this->assertSame($this->expected, $nodes);
+        $this->assertSame($this->expected, $nodes);
     }
 }

@@ -115,8 +115,8 @@ class StructureTest extends TestCase
         $initial = new Structure('{t:\d+}/store');
         $compared = new Structure('{t:\d+}/profile');
 
-        $this->assertEquals(1, $initial->compare($compared));
-        $this->assertEquals(-1, $compared->compare($initial));
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
     }
 
     public function testInitialFirstVariableEqualToComparedWithParameterSecondFixedEqual()
@@ -133,8 +133,8 @@ class StructureTest extends TestCase
         $initial = new Structure('{t:\d+}/store/{p}');
         $compared = new Structure('{t:\d+}/store');
 
-        $this->assertEquals(-1, $initial->compare($compared));
-        $this->assertEquals(1, $compared->compare($initial));
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testInitialFirstFixedEqualToComparedRestEqual()
@@ -150,6 +150,15 @@ class StructureTest extends TestCase
     {
         $initial = new Structure('{param}-{parameter}');
         $compared = new Structure('{p}/{p}/form');
+
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
+    }
+
+    public function testEndsWithFixedAfterVariable2()
+    {
+        $initial = new Structure('{entity}/{id}/form');
+        $compared = new Structure('{id}/test/{page:\d+}');
 
         $this->assertEquals(-1, $initial->compare($compared));
         $this->assertEquals(1, $compared->compare($initial));
