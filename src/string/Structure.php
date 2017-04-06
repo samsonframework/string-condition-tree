@@ -50,12 +50,16 @@ class Structure
      */
     public function compare(Structure $structure): int
     {
+        $initialStructureSize = count($this->groups);
         $comparedStructureSize = count($structure->groups);
-        foreach ($this->groups as $index => $group) {
-            // Get compared group or last compared character group is size mismatches
-            $comparedGroup = $structure->groups[$index] ?? $structure->groups[$comparedStructureSize-1];
+        $maxSize = max($initialStructureSize, $comparedStructureSize);
 
-            if (($return = $group->compare($comparedGroup)) !== 0) {
+        for ($index = 0; $index < $maxSize; $index++) {
+            // Get compared/intial group or last compared character group is size mismatches
+            $comparedGroup = $structure->groups[$index] ?? $structure->groups[$comparedStructureSize-1];
+            $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize-1];
+
+            if (($return = $initialGroup->compare($comparedGroup)) !== 0) {
                 return $return;
             }
         }
