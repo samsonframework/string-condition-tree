@@ -37,6 +37,12 @@ class StructureTest extends TestCase
                 FixedCharacterGroup::class,
                 VariableCharacterGroup::class,
             ],
+            '{p}/{p}/form' => [
+                VariableCharacterGroup::class,
+                FixedCharacterGroup::class,
+                VariableCharacterGroup::class,
+                FixedCharacterGroup::class,
+            ]
         ];
 
         /** @var array $structure */
@@ -138,21 +144,21 @@ class StructureTest extends TestCase
         $this->assertEquals(0, $compared->compare($initial));
     }
 
-    public function testFirstInnerFixedLongerBetweenVariable()
+    public function testEndsWithFixedAfterVariable()
     {
-        $initial = new Structure('{t:\d+}/store/{p}');
-        $compared = new Structure('{t:\d+}/store{p}');
+        $initial = new Structure('{param}-{parameter}');
+        $compared = new Structure('{p}/{p}/form');
 
-        $this->assertEquals(1, $initial->compare($compared));
-        $this->assertEquals(-1, $compared->compare($initial));
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
     }
-//
-//    public function testP()
+
+//    public function testFirstInnerFixedLongerBetweenVariable()
 //    {
-//        $initial = new Structure('{param}-{parameter}');
-//        $compared = new Structure('{p}/{p}/form');
+//        $initial = new Structure('{t:\d+}/store/{p}');
+//        $compared = new Structure('{t:\d+}/store{p}');
 //
-//        $this->assertEquals(-1, $initial->compare($compared));
-//        $this->assertEquals(1, $compared->compare($initial));
+//        $this->assertEquals(1, $initial->compare($compared));
+//        $this->assertEquals(-1, $compared->compare($initial));
 //    }
 }

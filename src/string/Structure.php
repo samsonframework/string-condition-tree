@@ -32,7 +32,11 @@ class Structure
 
         // Iterate input and find fixed/variable groups
         while (preg_match(self::PATTERN, $input, $matches)) {
-            $input = str_replace($matches[0], '', $input);
+            // Replace only first occurence of character group
+            if (($pos = strpos($input, $matches[0])) !== false) {
+                $input = substr_replace($input, '', $pos, strlen($matches[0]));
+            }
+
             if (array_key_exists(VariableCharacterGroup::PATTERN_GROUP, $matches)) {
                 $this->groups[] = new VariableCharacterGroup(
                     $matches[VariableCharacterGroup::PATTERN_GROUP],
@@ -69,11 +73,14 @@ class Structure
             $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize - 1];
 
             // Define if initial character group has higher priority
-            $priorityMatrix[] = $return = $initialGroup->compare($comparedGroup);
+            $priorityMatrix[] = $initialGroup->compare($comparedGroup) * ($maxSize - $index);
+        }
 
-            if ($return !== 0) {
-                return $return;
-            }
+        $return = array_sum($priorityMatrix);
+        if ($return > 0) {
+            return 1;
+        } elseif ($return < 0) {
+            return -1;
         }
 
         return 0;
