@@ -34,6 +34,7 @@ class FixedVariableFixedCG extends AbstractCharacterGroup
     {
         parent::__construct($string, $length);
 
+        // Parse internal character groups
         $this->firstFixedCG = FixedCG::fromString($string);
         $this->variableCG = VariableCG::fromString($string);
         $this->lastFixedCG = FixedCG::fromString($string);
@@ -44,9 +45,23 @@ class FixedVariableFixedCG extends AbstractCharacterGroup
      */
     protected function compareLength(AbstractCharacterGroup $group): int
     {
-        /**
-         * Shorter fixed character group has higher priority
-         */
-        return $group->length <=> $this->length;
+        /** @var FixedVariableFixedCG $group */
+
+        // Shorter first FCG has higher priority
+        $return = $group->firstFixedCG->length <=> $this->firstFixedCG->length;
+
+        // First FCG are equal
+        if ($return === 0) {
+            // Longer last FCG has higher priority
+            $return = $this->lastFixedCG->length <=> $group->lastFixedCG->length;
+
+            // Last FCG are equal
+            if ($return === 0) {
+                // Longer VCG has higher priority
+                $return = $this->variableCG->length <=> $group->variableCG->length;
+            }
+        }
+
+        return $return;
     }
 }

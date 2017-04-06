@@ -37,7 +37,8 @@ class Structure
         // Iterate until input is cleared
         while (strlen($input)) {
             foreach (self::CG_TYPES as $characterGroupType) {
-                if(($group = $characterGroupType::fromString($input)) !== null) {
+                // Try to create character group
+                if (($group = $characterGroupType::fromString($input)) !== null) {
                     $this->groups[] = $group;
                     // Reset CG type iterator to preserve order
                     break;
@@ -59,8 +60,6 @@ class Structure
         $comparedStructureSize = count($structure->groups);
         $maxSize = max($initialStructureSize, $comparedStructureSize);
 
-        $priorityMatrix = [];
-
         // Iterate maximum sized structure
         for ($index = 0; $index < $maxSize; $index++) {
             // Get compared/initial group or last compared character group is size mismatches
@@ -68,23 +67,11 @@ class Structure
             $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize - 1];
 
             // Define if initial character group has higher priority
-            $priorityMatrix[] = $initialGroup->compare($comparedGroup) * ($initialGroup->isFixed() || $comparedGroup->isFixed() ? $maxSize : 1);
-        }
+            $return = $initialGroup->compare($comparedGroup);
 
-        /**
-         * Possible structures
-         *
-         * var|fixed
-         * var|fixed|var
-         * fixed|var
-         * fixed|var|fixed
-         */
-
-        $return = array_sum($priorityMatrix);
-        if ($return > 0) {
-            return 1;
-        } elseif ($return < 0) {
-            return -1;
+            if ($return !== 0) {
+                return $return;
+            }
         }
 
         return 0;
