@@ -69,7 +69,11 @@ class Structure
             $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize - 1];
 
             // Define if initial character group has higher priority
-            $priorityMatrix[] = $initialGroup->compare($comparedGroup);
+            $priorityMatrix[] = $return = $initialGroup->compare($comparedGroup);
+
+            if ($return !== 0) {
+                return $return;
+            }
         }
 
         return 0;
