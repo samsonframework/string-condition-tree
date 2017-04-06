@@ -4,6 +4,7 @@
  * on 02.03.17 at 13:25
  */
 namespace samsonframework\stringconditiontree;
+use samsonframework\stringconditiontree\string\Structure;
 
 /**
  * Class StringConditionTree
@@ -39,25 +40,18 @@ class StringConditionTree
     /** @var string Parametrized string end marker */
     protected $parameterEndMarker = self::PARAMETER_END;
 
-    /** @var StructureSorter */
-    protected $structureSorter;
-
     /**
      * StringConditionTree constructor.
      *
-     * @param StructureSorter|null $structureSorter Parametrized strings array structure sorter
      * @param string               $parameterStartMarker Parametrized string start marker
      * @param string               $parameterEndMarker   Parametrized string end marker
      */
     public function __construct(
-        StructureSorter $structureSorter = null,
         string $parameterStartMarker = self::PARAMETER_START,
         string $parameterEndMarker = self::PARAMETER_END
     ) {
         $this->parameterStartMarker = $parameterStartMarker;
         $this->parameterEndMarker = $parameterEndMarker;
-        $this->structureSorter = $structureSorter
-            ?? new StructureSorter($this->parameterStartMarker, $this->parameterEndMarker);
     }
 
     /**
@@ -101,7 +95,7 @@ class StringConditionTree
         /**
          * Sort LMPs(array keys) ascending by key length
          */
-        $longestPrefixes = $this->structureSorter->sortArrayByKeys($longestPrefixes);
+        $longestPrefixes = $this->sortArrayByKeys($longestPrefixes);
 
         /**
          * Iterate all sorted LMP strings and remove duplicates from LMP string ordered lower
@@ -243,6 +237,36 @@ class StringConditionTree
 
         // Value is already in array
         return false;
+    }
+
+    /**
+     * Sort strings array considering PCG and NPCG string structure.
+     *
+     * @param array $input Input array for sorting
+     *
+     * @return array Sorted keys array
+     */
+    public function sortArrayByKeys(array $input): array
+    {
+        /** @var Structure[] $structures */
+        $structures = [];
+        foreach (array_keys($input) as $string) {
+            $structures[$string] = new Structure($string);
+        }
+
+        usort($structures, function (Structure $initial, Structure $compared) {
+            return $initial->compare($compared);
+        });
+
+        $structures = array_reverse($structures);
+
+        // Restore initial strings sub-arrays
+        $result = [];
+        foreach ($structures as $structure) {
+            $result[$structure->input] = $input[$structure->input];
+        }
+
+        return $result;
     }
 
     /**
