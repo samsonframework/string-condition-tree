@@ -10,7 +10,7 @@ namespace samsonframework\stringconditiontree\string;
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-abstract class AbstractCharacterGroup
+abstract class AbstractCG
 {
     /** string Character group matching regexp pattern matching group name */
     const PATTERN_GROUP = '';
@@ -47,7 +47,7 @@ abstract class AbstractCharacterGroup
      *
      * @param string $input Input string
      *
-     * @return null|AbstractCharacterGroup|FixedCG|VariableCG Character group instance
+     * @return null|AbstractCG|FixedCG|VariableCG Character group instance
      */
     public static function fromString(string &$input)
     {
@@ -75,11 +75,11 @@ abstract class AbstractCharacterGroup
     /**
      * Compare character groups.
      *
-     * @param AbstractCharacterGroup $group Compared character group
+     * @param AbstractCG $group Compared character group
      *
      * @return int -1, 0, 1 Lower, equal, higher
      */
-    public function compare(AbstractCharacterGroup $group): int
+    public function compare(AbstractCG $group): int
     {
         // Equal character group types - return length comparison
         if ($this->isSameType($group)) {
@@ -98,11 +98,11 @@ abstract class AbstractCharacterGroup
     /**
      * Check if compared character group has same type.
      *
-     * @param AbstractCharacterGroup $group Compared character group
+     * @param AbstractCG $group Compared character group
      *
      * @return bool True if character group has same type otherwise false
      */
-    public function isSameType(AbstractCharacterGroup $group): bool
+    public function isSameType(AbstractCG $group): bool
     {
         return get_class($group) === get_class($this);
     }
@@ -110,11 +110,11 @@ abstract class AbstractCharacterGroup
     /**
      * Compare this character group length to compared character group length.
      *
-     * @param AbstractCharacterGroup $group Compared character group
+     * @param AbstractCG $group Compared character group
      *
      * @return int -1, 0, 1 Character groups comparison result
      */
-    abstract protected function compareLength(AbstractCharacterGroup $group): int;
+    abstract protected function compareLength(AbstractCG $group): int;
 
     /**
      * @return bool True if character group is fixed length otherwise false

@@ -10,7 +10,7 @@ namespace samsonframework\stringconditiontree\string;
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class VariableCG extends AbstractCharacterGroup
+class VariableCG extends AbstractCG
 {
     /** string Character group matching regexp pattern matching group name */
     const PATTERN_GROUP = 'variable';
@@ -24,7 +24,7 @@ class VariableCG extends AbstractCharacterGroup
     /**
      * @inheritdoc
      */
-    protected function compareLength(AbstractCharacterGroup $group): int
+    protected function compareLength(AbstractCG $group): int
     {
         $return = 0;
 

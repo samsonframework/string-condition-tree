@@ -10,7 +10,7 @@ namespace samsonframework\stringconditiontree\string;
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class FixedCG extends AbstractCharacterGroup
+class FixedCG extends AbstractCG
 {
     /** string Character group matching regexp pattern matching group name */
     const PATTERN_GROUP = 'fixed';
@@ -24,7 +24,7 @@ class FixedCG extends AbstractCharacterGroup
     /**
      * @inheritdoc
      */
-    protected function compareLength(AbstractCharacterGroup $group): int
+    protected function compareLength(AbstractCG $group): int
     {
         /**
          * Shorter fixed character group has higher priority

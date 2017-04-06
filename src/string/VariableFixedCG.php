@@ -12,7 +12,7 @@ namespace samsonframework\stringconditiontree\string;
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class VariableFixedCG extends AbstractCharacterGroup
+class VariableFixedCG extends AbstractCG
 {
     /** string Character group matching regexp pattern matching group name */
     const PATTERN_GROUP = 'variableFixed';
@@ -51,7 +51,7 @@ class VariableFixedCG extends AbstractCharacterGroup
     /**
      * @inheritdoc
      */
-    public function compare(AbstractCharacterGroup $group): int
+    public function compare(AbstractCG $group): int
     {
         // Equal character group types - return length comparison
         if ($this->isSameType($group)) {
@@ -74,7 +74,7 @@ class VariableFixedCG extends AbstractCharacterGroup
     /**
      * @inheritdoc
      */
-    protected function compareLength(AbstractCharacterGroup $group): int
+    protected function compareLength(AbstractCG $group): int
     {
         /** @var VariableFixedCG $group */
 

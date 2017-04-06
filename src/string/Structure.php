@@ -19,7 +19,7 @@ class Structure
         FixedCG::class,
     ];
 
-    /** @var AbstractCharacterGroup[] */
+    /** @var AbstractCG[] */
     public $groups = [];
 
     /** @var string Input string */

@@ -6,7 +6,7 @@
 namespace samsonframework\stringconditiontree\tests;
 
 use PHPUnit\Framework\TestCase;
-use samsonframework\stringconditiontree\string\AbstractCharacterGroup;
+use samsonframework\stringconditiontree\string\AbstractCG;
 use samsonframework\stringconditiontree\string\FixedCG;
 use samsonframework\stringconditiontree\string\VariableCG;
 
@@ -17,7 +17,7 @@ use samsonframework\stringconditiontree\string\VariableCG;
  */
 class CharacterGroupTest extends TestCase
 {
-    /** @var AbstractCharacterGroup[] */
+    /** @var AbstractCG[] */
     protected $groups = [];
 
     public function setUp()
