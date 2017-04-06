@@ -59,6 +59,17 @@ class Structure
             $comparedGroup = $structure->groups[$index] ?? $structure->groups[$comparedStructureSize - 1];
             $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize - 1];
 
+            /**
+             * Special opposite case when fixed CG goes after variable CG then
+             * longer fixed CG should have higher priority as variable CG can possibly include
+             * fixed CG.
+             */
+            if ($index > 0 && $index < $maxSize && $initialGroup->isFixed() && $initialGroup->isSameType($comparedGroup)) {
+                if (($return = $initialGroup->compare($comparedGroup, true)) !== 0) {
+                    return $return;
+                }
+            }
+
             if (($return = $initialGroup->compare($comparedGroup)) !== 0) {
                 return $return;
             }

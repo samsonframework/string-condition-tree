@@ -38,13 +38,15 @@ abstract class AbstractCharacterGroup
      *
      * @param AbstractCharacterGroup $group Compared character group
      *
+     * @param bool                   $afterVariable Flag that this character group goes after variable character group
+     *
      * @return int Comparison result
      */
-    public function compare(AbstractCharacterGroup $group): int
+    public function compare(AbstractCharacterGroup $group, bool $afterVariable = false): int
     {
         // Equal character group types - return length comparison
         if ($this->isSameType($group)) {
-            if ($this->isFixed()) {
+            if ($this->isFixed() && $afterVariable === false) {
                 // Fixed character groups with longer length has lower priority
                 return $group->length <=> $this->length;
             }
