@@ -53,6 +53,7 @@ abstract class AbstractCharacterGroup
         }
 
         /**
+         * Character groups are different:
          * Fixed character groups has higher priority,
          * variable character groups has lower priority
          */
