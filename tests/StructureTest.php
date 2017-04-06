@@ -17,30 +17,30 @@ use samsonframework\stringconditiontree\string\VariableCharacterGroup;
  */
 class StructureTest extends TestCase
 {
-    /** @var array Data for testing character group structure creation */
-    protected $creationData = [
-        '{p}' => [
-            VariableCharacterGroup::class,
-        ],
-        'p' => [
-            FixedCharacterGroup::class,
-        ],
-        '/form/{t:\d+}/profile' => [
-            FixedCharacterGroup::class,
-            VariableCharacterGroup::class,
-            FixedCharacterGroup::class
-        ],
-        '{p}form/{t:\d+}' => [
-            VariableCharacterGroup::class,
-            FixedCharacterGroup::class,
-            VariableCharacterGroup::class,
-        ],
-    ];
-
     public function testConstructor()
     {
+        /** @var array Data for testing character group structure creation */
+        $creationData = [
+            '{p}' => [
+                VariableCharacterGroup::class,
+            ],
+            'p' => [
+                FixedCharacterGroup::class,
+            ],
+            '/form/{t:\d+}/profile' => [
+                FixedCharacterGroup::class,
+                VariableCharacterGroup::class,
+                FixedCharacterGroup::class
+            ],
+            '{p}form/{t:\d+}' => [
+                VariableCharacterGroup::class,
+                FixedCharacterGroup::class,
+                VariableCharacterGroup::class,
+            ],
+        ];
+
         /** @var array $structure */
-        foreach ($this->creationData as $string => $structure) {
+        foreach ($creationData as $string => $structure) {
             $input = new Structure($string);
             foreach ($structure as $index => $characterGroupClass) {
                 $this->assertInstanceOf($characterGroupClass, $input->groups[$index]);
@@ -48,8 +48,30 @@ class StructureTest extends TestCase
         }
     }
 
-    public function testCompare()
+    public function testInitialFirstFixedLongerThanCompared()
     {
-        
+        $initial = new Structure('/form/{t:\d+}/profile');
+        $compared = new Structure('/form-one/{t:\d+}/profile');
+
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
+    }
+
+    public function testInitialFirstFixedEqualToComparedSecondVariableLonger()
+    {
+        $initial = new Structure('/form-one/{t:\d+}/profile');
+        $compared = new Structure('/form-two/{t}/profile');
+
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
+    }
+
+    public function testInitialFirstFixedEqualToComparedRestEqual()
+    {
+        $initial = new Structure('/form-one/{t:\d+}/profile');
+        $compared = new Structure('/form-two/{t:\d+}/profile');
+
+        $this->assertEquals(0, $initial->compare($compared));
+        $this->assertEquals(0, $compared->compare($initial));
     }
 }

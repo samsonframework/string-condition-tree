@@ -53,11 +53,13 @@ class Structure
         $comparedStructureSize = count($structure->groups);
         foreach ($this->groups as $index => $group) {
             // Get compared group or last compared character group is size mismatches
-            $comparedGroup = $structure[$index] ?? $structure[$comparedStructureSize-1];
+            $comparedGroup = $structure->groups[$index] ?? $structure->groups[$comparedStructureSize-1];
 
             if (($return = $group->compare($comparedGroup)) !== 0) {
                 return $return;
             }
         }
+
+        return 0;
     }
 }
