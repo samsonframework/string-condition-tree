@@ -16,7 +16,28 @@ class FixedVariableFixedCG extends AbstractCharacterGroup
     const PATTERN_GROUP = 'fixedVariableFixed';
 
     /** string Character group matching regexp pattern */
-    const PATTERN = '(?<'.self::PATTERN_GROUP.'>'.FixedCG::PATTERN_REGEXP.VariableCG::PATTERN_REGEXP.FixedCG::PATTERN_REGEXP.')';
+    const PATTERN = '^(?<'.self::PATTERN_GROUP.'>'.FixedCG::PATTERN_REGEXP.VariableCG::PATTERN_REGEXP.FixedCG::PATTERN_REGEXP.')';
+
+    /** @var FixedCG */
+    protected $firstFixedCG;
+
+    /** @var VariableCG */
+    protected $variableCG;
+
+    /** @var FixedCG */
+    protected $lastFixedCG;
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct(string $string, int $length = 0)
+    {
+        parent::__construct($string, $length);
+
+        $this->firstFixedCG = FixedCG::fromString($string);
+        $this->variableCG = VariableCG::fromString($string);
+        $this->lastFixedCG = FixedCG::fromString($string);
+    }
 
     /**
      * @inheritdoc

@@ -12,8 +12,12 @@ namespace samsonframework\stringconditiontree\string;
  */
 class Structure
 {
-    /** string Character group matching pattern */
-    const PATTERN = '/' . FixedVariableFixedCG::PATTERN . '|' . FixedCG::PATTERN . '|' . VariableCG::PATTERN . '/';
+    /** array Supported character group types */
+    const CG_TYPES = [
+        FixedVariableFixedCG::class,
+        VariableCG::class,
+        FixedCG::class,
+    ];
 
     /** @var AbstractCharacterGroup[] */
     public $groups = [];
@@ -30,31 +34,15 @@ class Structure
     {
         $this->input = $input;
 
-        // Iterate input and find fixed/variable groups
-        while (preg_match(self::PATTERN, $input, $matches)) {
-            $matches = array_filter($matches);
-            // Replace only first occurrence of character group
-            if (($pos = strpos($input, $matches[0])) !== false) {
-                $input = substr_replace($input, '', $pos, strlen($matches[0]));
-            }
-
-            if (array_key_exists(FixedVariableFixedCG::PATTERN_GROUP, $matches)) {
-                $this->groups[] = new FixedVariableFixedCG(
-                    $matches[FixedVariableFixedCG::PATTERN_GROUP],
-                    strlen($matches[FixedVariableFixedCG::PATTERN_GROUP])
-                );
-            } elseif (array_key_exists(VariableCG::PATTERN_GROUP, $matches)) {
-                $this->groups[] = new VariableCG(
-                    $matches[VariableCG::PATTERN_GROUP],
-                    strlen($matches[VariableCG::PATTERN_GROUP])
-                );
-            } else {
-                $this->groups[] = new FixedCG(
-                    $matches[FixedCG::PATTERN_GROUP],
-                    strlen($matches[FixedCG::PATTERN_GROUP])
-                );
+        // Iterate until input is cleared
+        while (strlen($input)) {
+            foreach (self::CG_TYPES as $characterGroupType) {
+                $this->groups[] = $characterGroupType::fromString($input);
             }
         }
+
+        // Remove empty values
+        $this->groups = array_values(array_filter($this->groups));
     }
 
     /**

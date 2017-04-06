@@ -19,8 +19,7 @@ class VariableCG extends AbstractCharacterGroup
     const PATTERN_REGEXP = '{.*?}';
 
     /** string Character group matching regexp pattern */
-    const PATTERN = '(?<'.self::PATTERN_GROUP.'>'.self::PATTERN_REGEXP.')';
-
+    const PATTERN = '^(?<'.self::PATTERN_GROUP.'>'.self::PATTERN_REGEXP.')';
 
     /**
      * @inheritdoc

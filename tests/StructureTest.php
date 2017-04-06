@@ -46,6 +46,11 @@ class StructureTest extends TestCase
         foreach ($creationData as $string => $structure) {
             $input = new Structure($string);
             foreach ($structure as $index => $characterGroupClass) {
+                $this->assertArrayHasKey(
+                    $index,
+                    $input->groups,
+                    'Wrong character group structure building for: ' . $string
+                );
                 $this->assertInstanceOf($characterGroupClass, $input->groups[$index]);
             }
         }

@@ -12,6 +12,15 @@ namespace samsonframework\stringconditiontree\string;
  */
 abstract class AbstractCharacterGroup
 {
+    /** string Character group matching regexp pattern matching group name */
+    const PATTERN_GROUP = '';
+
+    /** string Regular expression matching character group */
+    const PATTERN_REGEXP = '';
+
+    /** string Character group matching regexp pattern */
+    const PATTERN = '';
+
     /** @var int Character group length */
     public $length;
 
@@ -28,6 +37,26 @@ abstract class AbstractCharacterGroup
     {
         $this->string = $string;
         $this->length = $length;
+    }
+
+    /**
+     * Create character group from input string.
+     *
+     * @param string $input Input string
+     *
+     * @return null|AbstractCharacterGroup|FixedCG|VariableCG|FixedVariableFixedCG Character group instance
+     */
+    public static function fromString(string &$input)
+    {
+        if (preg_match('/'.static::PATTERN.'/', $input, $matches)) {
+            // Replace only first occurrence of character group
+            if (($pos = strpos($input, $matches[0])) !== false) {
+                $input = substr_replace($input, '', $pos, strlen($matches[0]));
+
+                $className = static::class;
+                return new $className($matches[static::PATTERN_GROUP], strlen($matches[static::PATTERN_GROUP]));
+            }
+        }
     }
 
     /**
