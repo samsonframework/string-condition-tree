@@ -251,7 +251,7 @@ class StringConditionTree
         /** @var Structure[] $structures */
         $structures = [];
         foreach (array_keys($input) as $string) {
-            $structures[$string] = new Structure($string);
+            $structures[] = new Structure($string);
         }
 
         usort($structures, function (Structure $initial, Structure $compared) {

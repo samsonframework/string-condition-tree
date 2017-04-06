@@ -26,9 +26,38 @@ class VariableCG extends AbstractCharacterGroup
      */
     protected function compareLength(AbstractCharacterGroup $group): int
     {
-        /**
-         * Longer variable character group has higher priority
-         */
-        return $this->length <=> $group->length;
+        $return = 0;
+
+        /** @var VariableCG $group */
+        $variableFiltered = $this->variableHasFilter();
+        $comparedFiltered = $group->variableHasFilter();
+
+        // Filtered variable character group has priority
+        if ($variableFiltered) {
+            $return = 1;
+            // Both are filtered
+            if ($comparedFiltered) {
+                // Longer Variable character group has higher priority
+                $return = $this->length <=> $group->length;
+            }
+        } elseif ($comparedFiltered) {
+            $return = -1;
+        }
+//        else {
+//            /**
+//             * Longer variable character group has higher priority
+//             */
+//            return $this->length <=> $group->length;
+//        }
+
+        return $return;
+    }
+
+    /**
+     * @return bool Return true if variable character group has filter
+     */
+    public function variableHasFilter(): bool
+    {
+        return strpos($this->string, ':') !== false;
     }
 }

@@ -51,26 +51,37 @@ class VariableFixedCG extends AbstractCharacterGroup
     /**
      * @inheritdoc
      */
+    public function compare(AbstractCharacterGroup $group): int
+    {
+        // Equal character group types - return length comparison
+        if ($this->isSameType($group)) {
+            // Variable character groups with longer length has higher priority
+            return $this->compareLength($group);
+        }
+
+        // Fixed character group has higher priority
+        if ($group->isFixed()) {
+            return -1;
+        }
+
+        /**
+         * VariableFixed character group has higher priority than regular
+         * variable character group.
+         */
+        return 1;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function compareLength(AbstractCharacterGroup $group): int
     {
         /** @var VariableFixedCG $group */
 
         // Fixed CG are equal
         if (($return = $this->compareFixed($group)) === 0) {
-            $variableFiltered = $this->variableHasFilter();
-            $comparedFiltered = $group->variableHasFilter();
-
-            // Filtered variable character group has priority
-            if ($variableFiltered) {
-                $return = 1;
-                // Both are filtered
-                if ($comparedFiltered) {
-                    // Longer Variable character group has higher priority
-                    $return = $this->variableCG->length <=> $group->variableCG->length;
-                }
-            } elseif ($comparedFiltered) {
-                $return = -1;
-            }
+            // Compare variable character groups
+            $return = $this->variableCG->compare($group->variableCG);
         }
 
         return $return;
@@ -87,13 +98,5 @@ class VariableFixedCG extends AbstractCharacterGroup
     {
         // Opposite fixed CG comparison
         return $this->fixedCG->length <=> $group->fixedCG->length;
-    }
-
-    /**
-     * @return bool Return true if variable character group has filter
-     */
-    public function variableHasFilter(): bool
-    {
-        return strpos($this->variableCG->string, ':') !== false;
     }
 }
