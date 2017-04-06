@@ -21,7 +21,8 @@ abstract class AbstractCharacterGroup
     /**
      * AbstractCharacterGroup constructor.
      *
-     * @param int $length Character group length
+     * @param string $string Character group string
+     * @param int    $length Character group length
      */
     public function __construct(string $string, int $length = 0)
     {
