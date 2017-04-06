@@ -22,11 +22,11 @@ class CharacterGroupTest extends TestCase
 
     public function setUp()
     {
-        $this->groups[] = new FixedCharacterGroup(6);
-        $this->groups[] = new VariableCharacterGroup(7);
-        $this->groups[] = new FixedCharacterGroup(9);
-        $this->groups[] = new VariableCharacterGroup(3);
-        $this->groups[] = new FixedCharacterGroup(6);
+        $this->groups[] = new FixedCharacterGroup('',6);
+        $this->groups[] = new VariableCharacterGroup('',7);
+        $this->groups[] = new FixedCharacterGroup('',9);
+        $this->groups[] = new VariableCharacterGroup('',3);
+        $this->groups[] = new FixedCharacterGroup('',6);
     }
 
     public function testSameType()

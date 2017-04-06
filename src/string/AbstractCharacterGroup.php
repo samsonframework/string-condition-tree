@@ -15,13 +15,17 @@ abstract class AbstractCharacterGroup
     /** @var int Character group length */
     public $length;
 
+    /** @var string Character group string */
+    public $string;
+
     /**
      * AbstractCharacterGroup constructor.
      *
      * @param int $length Character group length
      */
-    public function __construct(int $length = 0)
+    public function __construct(string $string, int $length = 0)
     {
+        $this->string = $string;
         $this->length = $length;
     }
 

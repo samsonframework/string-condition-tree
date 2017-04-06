@@ -47,15 +47,24 @@ class StructureSorter
      */
     public function sortArrayByKeys(array $input): array
     {
+        /** @var Structure[] $structures */
         $structures = [];
         foreach (array_keys($input) as $string) {
             $structures[$string] = new Structure($string);
         }
 
         usort($structures, function(Structure $initial, Structure $compared) {
-            $result = $initial->compare($compared);
-            return $result;
+            return $initial->compare($compared);
         });
+
+        $structures = array_reverse($structures);
+
+        // Restore initial strings sub-arrays
+        $result = [];
+        foreach ($structures as $structure) {
+            $result[$structure->input] = $input[$structure->input];
+        }
+        return $result;
 
 
         // Convert string array keys into structure arrays

@@ -128,4 +128,13 @@ class StructureTest extends TestCase
         $this->assertEquals(1, $initial->compare($compared));
         $this->assertEquals(-1, $compared->compare($initial));
     }
+
+    public function testP()
+    {
+        $initial = new Structure('{param}-{parameter}');
+        $compared = new Structure('{p}/{p}/form');
+
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
+    }
 }

@@ -34,9 +34,15 @@ class Structure
         while (preg_match(self::PATTERN, $input, $matches)) {
             $input = str_replace($matches[0], '', $input);
             if (array_key_exists(VariableCharacterGroup::PATTERN_GROUP, $matches)) {
-                $this->groups[] = new VariableCharacterGroup(strlen($matches[VariableCharacterGroup::PATTERN_GROUP]));
+                $this->groups[] = new VariableCharacterGroup(
+                    $matches[VariableCharacterGroup::PATTERN_GROUP],
+                    strlen($matches[VariableCharacterGroup::PATTERN_GROUP])
+                );
             } else {
-                $this->groups[] = new FixedCharacterGroup(strlen($matches[FixedCharacterGroup::PATTERN_GROUP]));
+                $this->groups[] = new FixedCharacterGroup(
+                    $matches[FixedCharacterGroup::PATTERN_GROUP],
+                    strlen($matches[FixedCharacterGroup::PATTERN_GROUP])
+                );
             }
         }
     }
