@@ -43,12 +43,6 @@ class VariableCG extends AbstractCharacterGroup
         } elseif ($comparedFiltered) {
             $return = -1;
         }
-//        else {
-//            /**
-//             * Longer variable character group has higher priority
-//             */
-//            return $this->length <=> $group->length;
-//        }
 
         return $return;
     }

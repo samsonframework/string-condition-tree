@@ -47,7 +47,7 @@ abstract class AbstractCharacterGroup
      *
      * @param string $input Input string
      *
-     * @return null|AbstractCharacterGroup|FixedCG|VariableCG|FixedVariableFixedCG Character group instance
+     * @return null|AbstractCharacterGroup|FixedCG|VariableCG Character group instance
      */
     public static function fromString(string &$input)
     {

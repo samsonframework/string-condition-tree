@@ -14,7 +14,6 @@ class Structure
 {
     /** array Supported character group types */
     const CG_TYPES = [
-        //FixedVariableFixedCG::class,
         VariableFixedCG::class,
         VariableCG::class,
         FixedCG::class,
