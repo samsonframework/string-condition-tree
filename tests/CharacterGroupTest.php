@@ -29,4 +29,18 @@ class CharacterGroupTest extends TestCase
         $this->assertFalse($this->structure->groups[0]->isSameType($this->structure->groups[1]));
         $this->assertFalse($this->structure->groups[1]->isSameType($this->structure->groups[2]));
     }
+
+    public function testIsFixed()
+    {
+        $this->assertTrue($this->structure->groups[0]->isFixed());
+        $this->assertFalse($this->structure->groups[1]->isFixed());
+        $this->assertTrue($this->structure->groups[2]->isFixed());
+    }
+
+    public function testIsVariable()
+    {
+        $this->assertFalse($this->structure->groups[0]->isVariable());
+        $this->assertTrue($this->structure->groups[1]->isVariable());
+        $this->assertFalse($this->structure->groups[2]->isVariable());
+    }
 }
