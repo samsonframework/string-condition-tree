@@ -22,11 +22,11 @@ class CharacterGroupTest extends TestCase
 
     public function setUp()
     {
-        $this->groups[] = new FixedCharacterGroup('',6);
-        $this->groups[] = new VariableCharacterGroup('',7);
-        $this->groups[] = new FixedCharacterGroup('',9);
-        $this->groups[] = new VariableCharacterGroup('',3);
-        $this->groups[] = new FixedCharacterGroup('',6);
+        $this->groups[] = new FixedCharacterGroup('', 6);
+        $this->groups[] = new VariableCharacterGroup('', 7);
+        $this->groups[] = new FixedCharacterGroup('', 9);
+        $this->groups[] = new VariableCharacterGroup('', 3);
+        $this->groups[] = new FixedCharacterGroup('', 6);
     }
 
     public function testSameType()
@@ -53,39 +53,21 @@ class CharacterGroupTest extends TestCase
     public function testCompare()
     {
         // Fixed higher than variable
-        $this->assertEquals(
-            1,
-            $this->groups[0]->compare($this->groups[1])
-        );
+        $this->assertEquals(1, $this->groups[0]->compare($this->groups[1]));
 
         // Variable lower than fixed
-        $this->assertEquals(
-            -1,
-            $this->groups[1]->compare($this->groups[0])
-        );
+        $this->assertEquals(-1, $this->groups[1]->compare($this->groups[0]));
 
         // 2nd fixed longer then 1st fixed
-        $this->assertEquals(
-            1,
-            $this->groups[0]->compare($this->groups[2])
-        );
+        $this->assertEquals(1, $this->groups[0]->compare($this->groups[2]));
 
         // 1st fixed shorter then 2nd fixed
-        $this->assertEquals(
-            -1,
-            $this->groups[2]->compare($this->groups[0])
-        );
+        $this->assertEquals(-1, $this->groups[2]->compare($this->groups[0]));
 
         // 1st fixed equal length to 4th fixed
-        $this->assertEquals(
-            0,
-            $this->groups[4]->compare($this->groups[0])
-        );
+        $this->assertEquals(0, $this->groups[4]->compare($this->groups[0]));
 
         // 4st fixed equal length to 1th fixed
-        $this->assertEquals(
-            0,
-            $this->groups[0]->compare($this->groups[4])
-        );
+        $this->assertEquals(0, $this->groups[0]->compare($this->groups[4]));
     }
 }

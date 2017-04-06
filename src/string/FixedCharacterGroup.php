@@ -17,4 +17,15 @@ class FixedCharacterGroup extends AbstractCharacterGroup
 
     /** string Character group matching regexp pattern */
     const PATTERN = '(?<'.self::PATTERN_GROUP.'>[^{}]+)';
+
+    /**
+     * @inheritdoc
+     */
+    protected function compareLength(AbstractCharacterGroup $group): int
+    {
+        /**
+         * Shorter fixed character group has higher priority
+         */
+        return $group->length <=> $this->length;
+    }
 }

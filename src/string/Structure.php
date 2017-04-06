@@ -60,25 +60,16 @@ class Structure
         $comparedStructureSize = count($structure->groups);
         $maxSize = max($initialStructureSize, $comparedStructureSize);
 
+        $priorityMatrix = [];
+
+        // Iterate maximum sized structure
         for ($index = 0; $index < $maxSize; $index++) {
             // Get compared/initial group or last compared character group is size mismatches
             $comparedGroup = $structure->groups[$index] ?? $structure->groups[$comparedStructureSize - 1];
             $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize - 1];
 
-            /**
-             * Special opposite case when fixed CG goes after variable CG then
-             * longer fixed CG should have higher priority as variable CG can possibly include
-             * fixed CG.
-             */
-            if ($index > 0 && $index < $maxSize && $initialGroup->isFixed() && $initialGroup->isSameType($comparedGroup)) {
-                if (($return = $initialGroup->compare($comparedGroup, true)) !== 0) {
-                    return $return;
-                }
-            }
-
-            if (($return = $initialGroup->compare($comparedGroup)) !== 0) {
-                return $return;
-            }
+            // Define if initial character group has higher priority
+            $priorityMatrix[] = $initialGroup->compare($comparedGroup);
         }
 
         return 0;
