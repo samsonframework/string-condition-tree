@@ -156,6 +156,8 @@ class StringConditionTree
      * @param string $initialString  Initial string
      * @param string $comparedString Compared string
      *
+     * TODO: Refactor this method
+     *
      * @return string Longest matching prefix
      */
     protected function getLongestMatchingPrefix(string $initialString, string $comparedString): string
