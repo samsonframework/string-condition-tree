@@ -6,7 +6,10 @@
 namespace samsonframework\stringconditiontree\string;
 
 /**
- * This class describes character group with fixed length.
+ * This class describes character group with next structure:
+ * - fixed length character group
+ * - variable length character group
+ * - fixed length character group
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */

@@ -10,6 +10,7 @@ use samsonframework\stringconditiontree\string\FixedCG;
 use samsonframework\stringconditiontree\string\FixedVariableFixedCG;
 use samsonframework\stringconditiontree\string\Structure;
 use samsonframework\stringconditiontree\string\VariableCG;
+use samsonframework\stringconditiontree\string\VariableFixedCG;
 
 /**
  * Class StructureTest
@@ -32,13 +33,12 @@ class StructureTest extends TestCase
                 FixedVariableFixedCG::class
             ],
             '{p}form/{t:\d+}' => [
-                VariableCG::class,
-                FixedCG::class,
+                VariableFixedCG::class,
                 VariableCG::class,
             ],
             '{p}/{p}/form' => [
-                VariableCG::class,
-                FixedVariableFixedCG::class
+                VariableFixedCG::class,
+                VariableFixedCG::class
             ]
         ];
 

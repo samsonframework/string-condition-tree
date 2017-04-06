@@ -27,6 +27,9 @@ abstract class AbstractCharacterGroup
     /** @var string Character group string */
     public $string;
 
+    /** @var int Character group size */
+    protected $size = 1;
+
     /**
      * AbstractCharacterGroup constructor.
      *
