@@ -55,7 +55,9 @@ class Structure
             // Get compared group or last compared character group is size mismatches
             $comparedGroup = $structure[$index] ?? $structure[$comparedStructureSize-1];
 
-            return $group->compare($comparedGroup);
+            if (($return = $group->compare($comparedGroup)) !== 0) {
+                return $return;
+            }
         }
     }
 }

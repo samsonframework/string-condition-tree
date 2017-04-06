@@ -47,4 +47,9 @@ class StructureTest extends TestCase
             }
         }
     }
+
+    public function testCompare()
+    {
+        
+    }
 }
