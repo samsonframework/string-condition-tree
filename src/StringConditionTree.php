@@ -4,10 +4,13 @@
  * on 02.03.17 at 13:25
  */
 namespace samsonframework\stringconditiontree;
+
 use samsonframework\stringconditiontree\string\Structure;
 
 /**
  * Class StringConditionTree
+ *
+ * TODO: Remove variable character group markers, move LMP search to string.
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
