@@ -48,6 +48,24 @@ class StructureTest extends TestCase
         }
     }
 
+    public function testInitialFixedLongerThanCompared()
+    {
+        $initial = new Structure('/form-one/');
+        $compared = new Structure('/form');
+
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
+    }
+
+    public function testInitialVariableLongerThanCompared()
+    {
+        $initial = new Structure('{param}');
+        $compared = new Structure('{p}');
+
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
+    }
+
     public function testInitialFirstFixedLongerThanCompared()
     {
         $initial = new Structure('/form/{t:\d+}/profile');
