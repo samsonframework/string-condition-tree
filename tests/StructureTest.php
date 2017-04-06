@@ -17,12 +17,23 @@ use samsonframework\stringconditiontree\string\VariableCharacterGroup;
  */
 class StructureTest extends TestCase
 {
-    /** @var array Data for testing characteg group structure creation */
+    /** @var array Data for testing character group structure creation */
     protected $creationData = [
+        '{p}' => [
+            VariableCharacterGroup::class,
+        ],
+        'p' => [
+            FixedCharacterGroup::class,
+        ],
         '/form/{t:\d+}/profile' => [
             FixedCharacterGroup::class,
             VariableCharacterGroup::class,
             FixedCharacterGroup::class
+        ],
+        '{p}form/{t:\d+}' => [
+            VariableCharacterGroup::class,
+            FixedCharacterGroup::class,
+            VariableCharacterGroup::class,
         ],
     ];
 
