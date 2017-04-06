@@ -102,7 +102,7 @@ class StructureTest extends TestCase
         $this->assertEquals(1, $compared->compare($initial));
     }
 
-    public function testInitialFirstVariableEqualToComparedWithQualSecondFixedAndVariable()
+    public function testInitialFirstVariableEqualWithVariableToComparedWithShorterSecondShorter()
     {
         $initial = new Structure('{t:\d+}/store/{p}');
         $compared = new Structure('{t:\d+}/store');
@@ -118,5 +118,14 @@ class StructureTest extends TestCase
 
         $this->assertEquals(0, $initial->compare($compared));
         $this->assertEquals(0, $compared->compare($initial));
+    }
+
+    public function testFirstInnerFixedLongerBetweenVariable()
+    {
+        $initial = new Structure('{t:\d+}/store/{p}');
+        $compared = new Structure('{t:\d+}/store{p}');
+
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 }

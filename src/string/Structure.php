@@ -13,7 +13,7 @@ namespace samsonframework\stringconditiontree\string;
 class Structure
 {
     /** string Character group matching pattern */
-    const PATTERN = '/'.FixedCharacterGroup::PATTERN.'|'.VariableCharacterGroup::PATTERN.'/';
+    const PATTERN = '/' . FixedCharacterGroup::PATTERN . '|' . VariableCharacterGroup::PATTERN . '/';
 
     /** @var AbstractCharacterGroup[] */
     public $groups = [];
@@ -55,9 +55,9 @@ class Structure
         $maxSize = max($initialStructureSize, $comparedStructureSize);
 
         for ($index = 0; $index < $maxSize; $index++) {
-            // Get compared/intial group or last compared character group is size mismatches
-            $comparedGroup = $structure->groups[$index] ?? $structure->groups[$comparedStructureSize-1];
-            $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize-1];
+            // Get compared/initial group or last compared character group is size mismatches
+            $comparedGroup = $structure->groups[$index] ?? $structure->groups[$comparedStructureSize - 1];
+            $initialGroup = $this->groups[$index] ?? $this->groups[$initialStructureSize - 1];
 
             if (($return = $initialGroup->compare($comparedGroup)) !== 0) {
                 return $return;

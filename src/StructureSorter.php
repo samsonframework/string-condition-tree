@@ -4,6 +4,7 @@
  * on 05.04.17 at 15:18
  */
 namespace samsonframework\stringconditiontree;
+
 use samsonframework\stringconditiontree\string\Structure;
 
 /**
