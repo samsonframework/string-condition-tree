@@ -49,7 +49,7 @@ abstract class AbstractCharacterGroup
         // Equal character group types - return length comparison
         if ($this->isSameType($group)) {
             // Variable character groups with longer length has higher priority
-            return $this->length <=> $group->length;
+            return $this->compareLength($group);
         }
 
         // Fixed character groups has higher priority
@@ -74,14 +74,6 @@ abstract class AbstractCharacterGroup
     }
 
     /**
-     * @return bool True if character group is fixed length otherwise false
-     */
-    public function isFixed(): bool
-    {
-        return $this instanceof FixedCharacterGroup;
-    }
-
-    /**
      * Compare this character group length to compared character group length.
      *
      * @param AbstractCharacterGroup $group Compared character group
@@ -89,4 +81,12 @@ abstract class AbstractCharacterGroup
      * @return int -1, 0, 1 Character groups comparison result
      */
     abstract protected function compareLength(AbstractCharacterGroup $group): int;
+
+    /**
+     * @return bool True if character group is fixed length otherwise false
+     */
+    public function isFixed(): bool
+    {
+        return $this instanceof FixedCharacterGroup;
+    }
 }
