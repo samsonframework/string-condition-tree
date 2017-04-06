@@ -23,6 +23,7 @@ class VariableCG extends AbstractCG
 
     /**
      * @inheritdoc
+     * TODO: Refactor method
      */
     protected function compareLength(AbstractCG $group): int
     {
