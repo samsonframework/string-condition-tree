@@ -19,7 +19,11 @@ class FixedVariableFixedCG extends AbstractCharacterGroup
     const PATTERN_GROUP = 'fixedVariableFixed';
 
     /** string Character group matching regexp pattern */
-    const PATTERN = '(?<'.self::PATTERN_GROUP.'>'.FixedCG::PATTERN_REGEXP.VariableCG::PATTERN_REGEXP.FixedCG::PATTERN_REGEXP.')';
+    const PATTERN = '(?<'.self::PATTERN_GROUP.'>'
+    .FixedCG::PATTERN_REGEXP
+    .VariableCG::PATTERN_REGEXP
+    .FixedCG::PATTERN_REGEXP
+    .')';
 
     /** @var FixedCG */
     protected $firstFixedCG;
@@ -50,21 +54,54 @@ class FixedVariableFixedCG extends AbstractCharacterGroup
     {
         /** @var FixedVariableFixedCG $group */
 
-        // Shorter first FCG has higher priority
-        $return = $group->firstFixedCG->length <=> $this->firstFixedCG->length;
-
-        // First FCG are equal
-        if ($return === 0) {
-            // Longer last FCG has higher priority
-            $return = $this->lastFixedCG->length <=> $group->lastFixedCG->length;
-
-            // Last FCG are equal
-            if ($return === 0) {
-                // Longer VCG has higher priority
-                $return = $this->variableCG->length <=> $group->variableCG->length;
-            }
+        // Compare fixed character groups
+        if (($return = $this->compareFixed($group)) === 0) {
+            // Longer VCG has higher priority
+            $return = $this->variableCG->length <=> $group->variableCG->length;
         }
 
         return $return;
+    }
+
+    /**
+     * Compare fixed character groups.
+     *
+     * @param FixedVariableFixedCG $group Compared character group
+     *
+     * @return int Comparison result
+     */
+    private function compareFixed(FixedVariableFixedCG $group): int
+    {
+        if (($return = $this->compareFirstFixed($group)) === 0) {
+            $return = $this->compareLastFixed($group);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Shorter first fixed character group has higher priority
+     *
+     * @param FixedVariableFixedCG $group Compared character group
+     *
+     * @return int Comparison result
+     */
+    private function compareFirstFixed(FixedVariableFixedCG $group): int
+    {
+        // Regular fixed CG comparison
+        return $this->firstFixedCG->compareLength($group->firstFixedCG);
+    }
+
+    /**
+     * Longer last fixed character group has higher priority
+     *
+     * @param FixedVariableFixedCG $group Compared character group
+     *
+     * @return int Comparison result
+     */
+    private function compareLastFixed(FixedVariableFixedCG $group): int
+    {
+        // Opposite comparison
+        return $this->lastFixedCG->length <=> $group->lastFixedCG->length;
     }
 }

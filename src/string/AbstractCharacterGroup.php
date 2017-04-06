@@ -60,6 +60,8 @@ abstract class AbstractCharacterGroup
                 return new $className($matches[static::PATTERN_GROUP], strlen($matches[static::PATTERN_GROUP]));
             }
         }
+
+        return null;
     }
 
     /**
