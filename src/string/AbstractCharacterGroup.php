@@ -52,13 +52,11 @@ abstract class AbstractCharacterGroup
             return $this->compareLength($group);
         }
 
-        // Fixed character groups has higher priority
-        if ($this->isFixed()) {
-            return 1;
-        }
-
-        // Variable character groups has lower priority
-        return -1;
+        /**
+         * Fixed character groups has higher priority,
+         * variable character groups has lower priority
+         */
+        return $this->isFixed() ? 1 : -1;
     }
 
     /**
