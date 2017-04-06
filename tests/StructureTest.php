@@ -66,6 +66,24 @@ class StructureTest extends TestCase
         $this->assertEquals(-1, $compared->compare($initial));
     }
 
+    public function testInitialFirstVariableEqualToComparedSecondFixedLonger()
+    {
+        $initial = new Structure('{t:\d+}/store');
+        $compared = new Structure('{t:\d+}/profile');
+
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
+    }
+
+    public function testInitialFirstVariableEqualToComparedWithParameterSecondFixedLonger()
+    {
+        $initial = new Structure('{t:\d+}/store/{p}');
+        $compared = new Structure('{t:\d+}/profile');
+
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
+    }
+
     public function testInitialFirstFixedEqualToComparedRestEqual()
     {
         $initial = new Structure('/form-one/{t:\d+}/profile');
