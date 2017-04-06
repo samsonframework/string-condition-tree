@@ -48,7 +48,7 @@ abstract class AbstractCharacterGroup
      */
     public static function fromString(string &$input)
     {
-        if (preg_match('/'.static::PATTERN.'/', $input, $matches)) {
+        if (preg_match('/^'.static::PATTERN.'/', $input, $matches)) {
             // Replace only first occurrence of character group
             if (($pos = strpos($input, $matches[0])) !== false) {
                 $input = substr_replace($input, '', $pos, strlen($matches[0]));

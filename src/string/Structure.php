@@ -37,12 +37,13 @@ class Structure
         // Iterate until input is cleared
         while (strlen($input)) {
             foreach (self::CG_TYPES as $characterGroupType) {
-                $this->groups[] = $characterGroupType::fromString($input);
+                if(($group = $characterGroupType::fromString($input)) !== null) {
+                    $this->groups[] = $group;
+                    // Reset CG type iterator to preserve order
+                    break;
+                }
             }
         }
-
-        // Remove empty values
-        $this->groups = array_values(array_filter($this->groups));
     }
 
     /**

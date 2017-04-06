@@ -16,7 +16,7 @@ class FixedCG extends AbstractCharacterGroup
     const PATTERN_GROUP = 'fixed';
 
     /** string Regular expression matching character group */
-    const PATTERN_REGEXP = '^[^{}]+';
+    const PATTERN_REGEXP = '[^{}]+';
 
     /** string Character group matching regexp pattern */
     const PATTERN = '(?<'.self::PATTERN_GROUP.'>'.self::PATTERN_REGEXP.')';
