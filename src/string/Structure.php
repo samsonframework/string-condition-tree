@@ -100,7 +100,7 @@ class Structure extends IterableStructure
              * If returned prefix is not equal to initial/compared character groups then it means
              * that it is shorter and we need to stop searching.
              */
-            if ($prefix !== $initialGroup->getString() || $prefix !== $comparedGroup->getString()) {
+            if ($this->isStringNotMatchingAnyCG($prefix, $initialGroup, $comparedGroup)) {
                 break;
             }
         }
@@ -119,5 +119,19 @@ class Structure extends IterableStructure
     {
 
         return $this->count() < $compared->count() ? $this : $compared;
+    }
+
+    /**
+     * Define if string does not match any of the passed character groups.
+     *
+     * @param string     $string String for comparison
+     * @param AbstractCG $initialGroup Initial character group
+     * @param AbstractCG $comparedGroup Compared character group
+     *
+     * @return bool True if string not matching any of character groups
+     */
+    private function isStringNotMatchingAnyCG(string $string, AbstractCG $initialGroup, AbstractCG $comparedGroup): bool
+    {
+        return $string !== $initialGroup->getString() || $string !== $comparedGroup->getString();
     }
 }

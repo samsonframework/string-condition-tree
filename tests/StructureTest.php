@@ -60,6 +60,7 @@ class StructureTest extends TestCase
     public function testGetCommonPrefix()
     {
         $data = [
+            'cms/gift/' => ['cms/gift/{id}/{search}', 'cms/gift/form/{id}'],
             '/' => ['/{entity}/{id}/form', '/{id}/test/{page:\d+}'],
             '/test/{p}' => ['/test/{p}', '/test/{p}/'],
             '{p}/test/' => ['{p}/test/{f}', '{p}/test/{z}/'],
