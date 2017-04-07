@@ -183,10 +183,19 @@ class StructureTest extends TestCase
         $this->assertEquals(-1, $compared->compare($initial));
     }
 
-    public function test1()
+    public function testVariableFixedVariableToFixed()
     {
         $initial = new Structure('{param}-{parameter}');
         $compared = new Structure('/test/');
+
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
+    }
+
+    public function testLongerVariableFilter()
+    {
+        $initial = new Structure('{param:\d+}');
+        $compared = new Structure('{p:[12345]+}');
 
         $this->assertEquals(-1, $initial->compare($compared));
         $this->assertEquals(1, $compared->compare($initial));
