@@ -23,29 +23,33 @@ class VariableCG extends AbstractCG
 
     /**
      * @inheritdoc
-     * TODO: Refactor method
      */
     protected function compareLength(AbstractCG $group): int
     {
-        $return = 0;
-
         /** @var VariableCG $group */
         $variableFiltered = $this->variableHasFilter();
         $comparedFiltered = $group->variableHasFilter();
 
-        // Filtered variable character group has priority
-        if ($variableFiltered) {
-            $return = 1;
-            // Both are filtered
-            if ($comparedFiltered) {
-                // Longer Variable character group has higher priority
-                $return = $this->length <=> $group->length;
-            }
-        } elseif ($comparedFiltered) {
-            $return = -1;
+        /**
+         * Both variable character groups are filtered
+         * longer variable character groups has higher priority.
+         */
+        if ($variableFiltered && $comparedFiltered) {
+            return $this->length <=> $group->length;
         }
 
-        return $return;
+        // Only this variable character group is filtered
+        if ($variableFiltered && $comparedFiltered === false) {
+            return 1;
+        }
+
+        // Only compared variable character group is filtered
+        if ($variableFiltered === false && $comparedFiltered) {
+            return -1;
+        }
+
+        // Consider both variable character groups are not filtered
+        return 0;
     }
 
     /**
