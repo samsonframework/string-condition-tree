@@ -60,8 +60,8 @@ class VariableCG extends AbstractCG
     protected function compareLength(AbstractCG $group): int
     {
         /** @var VariableCG $group */
-        $variableFiltered = $this->variableHasFilter();
-        $comparedFiltered = $group->variableHasFilter();
+        $variableFiltered = $this->isFiltered();
+        $comparedFiltered = $group->isFiltered();
 
         /**
          * Both variable character groups are filtered
@@ -88,7 +88,7 @@ class VariableCG extends AbstractCG
     /**
      * @return bool Return true if variable character group has filter
      */
-    public function variableHasFilter(): bool
+    public function isFiltered(): bool
     {
         return $this->filter !== '';
     }
