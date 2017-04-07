@@ -6,11 +6,12 @@
 namespace samsonframework\stringconditiontree\string;
 
 /**
- * Class LongestMatchingPrefix
+ * Class finds longest common prefix between strings,
+ * considering fixed and variable character groups.
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class LongestMatchingPrefix
+class CommonPrefix
 {
     /** @var Structure Input string structure */
     protected $structure;

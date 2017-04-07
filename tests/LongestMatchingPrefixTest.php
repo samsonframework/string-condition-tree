@@ -6,7 +6,7 @@
 namespace samsonframework\stringconditiontree\tests;
 
 use PHPUnit\Framework\TestCase;
-use samsonframework\stringconditiontree\string\LongestMatchingPrefix;
+use samsonframework\stringconditiontree\string\CommonPrefix;
 
 /**
  * Class LongestMatchingPrefixTest
@@ -17,7 +17,7 @@ class LongestMatchingPrefixTest extends TestCase
 {
     public function testGet()
     {
-        $lmp = new LongestMatchingPrefix('/test/{p}');
+        $lmp = new CommonPrefix('/test/{p}');
 
         $this->assertEquals('/te', $lmp->getCommonPrefix('/te{p}'));
     }
