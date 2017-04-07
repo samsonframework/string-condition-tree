@@ -96,6 +96,11 @@ class VariableCG extends AbstractCG
             return -1;
         }
 
+        // 1 - 1 - longest
+        // 1 - 0 - 1
+        // 0 - 1 - -1
+        // 0 - 0 - 0
+
         // Consider both variable character groups are not filtered
         return 0;
     }

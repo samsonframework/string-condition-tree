@@ -85,11 +85,8 @@ class Structure extends IterableStructure
     {
         $longestPrefix = '';
 
-        // Define shortest structure
-        $shortestStructure = $this->count() < $compared->count() ? $this : $compared;
-
         /** @var AbstractCG $group Iterate longest structure character groups */
-        foreach ($shortestStructure as $index => $group) {
+        foreach ($this->getShortestStructure($compared) as $index => $group) {
             $initialGroup = $this->groups[$index];
             $comparedGroup = $compared->groups[$index];
 
@@ -109,5 +106,18 @@ class Structure extends IterableStructure
         }
 
         return $longestPrefix;
+    }
+
+    /**
+     * Define shortest structure.
+     *
+     * @param Structure $compared Structure to compare
+     *
+     * @return Structure Shortest structure
+     */
+    private function getShortestStructure(Structure $compared): Structure
+    {
+
+        return $this->count() < $compared->count() ? $this : $compared;
     }
 }
