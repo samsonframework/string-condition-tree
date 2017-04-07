@@ -15,10 +15,16 @@ use samsonframework\stringconditiontree\string\CommonPrefix;
  */
 class LongestMatchingPrefixTest extends TestCase
 {
-    public function testGet()
+    public function testGetCommonPrefix()
     {
-        $lmp = new CommonPrefix('/test/{p}');
+        $data = [
+            '/te' => ['/test/{p}', '/te{p}'],
+            '/test/{p}' => ['/test/{p}', '/test/{p}/'],
+        ];
 
-        $this->assertEquals('/te', $lmp->getCommonPrefix('/te{p}'));
+        foreach ($data as $lmp => $strings) {
+            $this->assertEquals($lmp, (new CommonPrefix($strings[0]))->getCommonPrefix($strings[1]));
+            $this->assertEquals($lmp, (new CommonPrefix($strings[1]))->getCommonPrefix($strings[0]));
+        }
     }
 }
