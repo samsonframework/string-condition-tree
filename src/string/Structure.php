@@ -38,7 +38,7 @@ class Structure
         while (strlen($input)) {
             foreach (self::CG_TYPES as $characterGroupType) {
                 // Try to create character group
-                if (($group = $characterGroupType::fromString($input)) !== null) {
+                if (!($group = $characterGroupType::fromString($input)) instanceof NullCG) {
                     $this->groups[] = $group;
                     // Reset CG type iterator to preserve order
                     break;
