@@ -39,6 +39,29 @@ class VariableFixedCG extends AbstractCG
     }
 
     /**
+     * Get variable character group common prefix, if exists then
+     * append fixed character group prefix.
+     *
+     * @inheritdoc
+     */
+    public function getCommonPrefix(AbstractCG $group): string
+    {
+        // Get common prefix as concatenation of variable and fixed character groups common prefixes
+        if ($this->isSameType($group)) {
+            /** @var VariableFixedCG $group */
+            return $this->variableCG->getCommonPrefix($group->variableCG)
+                . $this->fixedCG->getCommonPrefix($group->fixedCG);
+        }
+
+        // Compare only first variable character groups
+        if ($group instanceof VariableCG) {
+            return $this->variableCG->getCommonPrefix($group);
+        }
+
+        return '';
+    }
+
+    /**
      * @inheritdoc
      */
     public function compare(AbstractCG $group): int

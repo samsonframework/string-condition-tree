@@ -122,6 +122,15 @@ abstract class AbstractCG
     }
 
     /**
+     * Get two character groups longest common prefix.
+     *
+     * @param AbstractCG $group Compared character group
+     *
+     * @return string Longest common prefix or empty string
+     */
+    abstract public function getCommonPrefix(AbstractCG $group): string;
+
+    /**
      * @return string Character group string
      */
     public function getString(): string

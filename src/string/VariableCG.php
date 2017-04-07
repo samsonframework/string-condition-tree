@@ -55,6 +55,21 @@ class VariableCG extends AbstractCG
     }
 
     /**
+     * Whole variable length string should match.
+     *
+     * @inheritdoc
+     */
+    public function getCommonPrefix(AbstractCG $group): string
+    {
+        if ($this->isSameType($group)) {
+            return $this->string === $group->string ? $this->string : '';
+        }
+
+        // Pass to compared
+        return $group->getCommonPrefix($this);
+    }
+
+    /**
      * @inheritdoc
      */
     protected function compareLength(AbstractCG $group): int

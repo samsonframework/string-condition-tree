@@ -24,6 +24,37 @@ class FixedCG extends AbstractCG
     /**
      * @inheritdoc
      */
+    public function getCommonPrefix(AbstractCG $group): string
+    {
+        $prefix = '';
+
+        // Convert strings to arrays
+        $initialArray = str_split($this->string);
+        $comparedArray = str_split($group->string);
+
+        // Get shortest array
+        $minSize = min(count($initialArray), count($comparedArray));
+
+        // Iterate longest array
+        for ($i = 0; $i < $minSize; $i++) {
+            // Get existing character or empty string
+            $initialChar = $initialArray[$i] ?? '';
+            $comparedChar = $comparedArray[$i] ?? '';
+
+            // On first mismatch - break
+            if ($initialChar !== $comparedChar) {
+                break;
+            }
+
+            $prefix .= $initialChar;
+        }
+
+        return $prefix;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function compareLength(AbstractCG $group): int
     {
         /**

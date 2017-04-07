@@ -57,6 +57,24 @@ class StructureTest extends TestCase
         }
     }
 
+    public function testGetCommonPrefix()
+    {
+        $data = [
+            '/test/{p}' => ['/test/{p}', '/test/{p}/'],
+            '{p}/test/' => ['{p}/test/{f}', '{p}/test/{z}/'],
+            '/te' => ['/test/{p}', '/te{p}'],
+            '{p}/' => ['{p}/test', '{p}/form'],
+            '{p}' => ['{p}test', '{p}form'],
+            'test' => ['test', 'testing'],
+            '' => ['{p}', '{parameter}'],
+        ];
+
+        foreach ($data as $lmp => $strings) {
+            $this->assertEquals($lmp, (new Structure($strings[0]))->getCommonPrefix(new Structure($strings[1])));
+            $this->assertEquals($lmp, (new Structure($strings[1]))->getCommonPrefix(new Structure($strings[0])));
+        }
+    }
+
     public function testVariableFixedToVariableFixedVariableWithEqualFixed()
     {
         $initial = new Structure('{p}/test/');

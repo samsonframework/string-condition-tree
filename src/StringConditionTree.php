@@ -5,6 +5,7 @@
  */
 namespace samsonframework\stringconditiontree;
 
+use samsonframework\stringconditiontree\string\CommonPrefix;
 use samsonframework\stringconditiontree\string\Structure;
 
 /**
@@ -127,6 +128,16 @@ class StringConditionTree
      */
     protected function getLMPCollection(array $input): array
     {
+        $longestPrefixes = [];
+        foreach ($input as $index => $string) {
+            $initialStructure = new Structure($string);
+            foreach ($input as $comparedString) {
+                $comparedStructure = new Structure($comparedString);
+                $longestPrefixes[$initialStructure->getCommonPrefix($comparedStructure)][] = $comparedString;
+            }
+        }
+
+
         $longestPrefixes = [];
         for ($i = 0, $length = count($input); $i < $length; $i++) {
             $initial = $input[$i];

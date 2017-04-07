@@ -72,4 +72,42 @@ class Structure extends IterableStructure
         // Structures are equal
         return 0;
     }
+
+    /**
+     * Get longest common prefix between strings.
+     *
+     * @param Structure $compared Compared character group structure
+     *
+     * @return string Strings Longest common prefix or empty string
+     *
+     */
+    public function getCommonPrefix(Structure $compared)
+    {
+        $longestPrefix = '';
+
+        // Define shortest structure
+        $shortestStructure = $this->count() < $compared->count() ? $this : $compared;
+
+        /** @var AbstractCG $group Iterate longest structure character groups */
+        foreach ($shortestStructure as $index => $group) {
+            $initialGroup = $this->groups[$index];
+            $comparedGroup = $compared->groups[$index];
+
+            // Get longest matching prefix between character groups.
+            $prefix = $initialGroup->getCommonPrefix($comparedGroup);
+
+            // Concatenate common prefix
+            $longestPrefix .= $prefix;
+
+            /**
+             * If returned prefix is not equal to initial/compared character groups then it means
+             * that it is shorter and we need to stop searching.
+             */
+            if ($prefix !== $initialGroup->getString() || $prefix !== $comparedGroup->getString()) {
+                break;
+            }
+        }
+
+        return $longestPrefix;
+    }
 }

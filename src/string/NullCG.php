@@ -23,6 +23,14 @@ class NullCG extends AbstractCG
     /**
      * @inheritdoc
      */
+    public function getCommonPrefix(AbstractCG $group): string
+    {
+        return '';
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function compareLength(AbstractCG $group): int
     {
         // Passed character group always has higher priority
