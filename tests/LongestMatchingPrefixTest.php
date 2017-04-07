@@ -19,6 +19,6 @@ class LongestMatchingPrefixTest extends TestCase
     {
         $lmp = new LongestMatchingPrefix('/test/{p}');
 
-        $this->assertEquals('/te', $lmp->get('/te{p}'));
+        $this->assertEquals('/te', $lmp->getCommonPrefix('/te{p}'));
     }
 }

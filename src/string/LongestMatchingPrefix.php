@@ -12,19 +12,27 @@ namespace samsonframework\stringconditiontree\string;
  */
 class LongestMatchingPrefix
 {
-    /** @var string Input string */
-    protected $string;
-
     /** @var Structure Input string structure */
     protected $structure;
 
+    /**
+     * LongestMatchingPrefix constructor.
+     *
+     * @param string $string Input string
+     */
     public function __construct(string $string)
     {
-        $this->string = $string;
         $this->structure = new Structure($string);
     }
 
-    public function get(string $comparedString)
+    /**
+     * Get longest common prefix between strings.
+     *
+     * @param string $comparedString Compared string
+     *
+     * @return string Strings longest matching prefix or empty string
+     */
+    public function getCommonPrefix(string $comparedString)
     {
         $compared = new Structure($comparedString);
 
@@ -43,7 +51,7 @@ class LongestMatchingPrefix
              * If returned prefix is not equal initial character groups then it means
              * that it is shorter and we need to stop searching.
              */
-            if (($prefix = $this->compareGroups($initialGroup, $comparedGroup)) === $initialGroup->getString()) {
+            if (($prefix = $this->getGroupsCommonPrefix($initialGroup, $comparedGroup)) === $initialGroup->getString()) {
                 break;
             }
 
@@ -53,8 +61,23 @@ class LongestMatchingPrefix
         return $longestPrefix;
     }
 
-    protected function compareGroups(AbstractCG $initial, AbstractCG $compared): string
+    /**
+     * Get longest common prefix between character groups.
+     *
+     * @param AbstractCG $initial Initial character group
+     * @param AbstractCG $compared Compared character group
+     *
+     * @return string Longest common prefix between groups
+     */
+    protected function getGroupsCommonPrefix(AbstractCG $initial, AbstractCG $compared): string
     {
+        $prefix = '';
+
+//        // We cannot
+//        if ($initial->isSameType($compared) !== false) {
+//            return $prefix;
+//        }
+
         // Convert strings to arrays
         $initialArray = str_split($initial->getString());
         $comparedArray = str_split($compared->getString());
@@ -63,7 +86,6 @@ class LongestMatchingPrefix
         $maxSize = max(count($initialArray), count($comparedArray));
 
         // Iterate longest array
-        $prefix = '';
         for ($i = 0; $i < $maxSize; $i++) {
             // Get existing character or empty string
             $initialChar = $initialArray[$i] ?? '';
