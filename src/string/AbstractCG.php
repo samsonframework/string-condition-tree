@@ -120,4 +120,12 @@ abstract class AbstractCG
     {
         return $this instanceof FixedCG;
     }
+
+    /**
+     * @return string Character group string
+     */
+    public function getString(): string
+    {
+        return $this->string;
+    }
 }

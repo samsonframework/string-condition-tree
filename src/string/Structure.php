@@ -10,7 +10,7 @@ namespace samsonframework\stringconditiontree\string;
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class Structure
+class Structure extends IterableStructure
 {
     /** array Supported character group types */
     const CG_TYPES = [
@@ -18,9 +18,6 @@ class Structure
         VariableCG::class,
         FixedCG::class,
     ];
-
-    /** @var AbstractCG[] */
-    public $groups = [];
 
     /** @var string Input string */
     public $input;
