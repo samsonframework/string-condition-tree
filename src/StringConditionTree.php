@@ -35,7 +35,7 @@ class StringConditionTree
     /** @var TreeNode Resulting collection for debugging */
     protected $debug;
 
-    /** @var array Collection of input string => identifier */
+    /** @var array Collection of string string => identifier */
     protected $source;
 
     /** @var string Parametrized string start marker */
@@ -128,138 +128,75 @@ class StringConditionTree
      */
     protected function getLMPCollection(array $input): array
     {
+        /** @var Structure[] $input */
+        $input = $this->sortStructures($input);
+
         $longestPrefixes = [];
-        foreach ($input as $index => $string) {
-            $initialStructure = new Structure($string);
-            foreach ($input as $comparedString) {
-                if ($string !== $comparedString) {
-                    $comparedStructure = new Structure($comparedString);
-                    if (($longestPrefix = $initialStructure->getCommonPrefix($comparedStructure)) !== '') {
-                        $longestPrefixes[][] = $comparedString;
+
+        // Iterate sorted character group structures
+        foreach ($input as $initialStructure) {
+            $foundLMP = false;
+            // Iterate all character group structures again
+            foreach ($input as $comparedStructure) {
+                // Ignore same structures
+                if ($initialStructure === $comparedStructure) {
+                    continue;
+                }
+
+                // Get common longest prefix between structures
+                if (($longestPrefix = $initialStructure->getCommonPrefix($comparedStructure)) !== '') {
+                    $foundLMP = true;
+                    $foundExisting = false;
+                    foreach ($longestPrefixes as $prefix => $strings) {
+                        if ((new Structure($prefix))->getCommonPrefix(new Structure($longestPrefix)) === $prefix) {
+                            $longestPrefixes[$prefix][] = $comparedStructure->string;
+                            $foundExisting = true;
+                            break;
+                        }
                     }
 
-                    if ($longestPrefix === '//') {
-                        var_dump(1);
+                    if (!$foundExisting) {
+                        $longestPrefixes[$longestPrefix][] = $comparedStructure->string;
                     }
                 }
+            }
+
+            // We have not found longest common prefix with no strings - add as separate
+            if (!$foundLMP) {
+                $longestPrefixes[$initialStructure->string][] = $initialStructure->string;
             }
         }
 
-        $longestPrefixes = [];
-        for ($i = 0, $length = count($input); $i < $length; $i++) {
-            $initial = $input[$i];
-            $foundLMP = false;
-            for ($j = 0; $j < $length; $j++) {
-                $compared = $input[$j];
-                if ($compared !== $initial) {
-                    $longestMatchedPrefix = $this->getLongestMatchingPrefix($initial, $compared);
-
-                    // We have found at least one matching character between strings
-                    if ($longestMatchedPrefix !== '') {
-                        $foundLMP = true;
-                        $this->addUniqueToArray($initial, $longestPrefixes[$longestMatchedPrefix]);
-                    }
-                }
-            }
-
-            // Add initial string as LMP
-            if ($foundLMP === false) {
-                $this->addUniqueToArray($initial, $longestPrefixes[$initial]);
-            }
+        // Clear duplicates
+        foreach ($longestPrefixes as $prefix => &$strings) {
+            $longestPrefixes[$prefix] = array_unique($strings);
         }
 
         return $longestPrefixes;
     }
 
     /**
-     * Find longest matching prefix between two strings.
+     * Sort structures array.
      *
-     * @param string $initialString  Initial string
-     * @param string $comparedString Compared string
+     * @param array $strings Input strings array
      *
-     * TODO: Refactor this method
-     *
-     * @return string Longest matching prefix
+     * @return Structure[] Sorted structures array
      */
-    protected function getLongestMatchingPrefix(string $initialString, string $comparedString): string
+    protected function sortStructures(array $strings): array
     {
-        // Iterate and compare how string matches
-        $longestPrefix = '';
-
-        // Define shortest & longest strings to avoid errors
-        $initialLength = strlen($initialString);
-        $comparedLength = strlen($comparedString);
-
-        // Define shortest and longest strings to avoid character matching errors
-        $shortestString = $initialLength < $comparedLength ? $initialString : $comparedString;
-        $longestString = $initialLength >= $comparedLength ? $initialString : $comparedString;
-
-        // Iterate initial string characters
-        $isPattern = false;
-        $parametrizedPrefix = '';
-        for ($z = 0, $length = strlen($shortestString); $z < $length; $z++) {
-            // Pattern support
-            if ($isPattern || $shortestString{$z} === $this->parameterStartMarker) {
-                $isPattern = true;
-
-                // Concatenate longest matching prefix
-                $parametrizedPrefix .= $shortestString{$z};
-
-                // Compare characters with compared string
-                if ($shortestString{$z} !== $longestString{$z}) {
-                    break;
-                }
-
-                // If pattern id closed unset flag for special behaviour
-                if ($shortestString{$z} === $this->parameterEndMarker) {
-                    // If parametrized part ended append to longest matching prefix
-                    $longestPrefix .= $parametrizedPrefix;
-                    // Clear parametrized prefix as we can have other parametrized parts
-                    $parametrizedPrefix = '';
-                    // Reset parametrized flag
-                    $isPattern = false;
-                }
-            } else {
-                // Compare characters with compared string
-                if ($shortestString{$z} !== $longestString{$z}) {
-                    break; // Exit on first mismatching character
-                }
-
-                // Concatenate matching part of two strings
-                $longestPrefix .= $initialString{$z};
-            }
+        // Create structures
+        $structures = [];
+        foreach ($strings as $string) {
+            $structures[] = new Structure($string);
         }
 
-        return $longestPrefix;
-    }
+        // Sort structures
+        usort($structures, function (Structure $initial, Structure $compared) {
+            return $initial->compare($compared);
+        });
 
-    /**
-     * Add only unique value to array.
-     *
-     * @param mixed $value  Unique value
-     * @param array $array  Array for adding unique value
-     * @param bool  $strict Strict uniqueness check
-     *
-     * @return bool True if unique value was added
-     * @see in_array();
-     *
-     */
-    protected function addUniqueToArray($value, &$array, bool $strict = true)
-    {
-        // Create array if not array is passed
-        if (!is_array($array)) {
-            $array = [];
-        }
-
-        // Add value to array if it is unique
-        if (!in_array($value, $array, $strict)) {
-            $array[] = $value;
-
-            return true;
-        }
-
-        // Value is already in array
-        return false;
+        // Sort descending
+        return array_reverse($structures);
     }
 
     /**
@@ -286,7 +223,7 @@ class StringConditionTree
         // Restore initial strings sub-arrays
         $result = [];
         foreach ($structures as $structure) {
-            $result[$structure->input] = $input[$structure->input];
+            $result[$structure->string] = $input[$structure->string];
         }
 
         return $result;

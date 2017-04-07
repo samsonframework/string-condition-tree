@@ -16,6 +16,24 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
 
     /** @var array Expected string condition tree */
     protected $expected = [
+        'p' => [
+            '@self' => '#9',
+            '/' => [
+                'test' => [
+                    '/' => ['@self'=> '#10'],
+                    '-me/' => ['@self' => '#11']
+                ],
+                '{parameter}/' => [
+                    '@self' => '#15',
+                    'name' => ['@self' => '#16'],
+                ],
+                '{id:d+}' => ['@self' => '#14'],
+                '{id}' => [
+                    '@self' => '#12',
+                    '/' => ['@self' => '#13']
+                ],
+            ]
+        ],
         '/' => [
             '@self' => '#6',
             't' => [
@@ -40,24 +58,6 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
             '{id}/test/{page:\d+}' => ['@self' => '#29'],
             '{entity}/{id}/form' => ['@self' => '#28'],
             '{num}/{page:\d+}' => ['@self' => '#30'],
-        ],
-        'p' => [
-            '@self' => '#9',
-            '/' => [
-                'test' => [
-                    '/' => ['@self'=> '#10'],
-                    '-me/' => ['@self' => '#11']
-                ],
-                '{parameter}/' => [
-                    '@self' => '#15',
-                    'name' => ['@self' => '#16'],
-                ],
-                '{id:d+}' => ['@self' => '#14'],
-                '{id}' => [
-                    '@self' => '#12',
-                    '/' => ['@self' => '#13']
-                ],
-            ]
         ],
         'test/' => [
             '@self' => '#7',

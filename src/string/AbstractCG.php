@@ -40,7 +40,7 @@ abstract class AbstractCG
     }
 
     /**
-     * Create character group from input string.
+     * Create character group from string string.
      *
      * @param string $input Input string
      *

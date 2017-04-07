@@ -20,18 +20,18 @@ class Structure extends IterableStructure
     ];
 
     /** @var string Input string */
-    public $input;
+    public $string;
 
     /**
-     * Create string character group structure from input string.
+     * Create string character group structure from string string.
      *
      * @param string $input Input string for string character group structure
      */
     public function __construct(string $input)
     {
-        $this->input = $input;
+        $this->string = $input;
 
-        // Iterate until input is cleared
+        // Iterate until string is cleared
         while (strlen($input)) {
             foreach (self::CG_TYPES as $characterGroupType) {
                 // Try to create character group
