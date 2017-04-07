@@ -68,7 +68,7 @@ class VariableCG extends AbstractCG
          * longer variable character groups has higher priority.
          */
         if ($variableFiltered && $comparedFiltered) {
-            return $this->length <=> $group->length;
+            return strlen($this->filter) <=> strlen($group->filter);
         }
 
         // Only this variable character group is filtered
@@ -88,7 +88,7 @@ class VariableCG extends AbstractCG
     /**
      * @return bool Return true if variable character group has filter
      */
-    public function isFiltered(): bool
+    protected function isFiltered(): bool
     {
         return $this->filter !== '';
     }
