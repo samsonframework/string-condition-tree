@@ -14,6 +14,7 @@ class Structure extends IterableStructure
 {
     /** array Supported character group types */
     const CG_TYPES = [
+        FixedVariableCG::class,
         VariableFixedCG::class,
         VariableCG::class,
         FixedCG::class,

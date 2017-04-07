@@ -128,16 +128,15 @@ class StringConditionTree
      */
     protected function getLMPCollection(array $input): array
     {
-        /** @var Structure[] $input */
-        $input = $this->sortStructures($input);
+        $structures = $this->sortStructures($input);
 
         $longestPrefixes = [];
 
         // Iterate sorted character group structures
-        foreach ($input as $initialStructure) {
+        foreach ($structures as $initialStructure) {
             $foundLMP = false;
             // Iterate all character group structures again
-            foreach ($input as $comparedStructure) {
+            foreach ($structures as $comparedStructure) {
                 // Ignore same structures
                 if ($initialStructure === $comparedStructure) {
                     continue;
