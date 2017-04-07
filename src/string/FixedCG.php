@@ -28,25 +28,17 @@ class FixedCG extends AbstractCG
     {
         $prefix = '';
 
-        // Convert strings to arrays
-        $initialArray = str_split($this->string);
-        $comparedArray = str_split($group->string);
-
         // Get shortest array
-        $minSize = min(count($initialArray), count($comparedArray));
+        $minSize = min(strlen($this->string), strlen($group->string));
 
         // Iterate longest array
         for ($i = 0; $i < $minSize; $i++) {
-            // Get existing character or empty string
-            $initialChar = $initialArray[$i] ?? '';
-            $comparedChar = $comparedArray[$i] ?? '';
-
             // On first mismatch - break
-            if ($initialChar !== $comparedChar) {
+            if ($this->string{$i} !== $group->string{$i}) {
                 break;
             }
 
-            $prefix .= $initialChar;
+            $prefix .= $this->string{$i};
         }
 
         return $prefix;
