@@ -72,7 +72,7 @@ abstract class AbstractCG
     /**
      * Compare character groups.
      *
-     * @param AbstractCG $group Compared character group
+     * @param AbstractCG|FixedCG|VariableCG|VariableFixedCG $group Compared character group
      *
      * @return int -1, 0, 1 Lower, equal, higher
      */
@@ -107,7 +107,7 @@ abstract class AbstractCG
     /**
      * Compare this character group length to compared character group length.
      *
-     * @param AbstractCG $group Compared character group
+     * @param AbstractCG|FixedCG|VariableCG|VariableFixedCG $group Compared character group
      *
      * @return int -1, 0, 1 Character groups comparison result
      */
@@ -124,7 +124,7 @@ abstract class AbstractCG
     /**
      * Get two character groups longest common prefix.
      *
-     * @param AbstractCG $group Compared character group
+     * @param AbstractCG|FixedCG|VariableCG|VariableFixedCG $group Compared character group
      *
      * @return string Longest common prefix or empty string
      */

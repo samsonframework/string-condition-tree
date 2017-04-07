@@ -81,11 +81,10 @@ class VariableFixedCG extends AbstractCG
 
     /**
      * @inheritdoc
+     * @param VariableFixedCG $group
      */
     protected function compareLength(AbstractCG $group): int
     {
-        /** @var VariableFixedCG $group */
-
         // Fixed CG are equal
         if (($return = $this->compareFixed($group)) === 0) {
             // Compare variable character groups
