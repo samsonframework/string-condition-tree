@@ -132,11 +132,18 @@ class StringConditionTree
         foreach ($input as $index => $string) {
             $initialStructure = new Structure($string);
             foreach ($input as $comparedString) {
-                $comparedStructure = new Structure($comparedString);
-                $longestPrefixes[$initialStructure->getCommonPrefix($comparedStructure)][] = $comparedString;
+                if ($string !== $comparedString) {
+                    $comparedStructure = new Structure($comparedString);
+                    if (($longestPrefix = $initialStructure->getCommonPrefix($comparedStructure)) !== '') {
+                        $longestPrefixes[][] = $comparedString;
+                    }
+
+                    if ($longestPrefix === '//') {
+                        var_dump(1);
+                    }
+                }
             }
         }
-
 
         $longestPrefixes = [];
         for ($i = 0, $length = count($input); $i < $length; $i++) {
