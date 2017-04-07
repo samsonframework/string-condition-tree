@@ -12,7 +12,13 @@ namespace samsonframework\stringconditiontree\string;
  */
 class VariableCG extends AbstractCG
 {
-    /** string Character group matching regexp pattern matching group name */
+    /** string Regular expression named filter group */
+    const PATTERN_FILTER_GROUP = 'filter';
+
+    /** string Variable string filter pattern */
+    const PATTER_FILTER = '/.*?:(?<'.self::PATTERN_FILTER_GROUP.'>[^}]+)/';
+
+    /** string Regular expression named character group group */
     const PATTERN_GROUP = 'variable';
 
     /** string Regular expression matching character group */
@@ -20,6 +26,33 @@ class VariableCG extends AbstractCG
 
     /** string Character group matching regexp pattern */
     const PATTERN = '(?<'.self::PATTERN_GROUP.'>'.self::PATTERN_REGEXP.')';
+
+    /** @var string Variable character group filter string */
+    protected $filter;
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct($string, $length = 0)
+    {
+        parent::__construct($string, $length);
+
+        $this->filter = $this->getFilter();
+    }
+
+    /**
+     * Get variable character group filter value.
+     *
+     * @return string Filter value or empty string
+     */
+    protected function getFilter(): string
+    {
+        if (preg_match(static::PATTER_FILTER, $this->string, $matches)) {
+            return $matches[self::PATTERN_FILTER_GROUP];
+        }
+
+        return '';
+    }
 
     /**
      * @inheritdoc
@@ -57,6 +90,6 @@ class VariableCG extends AbstractCG
      */
     public function variableHasFilter(): bool
     {
-        return strpos($this->string, ':') !== false;
+        return $this->filter !== '';
     }
 }
