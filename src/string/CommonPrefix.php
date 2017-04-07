@@ -47,16 +47,19 @@ class CommonPrefix
             $initialGroup = $this->structure->groups[$index];
             $comparedGroup = $compared->groups[$index];
 
+            // Get longest matching prefix between character groups.
+            $prefix = $this->getGroupsCommonPrefix($initialGroup, $comparedGroup);
+
+            // Concatenate common prefix
+            $longestPrefix .= $prefix;
+
             /**
-             * Get longest matching prefix between character groups.
-             * If returned prefix is not equal initial character groups then it means
+             * If returned prefix is not equal to initial/compared character groups then it means
              * that it is shorter and we need to stop searching.
              */
-            if (($prefix = $this->getGroupsCommonPrefix($initialGroup, $comparedGroup)) === $initialGroup->getString()) {
+            if ($prefix !== $initialGroup->getString() || $prefix !== $comparedGroup->getString()) {
                 break;
             }
-
-            $longestPrefix .= $prefix;
         }
 
         return $longestPrefix;
@@ -74,20 +77,15 @@ class CommonPrefix
     {
         $prefix = '';
 
-//        // We cannot
-//        if ($initial->isSameType($compared) !== false) {
-//            return $prefix;
-//        }
-
         // Convert strings to arrays
         $initialArray = str_split($initial->getString());
         $comparedArray = str_split($compared->getString());
 
-        // Get longest array
-        $maxSize = max(count($initialArray), count($comparedArray));
+        // Get shortest array
+        $minSize = min(count($initialArray), count($comparedArray));
 
         // Iterate longest array
-        for ($i = 0; $i < $maxSize; $i++) {
+        for ($i = 0; $i < $minSize; $i++) {
             // Get existing character or empty string
             $initialChar = $initialArray[$i] ?? '';
             $comparedChar = $comparedArray[$i] ?? '';

@@ -20,6 +20,9 @@ class LongestMatchingPrefixTest extends TestCase
         $data = [
             '/te' => ['/test/{p}', '/te{p}'],
             '/test/{p}' => ['/test/{p}', '/test/{p}/'],
+            '{p}/' => ['{p}/test', '{p}/form'],
+            '{p}' => ['{p}test', '{p}form'],
+            'test' => ['test', 'testing'],
         ];
 
         foreach ($data as $lmp => $strings) {
