@@ -31,21 +31,11 @@ class VariableFixedCG extends AbstractCG
      */
     public function __construct(string $string, int $length = 0)
     {
-        $this->size = 2;
-
         parent::__construct($string, $length);
 
         // Parse internal character groups
         $this->variableCG = VariableCG::fromString($string);
         $this->fixedCG = FixedCG::fromString($string);
-    }
-
-    /**
-     * @return bool True if character group is fixed length otherwise false
-     */
-    public function isFixed(): bool
-    {
-        return $this instanceof self;
     }
 
     /**

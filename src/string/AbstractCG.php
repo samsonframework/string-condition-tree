@@ -22,13 +22,10 @@ abstract class AbstractCG
     const PATTERN = '';
 
     /** @var int Character group length */
-    public $length;
+    protected $length;
 
     /** @var string Character group string */
-    public $string;
-
-    /** @var int Character group size */
-    protected $size = 1;
+    protected $string;
 
     /**
      * AbstractCharacterGroup constructor.
