@@ -35,6 +35,7 @@ class FixedCGTest extends TestCase
 
         // Fixed higher than variable
         $this->assertEquals(0, $initial->compare($compared));
+        $this->assertEquals(0, $compared->compare($initial));
     }
 
     public function testCompareWithVariableCG()
