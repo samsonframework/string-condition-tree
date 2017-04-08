@@ -7,6 +7,9 @@ namespace samsonframework\stringconditiontree\tests;
 
 use PHPUnit\Framework\TestCase;
 use samsonframework\stringconditiontree\string\FixedCG;
+use samsonframework\stringconditiontree\string\FixedVariableCG;
+use samsonframework\stringconditiontree\string\VariableCG;
+use samsonframework\stringconditiontree\string\VariableFixedCG;
 
 /**
  * Class FixedCGTest
@@ -32,6 +35,32 @@ class FixedCGTest extends TestCase
 
         // Fixed higher than variable
         $this->assertEquals(0, $initial->compare($compared));
-        $this->assertEquals(0, $compared->compare($initial));
+    }
+
+    public function testCompareWithVariableCG()
+    {
+        $initial = new FixedCG('test');
+        $compared = new VariableCG('{t}');
+
+        // Fixed higher than variable
+        $this->assertEquals(1, $initial->compare($compared));
+    }
+
+    public function testCompareWithFixedVariableCG()
+    {
+        $initial = new FixedCG('test');
+        $compared = new FixedVariableCG('p{t}');
+
+        // Fixed higher than variable
+        $this->assertEquals(1, $initial->compare($compared));
+    }
+
+    public function testCompareWithVariableFixedCG()
+    {
+        $initial = new FixedCG('test');
+        $compared = new VariableFixedCG('{t}p');
+
+        // Fixed higher than variable
+        $this->assertEquals(1, $initial->compare($compared));
     }
 }
