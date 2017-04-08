@@ -46,7 +46,7 @@ abstract class AbstractCG
      *
      * @return NullCG|AbstractCG|FixedCG|VariableCG Character group instance
      */
-    public static function fromString(string &$input)
+    public static function fromString(string &$input): ?AbstractCG
     {
         if (preg_match('/^'.static::PATTERN.'/', $input, $matches)) {
             // Replace only first occurrence of character group
@@ -58,7 +58,7 @@ abstract class AbstractCG
             }
         }
 
-        return new NullCG();
+        return null;
     }
 
     /**

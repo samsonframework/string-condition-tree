@@ -29,7 +29,7 @@ class FixedVariableCGTest extends TestCase
     public function testWrongFromString()
     {
         $input = '{z}/test/{z}';
-        $this->assertInstanceOf(NullCG::class, FixedVariableCG::fromString($input));
+        $this->assertEquals(null, FixedVariableCG::fromString($input));
     }
 
     public function testCompareWithSameSizeFixedCG()
