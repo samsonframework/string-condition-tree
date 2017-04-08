@@ -10,8 +10,17 @@ namespace samsonframework\stringconditiontree;
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class TreeNode extends IterableTreeNode
+class TreeNode extends AbstractIterable
 {
+    /** string Internal collection name for iteration and counting */
+    protected const COLLECTION_NAME = 'children';
+
+    /** @var TreeNode[] Collection of tree node children */
+    public $children = [];
+
+    /** @var string Tree node identifier */
+    public $identifier;
+
     /** @var self Pointer to parent node */
     public $parent;
 
@@ -30,10 +39,37 @@ class TreeNode extends IterableTreeNode
      */
     public function __construct(string $value = '', string $identifier = '', TreeNode $parent = null)
     {
+        parent::__construct();
+
         $this->value = $value;
         $this->parent = $parent;
         $this->identifier = $identifier;
         $this->fullValue = $parent !== null ? $parent->fullValue . $value : '';
+    }
+
+    /**
+     * Convert tree node to associative array.
+     *
+     * @return array Tree structure as hashed array
+     */
+    public function toArray(): array
+    {
+        $result = [];
+
+        // Render @self item for tests
+        if ($this->identifier !== '') {
+            $result[StringConditionTree::SELF_NAME] = $this->identifier;
+        }
+
+        /**
+         * @var string $key
+         * @var TreeNode $child
+         */
+        foreach ($this as $key => $child) {
+            $result[$key] = $child->toArray();
+        }
+
+        return $result;
     }
 
     /**
