@@ -88,7 +88,7 @@ class StructureCollection extends AbstractIterable
                         if (!$foundInOtherCollection && strlen($newPrefix)) {
                             $usedStructures[] = $comparedStructure;
                             // Add structure to structure collection
-                            $commonPrefixes[$foundPrefix]->addUniqueStructure(new Structure($newPrefix));
+                            $commonPrefixes[$foundPrefix]->add(new Structure($newPrefix));
                         }
 
                         $oneCommonPrefixFound = true;
@@ -110,7 +110,7 @@ class StructureCollection extends AbstractIterable
                 if (!$foundInOtherCollection && strlen($newPrefix)) {
                     $usedStructures[] = $initialStructure;
                     // Add structure to structure collection
-                    $commonPrefixes[$foundPrefix]->addUniqueStructure(new Structure($newPrefix));
+                    $commonPrefixes[$foundPrefix]->add(new Structure($newPrefix));
                 }
             }
         }
@@ -134,10 +134,8 @@ class StructureCollection extends AbstractIterable
      * Sort structures.
      *
      * @param bool $ascending Ascending sorting order
-     *
-     * @return array|Structure|Structure[]
      */
-    protected function sort(bool $ascending = true)
+    protected function sort(bool $ascending = true): void
     {
         // Sort internalCollection
         uasort($this->structures, function (Structure $initial, Structure $compared) {
@@ -149,15 +147,13 @@ class StructureCollection extends AbstractIterable
     }
 
     /**
-     * Add only unique structure to collection.
+     * Add structure to structure collection.
      *
      * @param Structure $structure Added structure
      */
-    public function addUniqueStructure(Structure $structure): void
+    public function add(Structure $structure): void
     {
-        if (!$this->has($structure)) {
-            $this->add($structure);
-        }
+        $this->structures[$structure->getString()] = $structure;
     }
 
     /**
@@ -167,35 +163,6 @@ class StructureCollection extends AbstractIterable
      */
     public function has(Structure $structure): bool
     {
-        foreach ($this->structures as $comparedStructure) {
-            if ($this->isSameStructure($structure, $comparedStructure)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Compare two structures.
-     *
-     * @param Structure $initial Initial structure
-     * @param Structure $compared Compared structure
-     *
-     * @return bool True is structures are equal
-     */
-    protected function isSameStructure(Structure $initial, Structure $compared): bool
-    {
-        return $initial->getString() === $compared->getString();
-    }
-
-    /**
-     * Add structure to structure collection.
-     *
-     * @param Structure $structure Added structure
-     */
-    public function add(Structure $structure): void
-    {
-        $this->structures[$structure->getString()] = $structure;
+        return in_array($structure, $this->structures);
     }
 }
