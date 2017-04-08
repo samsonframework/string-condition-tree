@@ -68,14 +68,7 @@ class StructureCollection extends AbstractIterable
                          * Try to find if this prefix can be merged into already found common prefix
                          * as our structures collection is already sorted.
                          */
-                        $foundPrefixStructure = new Structure($foundPrefix);
-                        foreach ($commonPrefixes as $existingPrefix => $structures) {
-                            $internalPrefix = (new Structure($existingPrefix))->getCommonPrefix($foundPrefixStructure);
-                            if ($internalPrefix !== '') {
-                                $foundPrefix = $internalPrefix;
-                                break;
-                            }
-                        }
+                        $foundPrefix = $this->findPrefixInExistingCommonPrefix($foundPrefix, $commonPrefixes);
 
                         $this->addToCommonPrefixesCollection(
                             $commonPrefixes,
@@ -128,6 +121,23 @@ class StructureCollection extends AbstractIterable
 
         // Sort descending if needed
         $this->structures = $ascending ? array_reverse($this->structures) : $this->structures;
+    }
+
+    private function findPrefixInExistingCommonPrefix(string $prefix, array $existingPrefixes): string
+    {
+        /**
+         * Try to find if this prefix can be merged into already found common prefix
+         * as our structures collection is already sorted.
+         */
+        $foundPrefixStructure = new Structure($prefix);
+        foreach ($existingPrefixes as $existingPrefix => $structures) {
+            $internalPrefix = (new Structure($existingPrefix))->getCommonPrefix($foundPrefixStructure);
+            if ($internalPrefix !== '') {
+                return $internalPrefix;
+            }
+        }
+
+        return $prefix;
     }
 
     private function addToCommonPrefixesCollection(
