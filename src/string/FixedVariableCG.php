@@ -75,15 +75,33 @@ class FixedVariableCG extends AbstractCG
 
     /**
      * @inheritdoc
-     * @param AbstractCG|FixedVariableCG|FixedVariableCG|VariableFixedCG $group
      */
-    protected function compareLength(AbstractCG $group): int
+    public function compare(AbstractCG $group): int
     {
         // Compare with fixed character group
         if ($group instanceof FixedCG) {
             return $this->fixedCG->compare($group);
         }
 
+        // Always FixedVariable character group has higher priority over variable character group
+        // FixedVariable character group has higher priority over VariableFixed character group
+        if ($group instanceof VariableCG || $group instanceof VariableFixedCG) {
+            return 1;
+        }
+
+        if ($group instanceof FixedVariableCG) {
+            return $this->compareLength($group);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @inheritdoc
+     * @param AbstractCG|FixedVariableCG|FixedVariableCG|VariableFixedCG $group
+     */
+    protected function compareLength(AbstractCG $group): int
+    {
         // Fixed CG are equal
         if (($return = $this->fixedCG->compare($group->fixedCG)) === 0) {
             // Compare variable character groups
