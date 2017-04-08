@@ -77,7 +77,11 @@ class StringConditionTree
 
         $sct = StructureCollection::fromStringsArray(array_keys($input));
 
-        $result = $sct->getCommonPrefixesCollection();
+        $collection = $sct->getCommonPrefixesCollection();
+        $node = new TreeNode('');
+        $this->processor($collection, $node);
+
+        //return $node;
 
         return $this->debug->children[self::ROOT_NAME];
     }
@@ -292,6 +296,21 @@ class StringConditionTree
         }
 
         return $processed;
+    }
+
+    /**
+     * @param StructureCollection[] $collection
+     */
+    protected function processor(array $collection, TreeNode $parent, string $parentPrefix = ''): void
+    {
+        foreach ($collection as $prefix => $item) {
+            // Create tree node. Pass string identifier if present
+            $newChild = $parent->append($prefix, $this->source[$parentPrefix.$prefix] ?? '');
+
+            $lcpCollection = $item->getCommonPrefixesCollection();
+
+            $this->processor($lcpCollection, $newChild, $parentPrefix.$prefix);
+        }
     }
 
     /**

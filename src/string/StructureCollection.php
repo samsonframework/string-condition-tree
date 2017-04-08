@@ -41,9 +41,9 @@ class StructureCollection extends AbstractIterable
     }
 
     /**
-     * Get internalCollection of grouped longest matching prefixes with strings sub-array.
+     * Get collection of StructureCollection instances grouped by longest common prefixes.
      *
-     * @return StructureCollection[] Longest common prefixes array of StructureCollection
+     * @return StructureCollection[] Longest common prefixes array of StructureCollection instances
      */
     public function getCommonPrefixesCollection(): array
     {
@@ -51,9 +51,6 @@ class StructureCollection extends AbstractIterable
 
         /** @var StructureCollection[] $commonPrefixes */
         $commonPrefixes = [];
-
-        /** @var StructureCollection $usedStructures */
-        $usedStructures = new StructureCollection();
 
         // Iterate sorted character group internalCollection
         foreach ($this->structures as $initialStructure) {
@@ -70,9 +67,6 @@ class StructureCollection extends AbstractIterable
                          * Try to find if this prefix can be merged into already found common prefix
                          * as our structures collection is already sorted.
                          */
-                        if (strpos($foundPrefix, '{z}') !== false) {
-                            var_dump(1);
-                        }
                         $foundPrefixStructure = new Structure($foundPrefix);
                         foreach ($commonPrefixes as $existingPrefix => $structures) {
                             $internalPrefix = (new Structure($existingPrefix))->getCommonPrefix($foundPrefixStructure);
@@ -87,9 +81,19 @@ class StructureCollection extends AbstractIterable
                             $commonPrefixes[$foundPrefix] = new StructureCollection();
                         }
 
-                        // Add structure to structure collection
-                        $usedStructures->addStructure($comparedStructure);
-                        $commonPrefixes[$foundPrefix]->addStructure($comparedStructure);
+                        $foundInOtherCollection = false;
+                        foreach ($commonPrefixes as $prefix => $collection) {
+                            if ($collection->has($comparedStructure)) {
+                                $foundInOtherCollection = true;
+                            }
+                        }
+
+                        $newPrefix = substr($comparedStructure->getString(), strlen($foundPrefix));
+                        if (!$foundInOtherCollection && strlen($newPrefix)) {
+                            // Add structure to structure collection
+                            $commonPrefixes[$foundPrefix]->addUniqueStructure(new Structure($newPrefix));
+                        }
+
                         $oneCommonPrefixFound = true;
                     }
                 }
@@ -103,8 +107,18 @@ class StructureCollection extends AbstractIterable
                     $commonPrefixes[$foundPrefix] = new StructureCollection();
                 }
 
-                // Add structure to structure collection
-                $commonPrefixes[$foundPrefix]->addStructure($initialStructure);
+                $foundInOtherCollection = false;
+                foreach ($commonPrefixes as $prefix => $collection) {
+                    if ($collection->has($initialStructure)) {
+                        $foundInOtherCollection = true;
+                    }
+                }
+
+                $newPrefix = substr($initialStructure->getString(), strlen($foundPrefix));
+                if (!$foundInOtherCollection && strlen($newPrefix)) {
+                    // Add structure to structure collection
+                    $commonPrefixes[$foundPrefix]->addUniqueStructure(new Structure($newPrefix));
+                }
             }
         }
 
@@ -130,39 +144,6 @@ class StructureCollection extends AbstractIterable
     }
 
     /**
-     * Add structure to structure collection.
-     *
-     * @param Structure $structure Added structure
-     */
-    public function addStructure(Structure $structure)
-    {
-        // Search for existing structure
-        $found = false;
-        foreach ($this->structures as $comparedStructure) {
-            if ($this->isSameStructure($structure, $comparedStructure)) {
-                $found = true;
-            }
-        }
-
-        if (!$found) {
-            $this->structures[$structure->getString()] = $structure;
-        }
-    }
-
-    /**
-     * Compare two structures.
-     *
-     * @param Structure $initial
-     * @param Structure $compared
-     *
-     * @return bool
-     */
-    protected function isSameStructure(Structure $initial, Structure $compared): bool
-    {
-        return $initial->getString() === $compared->getString();
-    }
-
-    /**
      * @param Structure $structure
      *
      * @return bool
@@ -179,12 +160,37 @@ class StructureCollection extends AbstractIterable
     }
 
     /**
-     * Add string to structure collection.
+     * Compare two structures.
      *
-     * @param string $string Input string
+     * @param Structure $initial Initial structure
+     * @param Structure $compared Compared structure
+     *
+     * @return bool True is structures are equal
      */
-    public function addString(string $string)
+    protected function isSameStructure(Structure $initial, Structure $compared): bool
     {
-        $this->addStructure(new Structure($string));
+        return $initial->getString() === $compared->getString();
+    }
+
+    /**
+     * Add only unique structure to collection.
+     *
+     * @param Structure $structure Added structure
+     */
+    public function addUniqueStructure(Structure $structure): void
+    {
+        if (!$this->has($structure)) {
+            $this->add($structure);
+        }
+    }
+
+    /**
+     * Add structure to structure collection.
+     *
+     * @param Structure $structure Added structure
+     */
+    public function add(Structure $structure): void
+    {
+        $this->structures[$structure->getString()] = $structure;
     }
 }

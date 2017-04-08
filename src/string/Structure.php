@@ -43,7 +43,7 @@ class Structure extends AbstractIterable
         while (strlen($input)) {
             foreach (self::CG_TYPES as $characterGroupType) {
                 // Try to create character group
-                if (!($group = $characterGroupType::fromString($input)) !== null) {
+                if (($group = $characterGroupType::fromString($input)) !== null) {
                     $this->groups[] = $group;
                     // Reset CG type iterator to preserve order
                     break;
@@ -64,6 +64,14 @@ class Structure extends AbstractIterable
         $initialStructureSize = count($this->groups);
         $comparedStructureSize = count($structure->groups);
         $maxSize = max($initialStructureSize, $comparedStructureSize);
+
+        if ($initialStructureSize === 0) {
+            return -1;
+        }
+
+        if ($comparedStructureSize === 0) {
+            return 1;
+        }
 
         // Iterate maximum sized structure
         for ($index = 0; $index < $maxSize; $index++) {

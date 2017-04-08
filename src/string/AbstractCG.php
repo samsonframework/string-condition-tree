@@ -44,7 +44,7 @@ abstract class AbstractCG
      *
      * @param string $input Input string
      *
-     * @return NullCG|AbstractCG|FixedCG|VariableCG Character group instance
+     * @return null|AbstractCG|FixedCG|VariableCG Character group instance
      */
     public static function fromString(string &$input): ?AbstractCG
     {
