@@ -86,10 +86,6 @@ class StructureCollection extends AbstractIterable
 
                         $foundInOtherCollection = in_array($comparedStructure, $usedStructures);
 
-                        if (strpos($foundPrefix,'{z}') !== false ) {
-                            var_dump(1);
-                        }
-
                         $newPrefix = substr($comparedStructure->getString(), strlen($foundPrefix));
                         if (!$foundInOtherCollection && strlen($newPrefix)) {
                             $usedStructures[] = $comparedStructure;
