@@ -23,7 +23,7 @@ class Structure extends AbstractIterable
     ];
 
     /** @var AbstractCG[] */
-    public $groups;
+    public $groups = [];
 
     /** @var string Input string */
     public $string;
@@ -37,6 +37,8 @@ class Structure extends AbstractIterable
     {
         $this->string = $input;
 
+        parent::__construct('groups');
+
         // Iterate until string is cleared
         while (strlen($input)) {
             foreach (self::CG_TYPES as $characterGroupType) {
@@ -48,8 +50,6 @@ class Structure extends AbstractIterable
                 }
             }
         }
-
-        parent::__construct('groups');
     }
 
     /**
