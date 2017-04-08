@@ -68,14 +68,6 @@ class Structure extends AbstractIterable
         $comparedStructureSize = count($structure->groups);
         $maxSize = max($initialStructureSize, $comparedStructureSize);
 
-        if ($initialStructureSize === 0) {
-            return -1;
-        }
-
-        if ($comparedStructureSize === 0) {
-            return 1;
-        }
-
         // Iterate maximum sized structure
         for ($index = 0; $index < $maxSize; $index++) {
             // Get compared/initial group or last compared character group is size mismatches
