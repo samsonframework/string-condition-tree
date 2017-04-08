@@ -72,6 +72,22 @@ class VariableCG extends AbstractCG
     /**
      * @inheritdoc
      */
+    public function compare(AbstractCG $group): int
+    {
+        /**
+         * Shorter fixed character group has higher priority
+         */
+        if ($this->isSameType($group)) {
+            return $this->compareLength($group);
+        }
+
+        // Variable character group always has lower priority
+        return -1;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function compareLength(AbstractCG $group): int
     {
         /** @var VariableCG $group */

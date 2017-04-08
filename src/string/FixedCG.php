@@ -47,6 +47,22 @@ class FixedCG extends AbstractCG
     /**
      * @inheritdoc
      */
+    public function compare(AbstractCG $group): int
+    {
+        /**
+         * Shorter fixed character group has higher priority
+         */
+        if ($this->isSameType($group)) {
+            return $this->compareLength($group);
+        }
+
+        // Fixed character group always has higher priority
+        return 1;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function compareLength(AbstractCG $group): int
     {
         /**

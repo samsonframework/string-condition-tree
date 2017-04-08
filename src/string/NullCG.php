@@ -31,9 +31,16 @@ class NullCG extends AbstractCG
     /**
      * @inheritdoc
      */
+    public function compare(AbstractCG $group): int
+    {
+        return -1;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function compareLength(AbstractCG $group): int
     {
-        // Passed character group always has higher priority
         return -1;
     }
 }

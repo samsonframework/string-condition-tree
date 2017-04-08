@@ -82,7 +82,7 @@ class VariableFixedCG extends AbstractCG
             return 1;
         }
 
-        if ($group instanceof VariableFixedCG) {
+        if ($this->isSameType($group)) {
             return $this->compareLength($group);
         }
 

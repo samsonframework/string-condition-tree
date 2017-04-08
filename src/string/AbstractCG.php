@@ -62,35 +62,13 @@ abstract class AbstractCG
     }
 
     /**
-     * @return bool True if character group is variable length otherwise false
-     */
-    public function isVariable(): bool
-    {
-        return $this instanceof VariableCG;
-    }
-
-    /**
      * Compare character groups.
      *
      * @param AbstractCG|FixedCG|VariableCG|VariableFixedCG $group Compared character group
      *
      * @return int -1, 0, 1 Lower, equal, higher
      */
-    public function compare(AbstractCG $group): int
-    {
-        // Equal character group types - return length comparison
-        if ($this->isSameType($group)) {
-            // Variable character groups with longer length has higher priority
-            return $this->compareLength($group);
-        }
-
-        /**
-         * Character groups are different:
-         * Fixed character groups has higher priority,
-         * variable character groups has lower priority
-         */
-        return $this->isFixed() ? 1 : -1;
-    }
+    abstract public function compare(AbstractCG $group): int;
 
     /**
      * Check if compared character group has same type.
@@ -102,23 +80,6 @@ abstract class AbstractCG
     public function isSameType(AbstractCG $group): bool
     {
         return get_class($group) === get_class($this);
-    }
-
-    /**
-     * Compare this character group length to compared character group length.
-     *
-     * @param AbstractCG|FixedCG|VariableCG|VariableFixedCG $group Compared character group
-     *
-     * @return int -1, 0, 1 Character groups comparison result
-     */
-    abstract protected function compareLength(AbstractCG $group): int;
-
-    /**
-     * @return bool True if character group is fixed length otherwise false
-     */
-    public function isFixed(): bool
-    {
-        return $this instanceof FixedCG;
     }
 
     /**
@@ -137,4 +98,13 @@ abstract class AbstractCG
     {
         return $this->string;
     }
+
+    /**
+     * Same character group type comparison.
+     *
+     * @param AbstractCG|FixedCG|VariableCG|VariableFixedCG $group Compared character group
+     *
+     * @return int -1, 0, 1 Character groups comparison result
+     */
+    abstract protected function compareLength(AbstractCG $group): int;
 }

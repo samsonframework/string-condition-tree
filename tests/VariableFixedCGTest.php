@@ -8,6 +8,7 @@ namespace samsonframework\stringconditiontree\tests;
 use PHPUnit\Framework\TestCase;
 use samsonframework\stringconditiontree\string\FixedCG;
 use samsonframework\stringconditiontree\string\FixedVariableCG;
+use samsonframework\stringconditiontree\string\NullCG;
 use samsonframework\stringconditiontree\string\VariableCG;
 use samsonframework\stringconditiontree\string\VariableFixedCG;
 
@@ -18,6 +19,19 @@ use samsonframework\stringconditiontree\string\VariableFixedCG;
  */
 class VariableFixedCGTest extends TestCase
 {
+    public function testFromString()
+    {
+        $input = '{z}/test';
+        $this->assertInstanceOf(VariableFixedCG::class, VariableFixedCG::fromString($input));
+        $this->assertEquals('', $input);
+    }
+
+    public function testWrongFromString()
+    {
+        $input = '/test/{z}';
+        $this->assertInstanceOf(NullCG::class, VariableFixedCG::fromString($input));
+    }
+
     public function testCompareWithSameSizeFixedCG()
     {
         $initial = new VariableFixedCG('{p}/test');
