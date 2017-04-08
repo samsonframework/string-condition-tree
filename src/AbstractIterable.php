@@ -16,6 +16,8 @@ use Iterator;
  */
 abstract class AbstractIterable implements Iterator, Countable
 {
+    /** string Internal collection name for iteration and counting */
+    protected const COLLECTION_NAME = 'internalCollection';
     /** @var array Internal internalCollection storage */
     private $internalCollection;
 
@@ -26,7 +28,7 @@ abstract class AbstractIterable implements Iterator, Countable
      *
      * @throws InvalidArgumentException If internalCollection variable does not exists
      */
-    public function __construct(string $collectionName = 'internalCollection')
+    public function __construct(string $collectionName = self::COLLECTION_NAME)
     {
         if (!property_exists($this, $collectionName)) {
             throw new InvalidArgumentException(

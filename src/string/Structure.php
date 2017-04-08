@@ -141,4 +141,12 @@ class Structure extends AbstractIterable
     {
         return $string !== $initialGroup->getString() || $string !== $comparedGroup->getString();
     }
+
+    /**
+     * @return string Structure input string
+     */
+    public function getString(): string
+    {
+        return $this->string;
+    }
 }

@@ -28,4 +28,13 @@ class StructureCollectionTest extends TestCase
             $this->assertInstanceOf(Structure::class, $structure);
         }
     }
+
+    public function testGetCommonPrefixesCollection()
+    {
+        $strings = ['test', 'test2', 't'];
+        $expected = ['t'];
+
+        $commonPrefixes = StructureCollection::fromStringsArray($strings)->getCommonPrefixesCollection();
+        $this->assertSame($expected, array_keys($commonPrefixes));
+    }
 }
