@@ -18,6 +18,7 @@ abstract class AbstractIterable implements Iterator, Countable
 {
     /** string Internal collection name for iteration and counting */
     protected const COLLECTION_NAME = 'internalCollection';
+
     /** @var array Internal internalCollection storage */
     private $internalCollection;
 
