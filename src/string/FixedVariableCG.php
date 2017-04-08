@@ -79,6 +79,11 @@ class FixedVariableCG extends AbstractCG
      */
     protected function compareLength(AbstractCG $group): int
     {
+        // Compare with fixed character group
+        if ($group instanceof FixedCG) {
+            return $this->fixedCG->compare($group);
+        }
+
         // Fixed CG are equal
         if (($return = $this->fixedCG->compare($group->fixedCG)) === 0) {
             // Compare variable character groups

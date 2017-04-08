@@ -6,6 +6,7 @@
 namespace samsonframework\stringconditiontree;
 
 use samsonframework\stringconditiontree\string\Structure;
+use samsonframework\stringconditiontree\string\StructureCollection;
 
 /**
  * Class StringConditionTree
@@ -73,6 +74,10 @@ class StringConditionTree
          * to start building tree. Otherwise there is no reason to build tree.
          */
         $this->innerProcessor(self::ROOT_NAME, array_keys($input), $this->debug = new TreeNode());
+
+        $sct = StructureCollection::fromStringsArray(array_keys($input));
+
+        $result = $sct->getCommonPrefixesCollection();
 
         return $this->debug->children[self::ROOT_NAME];
     }

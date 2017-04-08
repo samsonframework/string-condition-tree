@@ -33,10 +33,10 @@ abstract class AbstractCG
      * @param string $string Character group string
      * @param int    $length Character group length
      */
-    public function __construct(string $string, int $length = 0)
+    public function __construct(string $string, int $length = null)
     {
         $this->string = $string;
-        $this->length = $length;
+        $this->length = $length ?? strlen($string);
     }
 
     /**

@@ -6,7 +6,6 @@
 namespace samsonframework\stringconditiontree;
 
 use Countable;
-use InvalidArgumentException;
 use Iterator;
 
 /**
@@ -26,17 +25,9 @@ abstract class AbstractIterable implements Iterator, Countable
      * GenericIterable constructor.
      *
      * @param string $collectionName Collection variable nested class name
-     *
-     * @throws InvalidArgumentException If internalCollection variable does not exists
      */
     public function __construct(string $collectionName = self::COLLECTION_NAME)
     {
-        if (!property_exists($this, $collectionName)) {
-            throw new InvalidArgumentException(
-                'Cannot create iterable - internalCollection [' . $collectionName . '] does not exists'
-            );
-        }
-
         // Set pointer for internal iterable and countable collection to passed property by its name
         $this->internalCollection = &$this->$collectionName;
 
