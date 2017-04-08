@@ -52,6 +52,9 @@ class StructureCollection extends AbstractIterable
         /** @var StructureCollection[] $commonPrefixes */
         $commonPrefixes = [];
 
+        /** @var Structure[] $usedStructures */
+        $usedStructures = [];
+
         // Iterate sorted character group internalCollection
         foreach ($this->structures as $initialStructure) {
             $oneCommonPrefixFound = false;
@@ -81,15 +84,15 @@ class StructureCollection extends AbstractIterable
                             $commonPrefixes[$foundPrefix] = new StructureCollection();
                         }
 
-                        $foundInOtherCollection = false;
-                        foreach ($commonPrefixes as $prefix => $collection) {
-                            if ($collection->has($comparedStructure)) {
-                                $foundInOtherCollection = true;
-                            }
+                        $foundInOtherCollection = in_array($comparedStructure, $usedStructures);
+
+                        if (strpos($foundPrefix,'{z}') !== false ) {
+                            var_dump(1);
                         }
 
                         $newPrefix = substr($comparedStructure->getString(), strlen($foundPrefix));
                         if (!$foundInOtherCollection && strlen($newPrefix)) {
+                            $usedStructures[] = $comparedStructure;
                             // Add structure to structure collection
                             $commonPrefixes[$foundPrefix]->addUniqueStructure(new Structure($newPrefix));
                         }
@@ -107,22 +110,30 @@ class StructureCollection extends AbstractIterable
                     $commonPrefixes[$foundPrefix] = new StructureCollection();
                 }
 
-                $foundInOtherCollection = false;
-                foreach ($commonPrefixes as $prefix => $collection) {
-                    if ($collection->has($initialStructure)) {
-                        $foundInOtherCollection = true;
-                    }
-                }
+                $foundInOtherCollection = in_array($initialStructure, $usedStructures);
 
                 $newPrefix = substr($initialStructure->getString(), strlen($foundPrefix));
                 if (!$foundInOtherCollection && strlen($newPrefix)) {
+                    $usedStructures[] = $initialStructure;
                     // Add structure to structure collection
                     $commonPrefixes[$foundPrefix]->addUniqueStructure(new Structure($newPrefix));
                 }
             }
         }
 
-        return $commonPrefixes;
+        // Sort common prefixes
+        $commonPrefixesCollection = new StructureCollection();
+        foreach ($commonPrefixes as $prefix => $structures) {
+            $commonPrefixesCollection->add(new Structure($prefix));
+        }
+        $commonPrefixesCollection->sort();
+
+        $final = [];
+        foreach ($commonPrefixesCollection as $prefix => $structureCollection) {
+            $final[$prefix] = $commonPrefixes[$prefix];
+        }
+
+        return $final;
     }
 
     /**
@@ -141,6 +152,18 @@ class StructureCollection extends AbstractIterable
 
         // Sort descending if needed
         $this->structures = $ascending ? array_reverse($this->structures) : $this->structures;
+    }
+
+    /**
+     * Add only unique structure to collection.
+     *
+     * @param Structure $structure Added structure
+     */
+    public function addUniqueStructure(Structure $structure): void
+    {
+        if (!$this->has($structure)) {
+            $this->add($structure);
+        }
     }
 
     /**
@@ -170,18 +193,6 @@ class StructureCollection extends AbstractIterable
     protected function isSameStructure(Structure $initial, Structure $compared): bool
     {
         return $initial->getString() === $compared->getString();
-    }
-
-    /**
-     * Add only unique structure to collection.
-     *
-     * @param Structure $structure Added structure
-     */
-    public function addUniqueStructure(Structure $structure): void
-    {
-        if (!$this->has($structure)) {
-            $this->add($structure);
-        }
     }
 
     /**

@@ -14,6 +14,9 @@ use samsonframework\stringconditiontree\AbstractIterable;
  */
 class Structure extends AbstractIterable
 {
+    /** string Internal collection name */
+    protected const COLLECTION_NAME = 'groups';
+
     /** array Supported character group types */
     const CG_TYPES = [
         FixedVariableCG::class,
@@ -35,9 +38,9 @@ class Structure extends AbstractIterable
      */
     public function __construct(string $input)
     {
-        $this->string = $input;
+        parent::__construct();
 
-        parent::__construct('groups');
+        $this->string = $input;
 
         // Iterate until string is cleared
         while (strlen($input)) {

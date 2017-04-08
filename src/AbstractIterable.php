@@ -24,10 +24,11 @@ abstract class AbstractIterable implements Iterator, Countable
     /**
      * GenericIterable constructor.
      *
-     * @param string $collectionName Collection variable nested class name
      */
-    public function __construct(string $collectionName = self::COLLECTION_NAME)
+    public function __construct()
     {
+        $collectionName = static::COLLECTION_NAME;
+
         // Set pointer for internal iterable and countable collection to passed property by its name
         $this->internalCollection = &$this->$collectionName;
 

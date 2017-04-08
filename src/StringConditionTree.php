@@ -81,7 +81,7 @@ class StringConditionTree
         $node = new TreeNode('');
         $this->processor($collection, $node);
 
-        //return $node;
+        return $node;
 
         return $this->debug->children[self::ROOT_NAME];
     }
@@ -303,10 +303,10 @@ class StringConditionTree
      */
     protected function processor(array $collection, TreeNode $parent, string $parentPrefix = ''): void
     {
-        // Create tree node. Pass string identifier if present
-        $newChild = $parent->append($parentPrefix, $this->source[$parentPrefix] ?? '');
-
         foreach ($collection as $prefix => $item) {
+            // Create tree node. Pass string identifier if present
+            $newChild = $parent->append($prefix, $this->source[$parentPrefix.$prefix] ?? '');
+
             $lcpCollection = $item->getCommonPrefixesCollection();
 
             $this->processor($lcpCollection, $newChild, $parentPrefix.$prefix);

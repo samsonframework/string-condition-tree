@@ -14,16 +14,9 @@ use samsonframework\stringconditiontree\AbstractIterable;
  */
 class TestAbstractIterable extends AbstractIterable
 {
+    /** string Internal collection name */
+    protected const COLLECTION_NAME = 'collection';
+
     /** @var array Test array */
     public $collection = [];
-
-    /**
-     * TestAbastractIterable constructor.
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct()
-    {
-        parent::__construct('collection');
-    }
 }
