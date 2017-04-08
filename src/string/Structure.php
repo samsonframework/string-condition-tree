@@ -5,12 +5,14 @@
  */
 namespace samsonframework\stringconditiontree\string;
 
+use samsonframework\stringconditiontree\AbstractIterable;
+
 /**
  * This class describes string character group structure(CGS).
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
-class Structure extends IterableStructure
+class Structure extends AbstractIterable
 {
     /** array Supported character group types */
     const CG_TYPES = [
@@ -19,6 +21,9 @@ class Structure extends IterableStructure
         VariableCG::class,
         FixedCG::class,
     ];
+
+    /** @var AbstractCG[] */
+    public $groups;
 
     /** @var string Input string */
     public $string;
@@ -43,6 +48,8 @@ class Structure extends IterableStructure
                 }
             }
         }
+
+        parent::__construct('groups');
     }
 
     /**
@@ -118,7 +125,6 @@ class Structure extends IterableStructure
      */
     private function getShortestStructure(Structure $compared): Structure
     {
-
         return $this->count() < $compared->count() ? $this : $compared;
     }
 

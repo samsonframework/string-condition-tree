@@ -5,7 +5,6 @@
  */
 namespace samsonframework\stringconditiontree;
 
-use samsonframework\stringconditiontree\string\CommonPrefix;
 use samsonframework\stringconditiontree\string\Structure;
 
 /**
@@ -32,7 +31,7 @@ class StringConditionTree
     /** Parameter sorting length value for counting */
     const PARAMETER_COF = 2000;
 
-    /** @var TreeNode Resulting collection for debugging */
+    /** @var TreeNode Resulting internalCollection for debugging */
     protected $debug;
 
     /** @var array Collection of string string => identifier */
@@ -120,7 +119,7 @@ class StringConditionTree
     }
 
     /**
-     * Get collection of grouped longest matching prefixes with strings sub-array.
+     * Get internalCollection of grouped longest matching prefixes with strings sub-array.
      *
      * @param array $input Input strings array
      *
@@ -132,17 +131,17 @@ class StringConditionTree
 
         $longestPrefixes = [];
 
-        // Iterate sorted character group structures
+        // Iterate sorted character group internalCollection
         foreach ($structures as $initialStructure) {
             $foundLMP = false;
-            // Iterate all character group structures again
+            // Iterate all character group internalCollection again
             foreach ($structures as $comparedStructure) {
-                // Ignore same structures
+                // Ignore same internalCollection
                 if ($initialStructure === $comparedStructure) {
                     continue;
                 }
 
-                // Get common longest prefix between structures
+                // Get common longest prefix between internalCollection
                 if (($longestPrefix = $initialStructure->getCommonPrefix($comparedStructure)) !== '') {
                     $foundLMP = true;
                     $foundExisting = false;
@@ -175,21 +174,21 @@ class StringConditionTree
     }
 
     /**
-     * Sort structures array.
+     * Sort internalCollection array.
      *
      * @param array $strings Input strings array
      *
-     * @return Structure[] Sorted structures array
+     * @return Structure[] Sorted internalCollection array
      */
     protected function sortStructures(array $strings): array
     {
-        // Create structures
+        // Create internalCollection
         $structures = [];
         foreach ($strings as $string) {
             $structures[] = new Structure($string);
         }
 
-        // Sort structures
+        // Sort internalCollection
         usort($structures, function (Structure $initial, Structure $compared) {
             return $initial->compare($compared);
         });
@@ -231,7 +230,7 @@ class StringConditionTree
     /**
      * Iterate LMP and remove duplicate strings in other LMPs.
      *
-     * @param array $prefixes LMP collection, returning value
+     * @param array $prefixes LMP internalCollection, returning value
      */
     protected function filterLMPStrings(array &$prefixes)
     {
@@ -288,5 +287,23 @@ class StringConditionTree
         }
 
         return $processed;
+    }
+
+    /**
+     * Convert strings arrays into array of internalCollection.
+     *
+     * @param array $strings Input strings array
+     *
+     * @return array
+     */
+    protected function convertStringsToStructures(array $strings)
+    {
+        // Create internalCollection
+        $structures = [];
+        foreach ($strings as $string) {
+            $structures[$string] = new Structure($string);
+        }
+
+        return $structures;
     }
 }
