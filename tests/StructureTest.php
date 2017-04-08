@@ -14,6 +14,7 @@ use samsonframework\stringconditiontree\string\VariableFixedCG;
 
 /**
  * Class StructureTest
+ * TODO: Rewrite tests only related to Structure test.
  *
  * @author Vitaly Egorov <egorov@samsonos.com>
  */
