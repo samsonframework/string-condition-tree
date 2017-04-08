@@ -26,8 +26,6 @@ class StructureCollection extends AbstractIterable
      * @param array $strings Strings array
      *
      * @return StructureCollection StructureCollection instance
-     *
-     * @throws \InvalidArgumentException If collection variable is missing
      */
     public static function fromStringsArray(array $strings): StructureCollection
     {
