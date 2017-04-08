@@ -303,10 +303,10 @@ class StringConditionTree
      */
     protected function processor(array $collection, TreeNode $parent, string $parentPrefix = ''): void
     {
-        foreach ($collection as $prefix => $item) {
-            // Create tree node. Pass string identifier if present
-            $newChild = $parent->append($prefix, $this->source[$parentPrefix.$prefix] ?? '');
+        // Create tree node. Pass string identifier if present
+        $newChild = $parent->append($parentPrefix, $this->source[$parentPrefix] ?? '');
 
+        foreach ($collection as $prefix => $item) {
             $lcpCollection = $item->getCommonPrefixesCollection();
 
             $this->processor($lcpCollection, $newChild, $parentPrefix.$prefix);

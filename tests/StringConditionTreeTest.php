@@ -64,8 +64,8 @@ class StringConditionTreeTest extends \PHPUnit_Framework_TestCase
             'this-please' => ['@self' => '#8']
         ],
         '{z}/te' => [
-            '/{y:0\d+}' => ['@self' => '#26'],
             'st/{y:01\d+}' => ['@self' => '#27'],
+            '/{y:0\d+}' => ['@self' => '#26'],
         ],
         '{p}/{p}/form' => ['@self' => '#24'],
         '{z}/' => [

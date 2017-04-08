@@ -66,14 +66,6 @@ class FixedVariableCG extends AbstractCG
     }
 
     /**
-     * @return bool True if character group is fixed length otherwise false
-     */
-    public function isFixed(): bool
-    {
-        return $this instanceof FixedVariableCG;
-    }
-
-    /**
      * @inheritdoc
      */
     public function compare(AbstractCG $group): int
@@ -103,11 +95,24 @@ class FixedVariableCG extends AbstractCG
     protected function compareLength(AbstractCG $group): int
     {
         // Fixed CG are equal
-        if (($return = $this->fixedCG->compare($group->fixedCG)) === 0) {
+        if (($return = $this->compareFixed($group)) === 0) {
             // Compare variable character groups
             $return = $this->variableCG->compare($group->variableCG);
         }
 
         return $return;
+    }
+
+    /**
+     * Longer fixed character group has higher priority.
+     *
+     * @param FixedVariableCG $group Compared character group
+     *
+     * @return int Comparison result
+     */
+    private function compareFixed(FixedVariableCG $group): int
+    {
+        // Opposite fixed CG comparison
+        return $this->fixedCG->length <=> $group->fixedCG->length;
     }
 }

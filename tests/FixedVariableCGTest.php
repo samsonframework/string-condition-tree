@@ -50,13 +50,22 @@ class FixedVariableCGTest extends TestCase
         $this->assertEquals(-1, $compared->compare($initial));
     }
 
+    public function testCompareWithSameSizeFixedCGWithFilteredVariableCG2()
+    {
+        $initial = new FixedVariableCG('/cms/gist/{id}/{search}');
+        $compared = new FixedVariableCG('/cms/gift/from/{id}');
+
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
+    }
+
     public function testCompareWithShorterSizeFixedCG()
     {
         $initial = new FixedVariableCG('test/{p}');
         $compared = new FixedVariableCG('t/{z}');
 
-        $this->assertEquals(-1, $initial->compare($compared));
-        $this->assertEquals(1, $compared->compare($initial));
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testCompareWithShorterSizeFixedCGAndFilteredVariableCG()
@@ -64,8 +73,8 @@ class FixedVariableCGTest extends TestCase
         $initial = new FixedVariableCG('test/{p:filter}');
         $compared = new FixedVariableCG('t/{z}');
 
-        $this->assertEquals(-1, $initial->compare($compared));
-        $this->assertEquals(1, $compared->compare($initial));
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testCompareWithFixedCG()

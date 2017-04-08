@@ -94,8 +94,8 @@ class StructureTest extends TestCase
         $initial = new Structure('string/{p}/test/');
         $compared = new Structure('low/{p}/test/{p1}');
 
-        $this->assertEquals(-1, $initial->compare($compared));
-        $this->assertEquals(1, $compared->compare($initial));
+        $this->assertEquals(1, $initial->compare($compared));
+        $this->assertEquals(-1, $compared->compare($initial));
     }
 
     public function testFixedLongerThanCompared()
@@ -121,8 +121,8 @@ class StructureTest extends TestCase
         $initial = new Structure('/form/{t:\d+}/profile');
         $compared = new Structure('/form-one/{t:\d+}/profile');
 
-        $this->assertEquals(1, $initial->compare($compared));
-        $this->assertEquals(-1, $compared->compare($initial));
+        $this->assertEquals(-1, $initial->compare($compared));
+        $this->assertEquals(1, $compared->compare($initial));
     }
 
     public function testInitialFirstFixedEqualToComparedSecondVariableLonger()
