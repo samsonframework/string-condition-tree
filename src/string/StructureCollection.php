@@ -77,19 +77,12 @@ class StructureCollection extends AbstractIterable
                             }
                         }
 
-                        // Create new structure collection with common prefix
-                        if (!array_key_exists($foundPrefix, $commonPrefixes)) {
-                            $commonPrefixes[$foundPrefix] = new StructureCollection();
-                        }
-
-                        $foundInOtherCollection = in_array($comparedStructure, $usedStructures);
-
-                        $newPrefix = substr($comparedStructure->getString(), strlen($foundPrefix));
-                        if (!$foundInOtherCollection && strlen($newPrefix)) {
-                            $usedStructures[] = $comparedStructure;
-                            // Add structure to structure collection
-                            $commonPrefixes[$foundPrefix]->add(new Structure($newPrefix));
-                        }
+                        $this->addToCommonPrefixesCollection(
+                            $commonPrefixes,
+                            $foundPrefix,
+                            $comparedStructure,
+                            $usedStructures
+                        );
 
                         $oneCommonPrefixFound = true;
                     }
@@ -97,21 +90,12 @@ class StructureCollection extends AbstractIterable
             }
 
             if (!$oneCommonPrefixFound) {
-                $foundPrefix = $initialStructure->getString();
-
-                // Create new structure collection with common prefix
-                if (!array_key_exists($foundPrefix, $commonPrefixes)) {
-                    $commonPrefixes[$foundPrefix] = new StructureCollection();
-                }
-
-                $foundInOtherCollection = in_array($initialStructure, $usedStructures);
-
-                $newPrefix = substr($initialStructure->getString(), strlen($foundPrefix));
-                if (!$foundInOtherCollection && strlen($newPrefix)) {
-                    $usedStructures[] = $initialStructure;
-                    // Add structure to structure collection
-                    $commonPrefixes[$foundPrefix]->add(new Structure($newPrefix));
-                }
+                $this->addToCommonPrefixesCollection(
+                    $commonPrefixes,
+                    $initialStructure->getString(),
+                    $initialStructure,
+                    $usedStructures
+                );
             }
         }
 
@@ -144,6 +128,25 @@ class StructureCollection extends AbstractIterable
 
         // Sort descending if needed
         $this->structures = $ascending ? array_reverse($this->structures) : $this->structures;
+    }
+
+    private function addToCommonPrefixesCollection(
+        array &$commonPrefixes,
+        string $foundPrefix,
+        Structure $comparedStructure,
+        array &$usedStructures
+    ): void {
+        // Create new structure collection with common prefix
+        if (!array_key_exists($foundPrefix, $commonPrefixes)) {
+            $commonPrefixes[$foundPrefix] = new StructureCollection();
+        }
+
+        $newPrefix = substr($comparedStructure->getString(), strlen($foundPrefix));
+        if ($newPrefix !== '' && !in_array($comparedStructure, $usedStructures, false)) {
+            $usedStructures[] = $comparedStructure;
+            // Add structure to structure collection
+            $commonPrefixes[$foundPrefix]->add(new Structure($newPrefix));
+        }
     }
 
     /**
