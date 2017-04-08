@@ -92,19 +92,7 @@ class StructureCollection extends AbstractIterable
             }
         }
 
-        // Sort common prefixes
-        $commonPrefixesCollection = new StructureCollection();
-        foreach ($commonPrefixes as $prefix => $structures) {
-            $commonPrefixesCollection->add(new Structure($prefix));
-        }
-        $commonPrefixesCollection->sort();
-
-        $final = [];
-        foreach ($commonPrefixesCollection as $prefix => $structureCollection) {
-            $final[$prefix] = $commonPrefixes[$prefix];
-        }
-
-        return $final;
+        return $this->sortStructureCollectionCollectionByPrefixes($commonPrefixes);
     }
 
     /**
@@ -157,6 +145,23 @@ class StructureCollection extends AbstractIterable
             // Add structure to structure collection
             $commonPrefixes[$foundPrefix]->add(new Structure($newPrefix));
         }
+    }
+
+    private function sortStructureCollectionCollectionByPrefixes(array $commonPrefixes): array
+    {
+        // Sort common prefixes
+        $commonPrefixesCollection = new StructureCollection();
+        foreach ($commonPrefixes as $prefix => $structures) {
+            $commonPrefixesCollection->add(new Structure($prefix));
+        }
+        $commonPrefixesCollection->sort();
+
+        $final = [];
+        foreach ($commonPrefixesCollection as $prefix => $structureCollection) {
+            $final[$prefix] = $commonPrefixes[$prefix];
+        }
+
+        return $final;
     }
 
     /**
